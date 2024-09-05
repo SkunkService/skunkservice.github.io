@@ -25,24 +25,26 @@ button {
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Darker shadow */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+    background-color: #444; /* Darker background for button */
 }
 
 button:hover {
     background-color: #555; /* Dark grey background on hover */
     color: #fff; /* White text color on hover */
-    box-shadow: 0 0 8px rgba(0,0,0,0.7); /* Enhanced shadow on hover */
+    border-color: #333; /* Darker border on hover */
 }
 
 button img {
     width: 24px;
     height: 24px;
     margin-right: 10px;
+    object-fit: contain; /* Ensure the image scales correctly */
 }
 
-/* Specific style for the LIVE Streams button */
 .live-streams-button {
     border-color: #E91E63; /* Pink border */
     color: #E91E63; /* Pink text color */
+    background-color: #333; /* Dark background for the LIVE Streams button */
 }
 
 .live-streams-button:hover {
