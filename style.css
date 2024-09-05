@@ -38,3 +38,15 @@ button img {
     height: 24px;
     margin-right: 10px;
 }
+
+/* Specific style for the LIVE Streams button */
+.live-streams-button {
+    border-color: #E91E63; /* Pink border */
+    color: #E91E63; /* Pink text color */
+}
+
+.live-streams-button:hover {
+    background-color: #C2185B; /* Darker pink background on hover */
+    color: #fff; /* White text color on hover */
+    border-color: #C2185B; /* Darker pink border on hover */
+}
