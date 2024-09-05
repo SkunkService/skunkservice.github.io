@@ -3,19 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="favicon" href="https://cdn-icons-png.freepik.com/512/5539/5539679.png" type="image/x-icon">
+    <link rel="icon" href="https://cdn-icons-png.freepik.com/512/5539/5539679.png" type="image/x-icon">
     <title>SkunkService - Pages</title>
     <link rel="stylesheet" href="style.css">
     <meta property="og:title" content="SkunkService - Official Website" />
     <meta property="og:description" content="We actually job for SkunkService." />
     <meta property="og:image" content="https://cdn-icons-png.freepik.com/512/5539/5539679.png" />
     <meta property="og:url" content="https://skunkservice.github.io" />
+    <style>
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .button-container button {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            padding: 10px;
+            border: none;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        .button-container img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .button-container button:hover {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
     <h1>What would you go this Pages?</h1>
-    <button onclick='window.open("https://skunkservice.github.io/Skunk-Application")'>Skunk Application</button>
-    <button onclick='window.open("https://skunkservice.github.io/SkunkApp-Privacy-Policy")'>SkunkApp - Privacy Policy</button>
-    <button onclick='window.open("https://skunkservice.github.io/Terms-of-Service")'>SkunkApp - Terms of Service</button>
-    <button onclick='window.open("https://skunkservice.github.io/live")'>LIVE Streams</button>
+    <div class="button-container">
+        <button onclick='window.open("https://skunkservice.github.io/Skunk-Application")'>
+            <img src="https://raw.githubusercontent.com/SkunkService/Skunk-Application/main/docs/icon.png" alt="Skunk Application Icon">
+            Skunk Application
+        </button>
+        <button onclick='window.open("https://skunkservice.github.io/SkunkApp-Privacy-Policy")'>
+            <img src="https://raw.githubusercontent.com/SkunkService/Skunk-Application/main/docs/icon.png" alt="Privacy Policy Icon">
+            SkunkApp - Privacy Policy
+        </button>
+        <button onclick='window.open("https://skunkservice.github.io/Terms-of-Service")'>
+            <img src="https://raw.githubusercontent.com/SkunkService/Skunk-Application/main/docs/icon.png" alt="Terms of Service Icon">
+            SkunkApp - Terms of Service
+        </button>
+        <button onclick='window.open("https://skunkservice.github.io/live")'>
+            <img src="https://raw.githubusercontent.com/SkunkService/live/main/docs/live.png" alt="LIVE Streams Icon">
+            LIVE Streams
+        </button>
+    </div>
 </body>
 </html>
