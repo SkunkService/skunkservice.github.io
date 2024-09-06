@@ -45,6 +45,18 @@
         let history = [];
         let historyIndex = -1;
 
+        // Load library from localStorage
+        function loadLibrary() {
+            const libraryData = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            libraryData.forEach(dataURL => addToLibrary(dataURL));
+        }
+
+        // Save library to localStorage
+        function saveLibrary() {
+            const libraryImages = Array.from(document.querySelectorAll('.library img')).map(img => img.src);
+            localStorage.setItem('imageLibrary', JSON.stringify(libraryImages));
+        }
+
         function setTool(tool) {
             currentTool = tool;
             if (tool === 'fill') {
@@ -148,6 +160,7 @@
             img.src = dataURL;
             img.onclick = () => drawImageOnCanvas(img.src); // Load image onto canvas when clicked
             library.appendChild(img);
+            saveLibrary(); // Save library to localStorage
         }
 
         function addToLibraryFromCanvas() {
@@ -183,6 +196,9 @@
                 alert('Please select a valid image file.');
             }
         });
+
+        // Load library on page load
+        loadLibrary();
 
         // Initialize undo/redo
         saveState(); // Save initial empty state
