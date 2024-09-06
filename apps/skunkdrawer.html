@@ -4,14 +4,37 @@
     <title>SkunkDrawer - SkunkService's Website</title>
     <meta name="description" content="SkunkDrawer is a powerful drawing tool integrated with SkunkService. Create, edit, and manage your drawings easily.">
     <style>
-        canvas { border: 1px solid black; }
-        .toolbar { margin-bottom: 10px; }
-        .toolbar input, .toolbar button { margin-right: 10px; }
-        .library { margin-top: 10px; }
-        .library img { width: 100px; height: 75px; margin-right: 5px; cursor: pointer; }
-        .library img.selected { border: 2px solid red; }
-        #manageLibraryModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background: white; border: 1px solid black; z-index: 1000; }
-        #manageLibraryModal button { margin-top: 10px; }
+        body { margin: 0; padding: 0; }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+        }
+        canvas {
+            border: 1px solid black;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure the canvas scales correctly */
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .toolbar button, .toolbar input {
+            margin: 5px;
+        }
+        #library {
+            margin-top: 10px;
+            text-align: center;
+        }
+        #library img {
+            max-width: 100px;
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -20,36 +43,25 @@
         <button onclick="setTool('eraser')">Eraser</button>
         <button onclick="setTool('fill')">Fill</button>
         <button onclick="setTool('crop')">Crop</button>
-        <button onclick="saveDrawing()">Save</button>
-        <button onclick="loadDrawing()">Load</button>
+        <button onclick="saveDrawing()">Save Drawing</button>
+        <button onclick="loadDrawing()">Load Drawing</button>
+        <button onclick="generateJSON()">Generate JSON for Recovery</button>
+        <button onclick="loadJSON()">Load JSON Recovery</button>
+        <button onclick="manageLibrary()">Manage Library</button>
+        <button onclick="addToLibrary()">Add to Library</button>
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
         <label for="colorPicker">Brush Color:</label>
         <input type="color" id="colorPicker" value="#000000">
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
-        <input type="file" id="uploadImage" accept="image/*">
-        <button onclick="addToLibraryFromCanvas()">Add to Library</button>
-        <button onclick="openManageLibrary()">Manage Library</button>
-        <button onclick="generateJSON()">Generate JSON for Recovery</button>
-        <input type="file" id="jsonFileInput" accept=".json" style="display: none;" />
-        <button onclick="triggerFileInput()">Load JSON Recovery</button>
+        <label for="importImage">Import Image:</label>
+        <input type="file" id="importImage" accept="image/*">
     </div>
-    
-    <canvas id="myCanvas" width="800" height="600"></canvas>
-
-    <div class="library" id="imageLibrary">
-        <!-- Images will be added here dynamically -->
+    <div class="canvas-container">
+        <canvas id="myCanvas"></canvas>
     </div>
-
-    <!-- Manage Library Modal -->
-    <div id="manageLibraryModal">
-        <h3>Manage Library</h3>
-        <div id="manageLibraryImages">
-            <!-- Manageable images will be added here -->
-        </div>
-        <button onclick="closeManageLibrary()">Close</button>
-    </div>
+    <div id="library"></div>
 
     <script>
         const canvas = document.getElementById('myCanvas');
@@ -60,31 +72,15 @@
         let brushSize = 30; // Default brush size
         let history = [];
         let historyIndex = -1;
-        let selectedImage = null;
+        let library = JSON.parse(localStorage.getItem('library')) || [];
 
-        // Load library from localStorage
-        function loadLibrary() {
-            const libraryData = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-            const library = document.getElementById('imageLibrary');
-            library.innerHTML = ''; // Clear existing library images
-
-            libraryData.forEach((dataURL, index) => {
-                const img = document.createElement('img');
-                img.src = dataURL;
-                img.dataset.index = index;
-                img.onclick = () => {
-                    drawImageOnCanvas(img.src);
-                    selectedImage = img;
-                };
-                library.appendChild(img);
-            });
+        function resizeCanvas() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
         }
 
-        // Save library to localStorage
-        function saveLibrary() {
-            const libraryImages = Array.from(document.querySelectorAll('.library img')).map(img => img.src);
-            localStorage.setItem('imageLibrary', JSON.stringify(libraryImages));
-        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Initial resize
 
         function setTool(tool) {
             currentTool = tool;
@@ -106,7 +102,7 @@
             if (currentTool === 'draw' || currentTool === 'eraser') {
                 isDrawing = false;
                 ctx.beginPath();
-                saveState(); // Save the state after drawing
+                saveState(); // Save state after drawing
             }
         }
 
@@ -126,7 +122,6 @@
         function saveDrawing() {
             const dataURL = canvas.toDataURL('image/png');
             localStorage.setItem('savedDrawing', dataURL);
-            addToLibrary(dataURL);
             alert('Drawing saved!');
         }
 
@@ -142,6 +137,75 @@
             } else {
                 alert('No drawing saved.');
             }
+        }
+
+        function generateJSON() {
+            const dataURL = canvas.toDataURL('image/png');
+            const json = JSON.stringify({ savedDrawing: dataURL });
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'recovery.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function loadJSON() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (event) => {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const json = JSON.parse(e.target.result);
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = json.savedDrawing;
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function manageLibrary() {
+            const libraryDiv = document.getElementById('library');
+            libraryDiv.innerHTML = ''; // Clear previous library items
+
+            library.forEach((item, index) => {
+                const img = document.createElement('img');
+                img.src = item;
+                img.alt = `Library Image ${index + 1}`;
+                img.onclick = () => {
+                    const imgElement = new Image();
+                    imgElement.src = item;
+                    imgElement.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                        ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                    };
+                };
+                libraryDiv.appendChild(img);
+            });
+        }
+
+        function addToLibrary() {
+            const dataURL = canvas.toDataURL('image/png');
+            library.push(dataURL);
+            localStorage.setItem('library', JSON.stringify(library));
+            manageLibrary(); // Refresh the library display
+        }
+
+        function saveState() {
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            const dataURL = canvas.toDataURL();
+            history.push(dataURL);
+            historyIndex++;
         }
 
         function undo() {
@@ -164,131 +228,23 @@
             }
         }
 
-        function saveState() {
-            if (historyIndex < history.length - 1) {
-                history = history.slice(0, historyIndex + 1);
-            }
-            const dataURL = canvas.toDataURL();
-            history.push(dataURL);
-            historyIndex++;
-        }
-
-        function drawImageOnCanvas(imageSrc) {
-            const img = new Image();
-            img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                saveState(); // Save state after uploading image
-            };
-            img.src = imageSrc;
-        }
-
-        function addToLibrary(dataURL) {
-            const library = document.getElementById('imageLibrary');
-            const img = document.createElement('img');
-            img.src = dataURL;
-            img.onclick = () => {
-                drawImageOnCanvas(img.src);
-                selectedImage = img;
-            };
-            library.appendChild(img);
-            saveLibrary(); // Save library to localStorage
-        }
-
-        function addToLibraryFromCanvas() {
-            const dataURL = canvas.toDataURL('image/png');
-            addToLibrary(dataURL);
-            alert('Image added to library!');
-        }
-
-        function openManageLibrary() {
-            const manageLibraryModal = document.getElementById('manageLibraryModal');
-            const manageLibraryImages = document.getElementById('manageLibraryImages');
-            
-            manageLibraryImages.innerHTML = ''; // Clear current list
-            
-            const libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-            libraryImages.forEach((dataURL, index) => {
-                const img = document.createElement('img');
-                img.src = dataURL;
-                img.dataset.index = index;
-                img.onclick = () => selectImage(img);
-                manageLibraryImages.appendChild(img);
-                
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.onclick = (e) => {
-                    e.stopPropagation(); // Prevent event bubbling to img click
-                    deleteImage(index);
-                };
-                manageLibraryImages.appendChild(deleteButton);
-            });
-
-            manageLibraryModal.style.display = 'block';
-        }
-
-        function selectImage(img) {
-            const allImages = document.querySelectorAll('#manageLibraryImages img');
-            allImages.forEach(image => image.classList.remove('selected'));
-            img.classList.add('selected');
-            selectedImage = img;
-        }
-
-        function deleteImage(index) {
-            let libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-            libraryImages.splice(index, 1); // Remove image from array
-            localStorage.setItem('imageLibrary', JSON.stringify(libraryImages));
-            loadLibrary(); // Reload library
-            openManageLibrary(); // Refresh manage library modal
-        }
-
-        function closeManageLibrary() {
-            document.getElementById('manageLibraryModal').style.display = 'none';
-        }
-
-        function generateJSON() {
-            const drawingDataURL = canvas.toDataURL('image/png');
-            const libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-            const jsonData = {
-                drawing: drawingDataURL,
-                library: libraryImages
-            };
-            const blob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'drawing-library.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function triggerFileInput() {
-            document.getElementById('jsonFileInput').click();
-        }
-
-        function loadJSON() {
-            const fileInput = document.getElementById('jsonFileInput');
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file && file.type === 'application/json') {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const jsonData = JSON.parse(event.target.result);
-                        const img = new Image();
-                        img.onload = () => {
-                            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-                            ctx.drawImage(img, 0, 0);
-                        };
-                        img.src = jsonData.drawing;
-
-                        localStorage.setItem('imageLibrary', JSON.stringify(jsonData.library));
-                        loadLibrary(); // Reload library with JSON data
+        function importImage(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        saveState(); // Save state after importing image
                     };
-                    reader.readAsText(file);
-                } else {
-                    alert('Please select a valid JSON file.');
-                }
-            });
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file.');
+            }
         }
 
         // Event Listeners for drawing
@@ -305,25 +261,11 @@
             brushSize = parseInt(e.target.value, 10);
         });
 
-        // Upload Image
-        document.getElementById('uploadImage').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    drawImageOnCanvas(event.target.result); // Draw uploaded image on canvas
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Please select a valid image file.');
-            }
-        });
-
-        // Load library on page load
-        loadLibrary();
-
         // Initialize undo/redo
         saveState(); // Save initial empty state
+
+        // Initialize import image functionality
+        document.getElementById('importImage').addEventListener('change', importImage);
     </script>
 </body>
 </html>
