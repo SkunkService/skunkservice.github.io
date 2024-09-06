@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Auto-Save Drawing</title>
+    <title>SkunkDrawer - SkunkService's Website</title>
+    <meta name="description" content="SkunkDrawer is a powerful drawing tool integrated with SkunkService. Create, edit, and manage your drawings easily.">
     <style>
         canvas { border: 1px solid black; }
         .toolbar { margin-bottom: 10px; }
+        .toolbar input { margin-right: 10px; }
+        .crop-area {
+            border: 1px dashed red;
+            position: absolute;
+            pointer-events: none;
+        }
+        .crop-container {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -12,35 +22,61 @@
         <button onclick="setTool('draw')">Draw</button>
         <button onclick="setTool('eraser')">Eraser</button>
         <button onclick="setTool('fill')">Fill</button>
+        <button onclick="setTool('crop')">Crop</button>
         <button onclick="saveDrawing()">Save</button>
         <button onclick="loadDrawing()">Load</button>
+        <label for="colorPicker">Brush Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+        <label for="brushSize">Brush Size:</label>
+        <input type="number" id="brushSize" min="1" value="30">
+        <label for="cropWidth">Crop Width:</label>
+        <input type="number" id="cropWidth" min="1" value="100">
+        <label for="cropHeight">Crop Height:</label>
+        <input type="number" id="cropHeight" min="1" value="100">
     </div>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <div class="crop-container">
+        <canvas id="myCanvas" width="800" height="600"></canvas>
+        <div id="cropArea" class="crop-area"></div>
+    </div>
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
+        const cropAreaDiv = document.getElementById('cropArea');
         let currentTool = 'draw';
         let isDrawing = false;
-        const brushSize = 30; // Diameter of the circle
-        const eraserSize = 30; // Diameter of the eraser
+        let brushColor = '#000000'; // Default brush color
+        let brushSize = 30; // Default brush size
+        let startX, startY;
+        let cropping = false;
 
         function setTool(tool) {
             currentTool = tool;
             if (tool === 'fill') {
                 canvas.addEventListener('click', fillCanvas);
+            } else if (tool === 'crop') {
+                canvas.addEventListener('mousedown', startCrop);
+                canvas.addEventListener('mousemove', updateCrop);
+                canvas.addEventListener('mouseup', finalizeCrop);
             } else {
                 canvas.removeEventListener('click', fillCanvas);
+                canvas.removeEventListener('mousedown', startCrop);
+                canvas.removeEventListener('mousemove', updateCrop);
+                canvas.removeEventListener('mouseup', finalizeCrop);
             }
         }
 
         function startDrawing(e) {
-            isDrawing = true;
-            draw(e);
+            if (currentTool === 'draw' || currentTool === 'eraser') {
+                isDrawing = true;
+                draw(e);
+            }
         }
 
         function stopDrawing() {
-            isDrawing = false;
-            ctx.beginPath();
+            if (currentTool === 'draw' || currentTool === 'eraser') {
+                isDrawing = false;
+                ctx.beginPath();
+            }
         }
 
         function draw(e) {
@@ -50,8 +86,8 @@
             const y = e.clientY - rect.top;
 
             ctx.beginPath();
-            ctx.arc(x, y, currentTool === 'eraser' ? eraserSize / 2 : brushSize / 2, 0, 2 * Math.PI);
-            ctx.fillStyle = currentTool === 'eraser' ? 'white' : 'black';
+            ctx.arc(x, y, currentTool === 'eraser' ? brushSize / 2 : brushSize / 2, 0, 2 * Math.PI);
+            ctx.fillStyle = currentTool === 'eraser' ? 'white' : brushColor;
             ctx.fill();
             ctx.closePath();
         }
@@ -129,6 +165,69 @@
         }
 
         window.addEventListener('beforeunload', autoSave);
+
+        function startCrop(e) {
+            if (currentTool === 'crop') {
+                cropping = true;
+                const rect = canvas.getBoundingClientRect();
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                cropAreaDiv.style.left = `${startX}px`;
+                cropAreaDiv.style.top = `${startY}px`;
+                cropAreaDiv.style.width = `0px`;
+                cropAreaDiv.style.height = `0px`;
+                cropAreaDiv.style.display = 'block';
+            }
+        }
+
+        function updateCrop(e) {
+            if (!cropping) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const width = Math.abs(x - startX);
+            const height = Math.abs(y - startY);
+            cropAreaDiv.style.width = `${width}px`;
+            cropAreaDiv.style.height = `${height}px`;
+            if (x < startX) {
+                cropAreaDiv.style.left = `${x}px`;
+            }
+            if (y < startY) {
+                cropAreaDiv.style.top = `${y}px`;
+            }
+        }
+
+        function finalizeCrop() {
+            if (!cropping) return;
+            cropping = false;
+            cropAreaDiv.style.display = 'none';
+            const cropWidth = parseInt(document.getElementById('cropWidth').value, 10);
+            const cropHeight = parseInt(document.getElementById('cropHeight').value, 10);
+            const cropRect = cropAreaDiv.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            const cropX = cropRect.left - canvasRect.left;
+            const cropY = cropRect.top - canvasRect.top;
+
+            const cropCanvas = document.createElement('canvas');
+            cropCanvas.width = cropWidth;
+            cropCanvas.height = cropHeight;
+            const cropCtx = cropCanvas.getContext('2d');
+            const imageData = ctx.getImageData(cropX, cropY, cropWidth, cropHeight);
+            cropCtx.putImageData(imageData, 0, 0);
+
+            ctx.clearRect(cropX, cropY, cropWidth, cropHeight);
+            ctx.drawImage(cropCanvas, cropX, cropY);
+
+            alert('Crop complete!');
+        }
+
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            brushColor = e.target.value;
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            brushSize = e.target.value;
+        });
 
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
