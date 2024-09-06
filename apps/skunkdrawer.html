@@ -9,6 +9,9 @@
         .toolbar input, .toolbar button { margin-right: 10px; }
         .library { margin-top: 10px; }
         .library img { width: 100px; height: 75px; margin-right: 5px; cursor: pointer; }
+        .library img.selected { border: 2px solid red; }
+        #manageLibraryModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background: white; border: 1px solid black; z-index: 1000; }
+        #manageLibraryModal button { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -27,12 +30,22 @@
         <input type="number" id="brushSize" min="1" value="30">
         <input type="file" id="uploadImage" accept="image/*">
         <button onclick="addToLibraryFromCanvas()">Add to Library</button>
+        <button onclick="openManageLibrary()">Manage Library</button>
     </div>
     
     <canvas id="myCanvas" width="800" height="600"></canvas>
 
     <div class="library" id="imageLibrary">
         <!-- Images will be added here dynamically -->
+    </div>
+
+    <!-- Manage Library Modal -->
+    <div id="manageLibraryModal">
+        <h3>Manage Library</h3>
+        <div id="manageLibraryImages">
+            <!-- Manageable images will be added here -->
+        </div>
+        <button onclick="closeManageLibrary()">Close</button>
     </div>
 
     <script>
@@ -44,6 +57,7 @@
         let brushSize = 30; // Default brush size
         let history = [];
         let historyIndex = -1;
+        let selectedImage = null;
 
         // Load library from localStorage
         function loadLibrary() {
@@ -158,7 +172,10 @@
             const library = document.getElementById('imageLibrary');
             const img = document.createElement('img');
             img.src = dataURL;
-            img.onclick = () => drawImageOnCanvas(img.src); // Load image onto canvas when clicked
+            img.onclick = () => {
+                drawImageOnCanvas(img.src);
+                selectedImage = img;
+            };
             library.appendChild(img);
             saveLibrary(); // Save library to localStorage
         }
@@ -167,6 +184,46 @@
             const dataURL = canvas.toDataURL('image/png');
             addToLibrary(dataURL);
             alert('Image added to library!');
+        }
+
+        function openManageLibrary() {
+            const manageLibraryModal = document.getElementById('manageLibraryModal');
+            const manageLibraryImages = document.getElementById('manageLibraryImages');
+            
+            manageLibraryImages.innerHTML = ''; // Clear current list
+            
+            const libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            libraryImages.forEach((dataURL, index) => {
+                const img = document.createElement('img');
+                img.src = dataURL;
+                img.onclick = () => selectImage(img);
+                manageLibraryImages.appendChild(img);
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteImage(index);
+                manageLibraryImages.appendChild(deleteButton);
+            });
+
+            manageLibraryModal.style.display = 'block';
+        }
+
+        function selectImage(img) {
+            const allImages = document.querySelectorAll('#manageLibraryImages img');
+            allImages.forEach(image => image.classList.remove('selected'));
+            img.classList.add('selected');
+            selectedImage = img;
+        }
+
+        function deleteImage(index) {
+            const libraryData = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            libraryData.splice(index, 1);
+            localStorage.setItem('imageLibrary', JSON.stringify(libraryData));
+            loadLibrary(); // Reload the library
+        }
+
+        function closeManageLibrary() {
+            document.getElementById('manageLibraryModal').style.display = 'none';
         }
 
         // Event Listeners for drawing
