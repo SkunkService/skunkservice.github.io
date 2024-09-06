@@ -357,6 +357,30 @@ function downloadImage() {
             }
         }
 
+        function toggleSettings() {
+            const settingsBox = document.getElementById('settingsBox');
+            settingsBox.style.display = settingsBox.style.display === 'none' || settingsBox.style.display === '' ? 'block' : 'none';
+        }
+
+        function applySettings() {
+            const autoRecovery = document.getElementById('autoRecovery').checked;
+            const recoveryMinutes = document.getElementById('recoveryMinutes').value;
+            const theme = document.getElementById('themeSelect').value;
+
+            console.log(`Auto-Recovery Enabled: ${autoRecovery}`);
+            console.log(`Auto-Recovery Interval: ${recoveryMinutes} minutes`);
+            console.log(`Selected Theme: ${theme}`);
+
+            // Apply settings (e.g., save to local storage or update UI)
+
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+            } else {
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+            }
+        }
     </script>
 </body>
 </html>
