@@ -153,3 +153,13 @@ input[type="range"]#brushOpacity::-moz-range-thumb {
     display: block;
     margin-bottom: 5px;
 }
+
+.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.light-theme {
+    background-color: #ffffff;
+    color: #000000;
+}
