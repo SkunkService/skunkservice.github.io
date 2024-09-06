@@ -31,6 +31,9 @@
         <input type="file" id="uploadImage" accept="image/*">
         <button onclick="addToLibraryFromCanvas()">Add to Library</button>
         <button onclick="openManageLibrary()">Manage Library</button>
+        <button onclick="generateJSON()">Generate JSON for Recovery</button>
+        <input type="file" id="loadJSON" accept=".json" />
+        <button onclick="loadJSON()">Load JSON Recovery</button>
     </div>
     
     <canvas id="myCanvas" width="800" height="600"></canvas>
@@ -62,7 +65,19 @@
         // Load library from localStorage
         function loadLibrary() {
             const libraryData = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-            libraryData.forEach(dataURL => addToLibrary(dataURL));
+            const library = document.getElementById('imageLibrary');
+            library.innerHTML = ''; // Clear existing library images
+
+            libraryData.forEach((dataURL, index) => {
+                const img = document.createElement('img');
+                img.src = dataURL;
+                img.dataset.index = index;
+                img.onclick = () => {
+                    drawImageOnCanvas(img.src);
+                    selectedImage = img;
+                };
+                library.appendChild(img);
+            });
         }
 
         // Save library to localStorage
@@ -196,12 +211,16 @@
             libraryImages.forEach((dataURL, index) => {
                 const img = document.createElement('img');
                 img.src = dataURL;
+                img.dataset.index = index;
                 img.onclick = () => selectImage(img);
                 manageLibraryImages.appendChild(img);
                 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
-                deleteButton.onclick = () => deleteImage(index);
+                deleteButton.onclick = (e) => {
+                    e.stopPropagation(); // Prevent event bubbling to img click
+                    deleteImage(index);
+                };
                 manageLibraryImages.appendChild(deleteButton);
             });
 
@@ -216,14 +235,55 @@
         }
 
         function deleteImage(index) {
-            const libraryData = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-            libraryData.splice(index, 1);
-            localStorage.setItem('imageLibrary', JSON.stringify(libraryData));
-            loadLibrary(); // Reload the library
+            const libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            libraryImages.splice(index, 1); // Remove image from array
+            
+            localStorage.setItem('imageLibrary', JSON.stringify(libraryImages));
+            loadLibrary(); // Reload library
+            openManageLibrary(); // Refresh manage library modal
         }
 
         function closeManageLibrary() {
             document.getElementById('manageLibraryModal').style.display = 'none';
+        }
+
+        function generateJSON() {
+            const drawingDataURL = canvas.toDataURL('image/png');
+            const libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            const jsonData = {
+                drawing: drawingDataURL,
+                library: libraryImages
+            };
+            const blob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'drawing-library.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function loadJSON() {
+            const fileInput = document.getElementById('loadJSON');
+            const file = fileInput.files[0];
+            if (file && file.type === 'application/json') {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const jsonData = JSON.parse(event.target.result);
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+                        ctx.drawImage(img, 0, 0);
+                    };
+                    img.src = jsonData.drawing;
+
+                    localStorage.setItem('imageLibrary', JSON.stringify(jsonData.library));
+                    loadLibrary(); // Reload library with JSON data
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a valid JSON file.');
+            }
         }
 
         // Event Listeners for drawing
