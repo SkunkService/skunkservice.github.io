@@ -53,6 +53,8 @@
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
         <button onclick="addCurrentCanvasToLibrary()">Add to Library</button>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileUpload()">
+        <button onclick="document.getElementById('fileInput').click()">Import Image</button>
     </div>
 
     <canvas id="myCanvas" width="800" height="600"></canvas>
@@ -196,6 +198,26 @@
             event.stopPropagation(); // Prevent triggering the canvas click event
             const libraryItem = event.target.parentElement;
             imageLibrary.removeChild(libraryItem);
+        }
+
+        // Handle file upload and add image to the canvas
+        function handleFileUpload() {
+            const file = document.getElementById('fileInput').files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        saveState(); // Save state after uploading image
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file.');
+            }
         }
 
         // Event Listeners for drawing
