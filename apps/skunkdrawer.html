@@ -91,7 +91,7 @@
             const y = e.clientY - rect.top;
 
             ctx.beginPath();
-            ctx.arc(x, y, currentTool === 'eraser' ? brushSize / 2 : brushSize / 2, 0, 2 * Math.PI);
+            ctx.arc(x, y, brushSize / 2, 0, 2 * Math.PI);
             ctx.fillStyle = currentTool === 'eraser' ? 'white' : brushColor;
             ctx.fill();
             ctx.closePath();
@@ -215,11 +215,10 @@
             cropCanvas.width = cropWidth;
             cropCanvas.height = cropHeight;
             const cropCtx = cropCanvas.getContext('2d');
-            const imageData = ctx.getImageData(cropX, cropY, cropWidth, cropHeight);
-            cropCtx.putImageData(imageData, 0, 0);
+            cropCtx.drawImage(canvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 
-            ctx.clearRect(cropX, cropY, cropWidth, cropHeight);
-            ctx.drawImage(cropCanvas, cropX, cropY);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(cropCanvas, 0, 0);
 
             alert('Crop complete!');
         }
