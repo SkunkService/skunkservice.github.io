@@ -171,6 +171,19 @@
             document.getElementById('uploadImage').click();
         }
 
+        function loadLibrary() {
+            const libraryData = localStorage.getItem('imageLibrary');
+            if (libraryData) {
+                const imageList = JSON.parse(libraryData);
+                imageList.forEach(imageSrc => addImageToLibrary(imageSrc));
+            }
+        }
+
+        function saveLibrary() {
+            const images = Array.from(imageLibrary.querySelectorAll('img')).map(img => img.src);
+            localStorage.setItem('imageLibrary', JSON.stringify(images));
+        }
+
         // Event Listeners for drawing
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
@@ -196,6 +209,7 @@
                         const imageSrc = event.target.result;
                         addImageToLibrary(imageSrc); // Add uploaded image to library
                         drawImageOnCanvas(imageSrc); // Optionally draw image on canvas
+                        saveLibrary(); // Save library to localStorage
                     };
                     img.src = event.target.result;
                 };
@@ -207,6 +221,9 @@
 
         // Initialize undo/redo
         saveState(); // Save initial empty state
+
+        // Load the image library from localStorage
+        loadLibrary();
     </script>
 </body>
 </html>
