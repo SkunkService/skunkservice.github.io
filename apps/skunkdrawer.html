@@ -7,6 +7,8 @@
         canvas { border: 1px solid black; }
         .toolbar { margin-bottom: 10px; }
         .toolbar input { margin-right: 10px; }
+        .library-item { margin-bottom: 10px; }
+        .library-item img { max-width: 100px; max-height: 100px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -21,7 +23,7 @@
         <button onclick="redo()">Redo</button>
         <button onclick="generateJSON()">Generate JSON for Recovery</button>
         <button onclick="manageLibrary()">Manage Library</button>
-        <input type="file" id="uploadImage" accept="image/*" style="display:none">
+        <input type="file" id="uploadImage" accept="image/*" style="display:none" onchange="importImage()">
         <label for="uploadImage">Upload Image</label>
         <label for="colorPicker">Brush Color:</label>
         <input type="color" id="colorPicker" value="#000000">
@@ -188,6 +190,7 @@
                 });
 
                 const container = document.createElement('div');
+                container.className = 'library-item';
                 container.appendChild(img);
                 container.appendChild(deleteBtn);
                 libraryDiv.appendChild(container);
@@ -195,25 +198,32 @@
 
             // Add button to add new images to the library
             const addButton = document.createElement('button');
-            addButton.textContent = 'Add Image to Library';
+            addButton.textContent = 'Add Canvas to Library';
             addButton.onclick = () => {
-                const fileInput = document.getElementById('uploadImage');
-                fileInput.click();
-                fileInput.onchange = (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            const imageData = e.target.result;
-                            library.push(imageData);
-                            localStorage.setItem('library', JSON.stringify(library));
-                            manageLibrary(); // Refresh library list
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
+                const dataURL = canvas.toDataURL('image/png');
+                const library = JSON.parse(localStorage.getItem('library') || '[]');
+                library.push(dataURL);
+                localStorage.setItem('library', JSON.stringify(library));
+                manageLibrary(); // Refresh library list
             };
             libraryDiv.appendChild(addButton);
+        }
+
+        function importImage() {
+            const fileInput = document.getElementById('uploadImage');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         function startCrop(e) {
@@ -226,50 +236,39 @@
         }
 
         function onCrop(e) {
-            if (currentTool === 'crop' && cropping) {
+            if (cropping) {
                 const rect = canvas.getBoundingClientRect();
-                const currentX = e.clientX - rect.left;
-                const currentY = e.clientY - rect.top;
-
-                // Clear and redraw the existing image to show cropping rectangle
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                img.src = canvas.toDataURL();
-
-                const width = currentX - cropStartX;
-                const height = currentY - cropStartY;
+                const cropEndX = e.clientX - rect.left;
+                const cropEndY = e.clientY - rect.top;
                 ctx.strokeStyle = 'red';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(cropStartX, cropStartY, width, height);
+                ctx.lineWidth = 1;
+                ctx.strokeRect(cropStartX, cropStartY, cropEndX - cropStartX, cropEndY - cropStartY);
             }
         }
 
-        function endCrop(e) {
-            if (currentTool === 'crop' && cropping) {
+        function endCrop() {
+            if (cropping) {
                 cropping = false;
                 const rect = canvas.getBoundingClientRect();
-                const endX = e.clientX - rect.left;
-                const endY = e.clientY - rect.top;
-
-                cropWidth = endX - cropStartX;
-                cropHeight = endY - cropStartY;
-
-                applyCrop();
+                cropWidth = document.getElementById('cropWidth').value;
+                cropHeight = document.getElementById('cropHeight').value;
+                const imageData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = cropWidth;
+                tempCanvas.height = cropHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.putImageData(imageData, 0, 0);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(tempCanvas, 0, 0);
             }
         }
 
         function applyCrop() {
-            if (cropWidth && cropHeight) {
-                const imageData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
-                canvas.width = cropWidth;
-                canvas.height = cropHeight;
-                ctx.putImageData(imageData, 0, 0);
+            if (cropping) {
+                endCrop();
+                cropping = false;
             }
         }
-
-        // Initialize library on page load
-        window.onload = manageLibrary;
     </script>
 </body>
 </html>
