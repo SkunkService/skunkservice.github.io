@@ -66,6 +66,10 @@
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
         const imageLibrary = document.getElementById('imageLibrary');
+        const colorPicker = document.getElementById('colorPicker');
+        const brushSizeInput = document.getElementById('brushSize');
+        const fileInput = document.getElementById('fileInput');
+
         let currentTool = 'draw';
         let isDrawing = false;
         let brushColor = '#000000'; // Default brush color
@@ -93,7 +97,7 @@
             if (currentTool === 'draw' || currentTool === 'eraser') {
                 isDrawing = false;
                 ctx.beginPath();
-                saveState(); // Save the state after drawing
+                saveState();
             }
         }
 
@@ -161,48 +165,47 @@
 
         function addCurrentCanvasToLibrary() {
             const dataURL = canvas.toDataURL('image/png');
-            const libraryItem = document.createElement('div');
-            libraryItem.classList.add('library-item');
-            libraryItem.innerHTML = `<img src="${dataURL}" alt="Canvas Image">
-                                     <button class="edit" onclick="editImage(event)">Edit</button>
-                                     <button onclick="deleteImage(event)">Delete</button>`;
-
-            // Click to draw image on canvas
-            libraryItem.addEventListener('click', () => {
-                drawImageOnCanvas(dataURL);
-            });
-
-            imageLibrary.appendChild(libraryItem);
+            let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            library.push(dataURL);
+            localStorage.setItem('imageLibrary', JSON.stringify(library));
+            displayLibrary();
         }
 
-        function drawImageOnCanvas(imageSrc) {
+        function displayLibrary() {
+            imageLibrary.innerHTML = '';
+            let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            library.forEach((imgDataURL, index) => {
+                const div = document.createElement('div');
+                div.className = 'library-item';
+                div.innerHTML = `
+                    <img src="${imgDataURL}" />
+                    <button class="edit" onclick="editImage(${index})">Edit</button>
+                    <button onclick="deleteImage(${index})">Delete</button>
+                `;
+                imageLibrary.appendChild(div);
+            });
+        }
+
+        function deleteImage(index) {
+            let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            library.splice(index, 1);
+            localStorage.setItem('imageLibrary', JSON.stringify(library));
+            displayLibrary();
+        }
+
+        function editImage(index) {
+            let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            const imgDataURL = library[index];
             const img = new Image();
             img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                saveState(); // Save state after uploading image
             };
-            img.src = imageSrc;
+            img.src = imgDataURL;
         }
 
-        function editImage(event) {
-            event.stopPropagation(); // Prevent triggering the canvas click event
-            const libraryItem = event.target.parentElement;
-            const imageSrc = libraryItem.querySelector('img').src;
-
-            // Draw the image from the library on the canvas for editing
-            drawImageOnCanvas(imageSrc);
-        }
-
-        function deleteImage(event) {
-            event.stopPropagation(); // Prevent triggering the canvas click event
-            const libraryItem = event.target.parentElement;
-            imageLibrary.removeChild(libraryItem);
-        }
-
-        // Handle file upload and add image to the canvas
         function handleFileUpload() {
-            const file = document.getElementById('fileInput').files[0];
+            const file = fileInput.files[0];
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
@@ -220,22 +223,22 @@
             }
         }
 
+        // Initialize brush color and size
+        colorPicker.addEventListener('input', (e) => {
+            brushColor = e.target.value;
+        });
+
+        brushSizeInput.addEventListener('input', (e) => {
+            brushSize = parseInt(e.target.value, 10);
+        });
+
         // Event Listeners for drawing
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mousemove', draw);
 
-        // Initialize brush color and size
-        document.getElementById('colorPicker').addEventListener('input', (e) => {
-            brushColor = e.target.value;
-        });
-
-        document.getElementById('brushSize').addEventListener('input', (e) => {
-            brushSize = parseInt(e.target.value, 10);
-        });
-
-        // Initialize undo/redo
-        saveState(); // Save initial empty state
+        // Display library on load
+        displayLibrary();
     </script>
 </body>
 </html>
