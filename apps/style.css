@@ -1,0 +1,118 @@
+/* General styles for the canvas and toolbar */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+canvas {
+    border: 2px solid #ccc;
+    background-color: white;
+    cursor: crosshair;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.toolbar {
+    background: linear-gradient(45deg, #333, #444);
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar button, .toolbar input {
+    margin-right: 10px;
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.toolbar button:hover, .toolbar input:hover {
+    background-color: #777;
+}
+
+input[type="color"] {
+    border: none;
+    padding: 0;
+}
+
+input[type="number"], input[type="range"] {
+    width: 80px;
+}
+
+input[type="range"]#brushOpacity {
+    -webkit-appearance: none;
+    background: #444;
+    height: 6px;
+    border-radius: 3px;
+}
+
+input[type="range"]#brushOpacity::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #666;
+    border: 2px solid #333;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]#brushOpacity::-moz-range-thumb {
+    background: #666;
+    border: 2px solid #333;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Styles for the image library */
+.library-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.library-item {
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 5px;
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.library-item img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+}
+
+.library-item button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.library-item button.edit {
+    background-color: blue;
+}
