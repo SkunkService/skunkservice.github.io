@@ -32,8 +32,8 @@
         <button onclick="addToLibraryFromCanvas()">Add to Library</button>
         <button onclick="openManageLibrary()">Manage Library</button>
         <button onclick="generateJSON()">Generate JSON for Recovery</button>
-        <input type="file" id="loadJSON" accept=".json" />
-        <button onclick="loadJSON()">Load JSON Recovery</button>
+        <input type="file" id="jsonFileInput" accept=".json" style="display: none;" />
+        <button onclick="triggerFileInput()">Load JSON Recovery</button>
     </div>
     
     <canvas id="myCanvas" width="800" height="600"></canvas>
@@ -263,27 +263,33 @@
             URL.revokeObjectURL(url);
         }
 
-        function loadJSON() {
-            const fileInput = document.getElementById('loadJSON');
-            const file = fileInput.files[0];
-            if (file && file.type === 'application/json') {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const jsonData = JSON.parse(event.target.result);
-                    const img = new Image();
-                    img.onload = () => {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-                        ctx.drawImage(img, 0, 0);
-                    };
-                    img.src = jsonData.drawing;
+        function triggerFileInput() {
+            document.getElementById('jsonFileInput').click();
+        }
 
-                    localStorage.setItem('imageLibrary', JSON.stringify(jsonData.library));
-                    loadLibrary(); // Reload library with JSON data
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Please select a valid JSON file.');
-            }
+        function loadJSON() {
+            const fileInput = document.getElementById('jsonFileInput');
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && file.type === 'application/json') {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const jsonData = JSON.parse(event.target.result);
+                        const img = new Image();
+                        img.onload = () => {
+                            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+                            ctx.drawImage(img, 0, 0);
+                        };
+                        img.src = jsonData.drawing;
+
+                        localStorage.setItem('imageLibrary', JSON.stringify(jsonData.library));
+                        loadLibrary(); // Reload library with JSON data
+                    };
+                    reader.readAsText(file);
+                } else {
+                    alert('Please select a valid JSON file.');
+                }
+            });
         }
 
         // Event Listeners for drawing
