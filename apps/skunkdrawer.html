@@ -4,37 +4,9 @@
     <title>SkunkDrawer - SkunkService's Website</title>
     <meta name="description" content="SkunkDrawer is a powerful drawing tool integrated with SkunkService. Create, edit, and manage your drawings easily.">
     <style>
-        body { margin: 0; padding: 0; }
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 60vh;
-        }
-        canvas {
-            border: 1px solid black;
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .toolbar button, .toolbar input {
-            margin: 5px;
-        }
-        #library {
-            margin-top: 10px;
-            text-align: center;
-        }
-        #library img {
-            max-width: 100px;
-            margin: 5px;
-            cursor: pointer;
-        }
+        canvas { border: 1px solid black; }
+        .toolbar { margin-bottom: 10px; }
+        .toolbar input { margin-right: 10px; }
     </style>
 </head>
 <body>
@@ -43,30 +15,28 @@
         <button onclick="setTool('eraser')">Eraser</button>
         <button onclick="setTool('fill')">Fill</button>
         <button onclick="setTool('crop')">Crop</button>
-        <button onclick="saveDrawing()">Save Drawing</button>
-        <button onclick="loadDrawing()">Load Drawing</button>
-        <button onclick="generateJSON()">Generate JSON for Recovery</button>
-        <button onclick="loadJSON()">Load JSON Recovery</button>
-        <button onclick="manageLibrary()">Manage Library</button>
-        <button onclick="addToLibrary()">Add to Library</button>
+        <button onclick="saveDrawing()">Save Canvas</button>
+        <button onclick="loadDrawing()">Load Canvas</button>
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
+        <button onclick="generateJSON()">Generate JSON for Recovery</button>
+        <button onclick="manageLibrary()">Manage Library</button>
+        <input type="file" id="uploadImage" accept="image/*" style="display:none">
+        <label for="uploadImage">Upload Image</label>
         <label for="colorPicker">Brush Color:</label>
         <input type="color" id="colorPicker" value="#000000">
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
-        <label for="importImage">Import Image:</label>
-        <input type="file" id="importImage" accept="image/*">
-        <label for="cropWidth">Crop Width:</label>
-        <input type="number" id="cropWidth" min="1" value="100">
-        <label for="cropHeight">Crop Height:</label>
-        <input type="number" id="cropHeight" min="1" value="100">
+        <div>
+            <label for="cropWidth">Crop Width:</label>
+            <input type="number" id="cropWidth" min="1" value="100">
+            <label for="cropHeight">Crop Height:</label>
+            <input type="number" id="cropHeight" min="1" value="100">
+        </div>
     </div>
-    <div class="canvas-container">
-        <canvas id="myCanvas"></canvas>
-    </div>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
     <div id="library"></div>
-
+    
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
@@ -76,64 +46,16 @@
         let brushSize = 30; // Default brush size
         let history = [];
         let historyIndex = -1;
-        let library = JSON.parse(localStorage.getItem('library')) || [];
-        let fillColor = '#000000';
-        let startX, startY, cropWidth, cropHeight;
-
-        function resizeCanvas() {
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas(); // Initial resize
+        let croppedImage = new Image();
+        let cropStartX, cropStartY;
 
         function setTool(tool) {
             currentTool = tool;
             if (tool === 'fill') {
                 canvas.addEventListener('click', fillCanvas);
-            } else if (tool === 'crop') {
-                canvas.addEventListener('mousedown', startCrop);
-                canvas.addEventListener('mouseup', endCrop);
             } else {
                 canvas.removeEventListener('click', fillCanvas);
-                canvas.removeEventListener('mousedown', startCrop);
-                canvas.removeEventListener('mouseup', endCrop);
             }
-        }
-
-        function fillCanvas(e) {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            ctx.fillStyle = fillColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            saveState(); // Save state after filling
-        }
-
-        function startCrop(e) {
-            if (currentTool === 'crop') {
-                const rect = canvas.getBoundingClientRect();
-                startX = e.clientX - rect.left;
-                startY = e.clientY - rect.top;
-                cropWidth = parseInt(document.getElementById('cropWidth').value, 10);
-                cropHeight = parseInt(document.getElementById('cropHeight').value, 10);
-                isDrawing = true;
-            }
-        }
-
-        function endCrop() {
-            if (currentTool === 'crop') {
-                isDrawing = false;
-                applyCrop(); // Apply crop operation
-                saveState(); // Save state after cropping
-            }
-        }
-
-        function applyCrop() {
-            const imgData = ctx.getImageData(startX, startY, cropWidth, cropHeight);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.putImageData(imgData, 0, 0);
         }
 
         function startDrawing(e) {
@@ -147,7 +69,7 @@
             if (currentTool === 'draw' || currentTool === 'eraser') {
                 isDrawing = false;
                 ctx.beginPath();
-                saveState(); // Save state after drawing
+                saveState(); // Save the state after drawing
             }
         }
 
@@ -175,7 +97,6 @@
             if (dataURL) {
                 const img = new Image();
                 img.onload = () => {
-                    resizeCanvas(); // Ensure canvas size is set
                     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
@@ -183,76 +104,6 @@
             } else {
                 alert('No drawing saved.');
             }
-        }
-
-        function generateJSON() {
-            const dataURL = canvas.toDataURL('image/png');
-            const json = JSON.stringify({ savedDrawing: dataURL });
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'recovery.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function loadJSON() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = (event) => {
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const json = JSON.parse(e.target.result);
-                    const img = new Image();
-                    img.onload = () => {
-                        resizeCanvas(); // Ensure canvas size is set
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    };
-                    img.src = json.savedDrawing;
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function manageLibrary() {
-            const libraryDiv = document.getElementById('library');
-            libraryDiv.innerHTML = ''; // Clear previous library items
-
-            library.forEach((item, index) => {
-                const img = document.createElement('img');
-                img.src = item;
-                img.alt = `Library Image ${index + 1}`;
-                img.onclick = () => {
-                    const imgElement = new Image();
-                    imgElement.onload = () => {
-                        resizeCanvas(); // Ensure canvas size is set
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
-                        ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-                    };
-                    imgElement.src = item;
-                };
-                libraryDiv.appendChild(img);
-            });
-        }
-
-        function addToLibrary() {
-            const dataURL = canvas.toDataURL('image/png');
-            library.push(dataURL);
-            localStorage.setItem('library', JSON.stringify(library));
-            manageLibrary(); // Update library display
-        }
-
-        function saveState() {
-            if (historyIndex === history.length - 1) {
-                history = history.slice(0, historyIndex + 1);
-            }
-            history.push(canvas.toDataURL('image/png'));
-            historyIndex++;
         }
 
         function undo() {
@@ -282,6 +133,165 @@
                 img.src = state;
             }
         }
+
+        function saveState() {
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            const dataURL = canvas.toDataURL();
+            history.push(dataURL);
+            historyIndex++;
+        }
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+
+        function startCrop(e) {
+            if (currentTool === 'crop') {
+                const rect = canvas.getBoundingClientRect();
+                cropStartX = e.clientX - rect.left;
+                cropStartY = e.clientY - rect.top;
+                canvas.addEventListener('mousemove', onMouseMove);
+                canvas.addEventListener('mouseup', endCrop);
+            }
+        }
+
+        function onMouseMove(e) {
+            if (currentTool === 'crop' && cropStartX !== undefined && cropStartY !== undefined) {
+                const rect = canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+
+                // Clear the canvas and redraw the cropped image
+                const cropWidth = Math.abs(currentX - cropStartX);
+                const cropHeight = Math.abs(currentY - cropStartY);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(croppedImage, 0, 0, canvas.width, canvas.height); // Draw original image
+
+                // Draw cropping rectangle
+                ctx.strokeStyle = 'red';
+                ctx.strokeRect(cropStartX, cropStartY, cropWidth, cropHeight);
+            }
+        }
+
+        function endCrop(e) {
+            if (currentTool === 'crop') {
+                const rect = canvas.getBoundingClientRect();
+                const endX = e.clientX - rect.left;
+                const endY = e.clientY - rect.top;
+
+                const cropWidth = Math.abs(endX - cropStartX);
+                const cropHeight = Math.abs(endY - cropStartY);
+
+                // Apply crop
+                const imageData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+                ctx.putImageData(imageData, 0, 0);
+
+                canvas.removeEventListener('mousemove', onMouseMove);
+                canvas.removeEventListener('mouseup', endCrop);
+                saveState(); // Save state after cropping
+            }
+        }
+
+        function generateJSON() {
+            const data = {
+                drawing: localStorage.getItem('savedDrawing'),
+                library: JSON.parse(localStorage.getItem('library') || '[]')
+            };
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'recovery.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function manageLibrary() {
+            const library = JSON.parse(localStorage.getItem('library') || '[]');
+            const libraryDiv = document.getElementById('library');
+            libraryDiv.innerHTML = ''; // Clear existing library list
+
+            library.forEach((item, index) => {
+                const img = new Image();
+                img.src = item;
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                img.title = 'Click to use';
+                img.addEventListener('click', () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                    const image = new Image();
+                    image.onload = () => ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    image.src = item;
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', () => {
+                    library.splice(index, 1);
+                    localStorage.setItem('library', JSON.stringify(library));
+                    manageLibrary(); // Refresh library
+                });
+
+                const div = document.createElement('div');
+                div.appendChild(img);
+                div.appendChild(deleteBtn);
+                libraryDiv.appendChild(div);
+            });
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function fillCanvas(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.fillStyle = brushColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        document.getElementById('uploadImage').addEventListener('change', handleFileUpload);
+
+        // Initialize brush settings
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            brushColor = e.target.value;
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            brushSize = parseInt(e.target.value, 10);
+        });
+
+        document.getElementById('cropWidth').addEventListener('input', (e) => {
+            cropWidth = parseInt(e.target.value, 10);
+        });
+
+        document.getElementById('cropHeight').addEventListener('input', (e) => {
+            cropHeight = parseInt(e.target.value, 10);
+        });
+
+        // Attach event listeners for drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mousedown', startCrop);
     </script>
 </body>
 </html>
