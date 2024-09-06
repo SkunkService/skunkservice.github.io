@@ -23,6 +23,7 @@
         <button onclick="generateJSON()">Generate JSON for Recovery</button>
         <button onclick="loadJSON()">Load JSON Recovery</button>
         <button onclick="manageLibrary()">Manage Library</button>
+        <button onclick="addToLibrary()">Add to Library</button>
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
         <label for="colorPicker">Brush Color:</label>
@@ -42,7 +43,7 @@
         let brushSize = 30; // Default brush size
         let history = [];
         let historyIndex = -1;
-        let library = [];
+        let library = JSON.parse(localStorage.getItem('library')) || [];
 
         function setTool(tool) {
             currentTool = tool;
@@ -152,6 +153,13 @@
                 };
                 libraryDiv.appendChild(img);
             });
+        }
+
+        function addToLibrary() {
+            const dataURL = canvas.toDataURL('image/png');
+            library.push(dataURL);
+            localStorage.setItem('library', JSON.stringify(library));
+            manageLibrary(); // Refresh the library display
         }
 
         function saveState() {
