@@ -288,6 +288,14 @@ function hexToRgb(hex) {
 brushOpacityInput.addEventListener('input', (e) => {
     brushOpacity = e.target.value / 100; // Convert to a value between 0 and 1
 });
+        
+function downloadImage() {
+    const dataURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'drawing.png'; // Filename for the downloaded image
+    link.click();
+}
 
     </script>
 </body>
