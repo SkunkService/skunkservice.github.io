@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auto-Save Drawing</title>
+    <style>
+        canvas { border: 1px solid black; }
+        .toolbar { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="setTool('draw')">Draw</button>
+        <button onclick="setTool('eraser')">Eraser</button>
+        <button onclick="setTool('fill')">Fill</button>
+        <button onclick="saveDrawing()">Save</button>
+        <button onclick="loadDrawing()">Load</button>
+    </div>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentTool = 'draw';
+        let isDrawing = false;
+        const brushSize = 30; // Diameter of the circle
+        const eraserSize = 30; // Diameter of the eraser
+
+        function setTool(tool) {
+            currentTool = tool;
+            if (tool === 'fill') {
+                canvas.addEventListener('click', fillCanvas);
+            } else {
+                canvas.removeEventListener('click', fillCanvas);
+            }
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            ctx.beginPath();
+            ctx.arc(x, y, currentTool === 'eraser' ? eraserSize / 2 : brushSize / 2, 0, 2 * Math.PI);
+            ctx.fillStyle = currentTool === 'eraser' ? 'white' : 'black';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function fillCanvas(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const startColor = getColorAt(x, y, imageData);
+
+            if (startColor) {
+                floodFill(x, y, startColor, imageData);
+            }
+        }
+
+        function getColorAt(x, y, imageData) {
+            const index = (y * imageData.width + x) * 4;
+            return [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
+        }
+
+        function floodFill(x, y, startColor, imageData) {
+            const stack = [[x, y]];
+            const targetColor = startColor;
+            const tolerance = 10;
+            const data = imageData.data;
+            const width = imageData.width;
+
+            while (stack.length > 0) {
+                const [x, y] = stack.pop();
+                const index = (y * width + x) * 4;
+                if (!colorsMatch(targetColor, [data[index], data[index + 1], data[index + 2], data[index + 3]], tolerance)) continue;
+
+                data[index] = 0; // Fill color
+                data[index + 1] = 0; // Fill color
+                data[index + 2] = 0; // Fill color
+                data[index + 3] = 255; // Alpha
+
+                if (x > 0) stack.push([x - 1, y]);
+                if (x < width - 1) stack.push([x + 1, y]);
+                if (y > 0) stack.push([x, y - 1]);
+                if (y < imageData.height - 1) stack.push([x, y + 1]);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function colorsMatch(color1, color2, tolerance) {
+            return Math.abs(color1[0] - color2[0]) <= tolerance &&
+                   Math.abs(color1[1] - color2[1]) <= tolerance &&
+                   Math.abs(color1[2] - color2[2]) <= tolerance;
+        }
+
+        function saveDrawing() {
+            const dataURL = canvas.toDataURL('image/png');
+            localStorage.setItem('savedDrawing', dataURL);
+            alert('Drawing saved!');
+        }
+
+        function loadDrawing() {
+            const dataURL = localStorage.getItem('savedDrawing');
+            if (dataURL) {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = dataURL;
+            } else {
+                alert('No drawing saved.');
+            }
+        }
+
+        function autoSave() {
+            saveDrawing();
+        }
+
+        window.addEventListener('beforeunload', autoSave);
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+    </script>
+</body>
+</html>
