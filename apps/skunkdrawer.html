@@ -15,8 +15,8 @@
         <button onclick="setTool('eraser')">Eraser</button>
         <button onclick="setTool('fill')">Fill</button>
         <button onclick="setTool('crop')">Start Cropping</button>
-        <button onclick="saveDrawing()">Save Canvas</button>
-        <button onclick="loadDrawing()">Load Canvas</button>
+        <button onclick="saveDrawing()">Save Drawing</button>
+        <button onclick="loadDrawing()">Load Drawing</button>
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
         <button onclick="generateJSON()">Generate JSON for Recovery</button>
@@ -147,59 +147,6 @@
             historyIndex++;
         }
 
-        function startCrop(e) {
-            if (currentTool === 'crop') {
-                const rect = canvas.getBoundingClientRect();
-                cropStartX = e.clientX - rect.left;
-                cropStartY = e.clientY - rect.top;
-                cropping = true;
-            }
-        }
-
-        function onCrop(e) {
-            if (currentTool === 'crop' && cropping) {
-                const rect = canvas.getBoundingClientRect();
-                const currentX = e.clientX - rect.left;
-                const currentY = e.clientY - rect.top;
-
-                // Clear and redraw the existing image to show cropping rectangle
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                img.src = canvas.toDataURL();
-
-                const width = currentX - cropStartX;
-                const height = currentY - cropStartY;
-                ctx.strokeStyle = 'red';
-                ctx.strokeRect(cropStartX, cropStartY, width, height);
-            }
-        }
-
-        function endCrop(e) {
-            if (currentTool === 'crop' && cropping) {
-                const rect = canvas.getBoundingClientRect();
-                const endX = e.clientX - rect.left;
-                const endY = e.clientY - rect.top;
-
-                cropWidth = endX - cropStartX;
-                cropHeight = endY - cropStartY;
-
-                cropping = false;
-                applyCrop(); // Apply crop based on width and height
-            }
-        }
-
-        function applyCrop() {
-            if (cropWidth <= 0 || cropHeight <= 0) return;
-
-            const croppedData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
-            canvas.width = cropWidth;
-            canvas.height = cropHeight;
-            ctx.putImageData(croppedData, 0, 0);
-
-            saveState(); // Save state after cropping
-        }
-
         function generateJSON() {
             const data = {
                 drawing: localStorage.getItem('savedDrawing'),
@@ -245,49 +192,83 @@
                 container.appendChild(deleteBtn);
                 libraryDiv.appendChild(container);
             });
+
+            // Add button to add new images to the library
+            const addButton = document.createElement('button');
+            addButton.textContent = 'Add Image to Library';
+            addButton.onclick = () => {
+                const fileInput = document.getElementById('uploadImage');
+                fileInput.click();
+                fileInput.onchange = (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const imageData = e.target.result;
+                            library.push(imageData);
+                            localStorage.setItem('library', JSON.stringify(library));
+                            manageLibrary(); // Refresh library list
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+            };
+            libraryDiv.appendChild(addButton);
         }
 
-        function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    };
-                    img.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
+        function startCrop(e) {
+            if (currentTool === 'crop') {
+                const rect = canvas.getBoundingClientRect();
+                cropStartX = e.clientX - rect.left;
+                cropStartY = e.clientY - rect.top;
+                cropping = true;
             }
         }
 
-        document.getElementById('uploadImage').addEventListener('change', handleFileUpload);
+        function onCrop(e) {
+            if (currentTool === 'crop' && cropping) {
+                const rect = canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
 
-        // Initialize brush settings
-        document.getElementById('colorPicker').addEventListener('input', (e) => {
-            brushColor = e.target.value;
-        });
+                // Clear and redraw the existing image to show cropping rectangle
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const img = new Image();
+                img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                img.src = canvas.toDataURL();
 
-        document.getElementById('brushSize').addEventListener('input', (e) => {
-            brushSize = parseInt(e.target.value, 10);
-        });
+                const width = currentX - cropStartX;
+                const height = currentY - cropStartY;
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(cropStartX, cropStartY, width, height);
+            }
+        }
 
-        document.getElementById('cropWidth').addEventListener('input', (e) => {
-            cropWidth = parseInt(e.target.value, 10);
-        });
+        function endCrop(e) {
+            if (currentTool === 'crop' && cropping) {
+                cropping = false;
+                const rect = canvas.getBoundingClientRect();
+                const endX = e.clientX - rect.left;
+                const endY = e.clientY - rect.top;
 
-        document.getElementById('cropHeight').addEventListener('input', (e) => {
-            cropHeight = parseInt(e.target.value, 10);
-        });
+                cropWidth = endX - cropStartX;
+                cropHeight = endY - cropStartY;
 
-        // Attach event listeners for drawing
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mousemove', draw);
+                applyCrop();
+            }
+        }
 
-        // Load the library on page load
+        function applyCrop() {
+            if (cropWidth && cropHeight) {
+                const imageData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+                ctx.putImageData(imageData, 0, 0);
+            }
+        }
+
+        // Initialize library on page load
         window.onload = manageLibrary;
     </script>
 </body>
