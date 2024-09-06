@@ -35,6 +35,8 @@
         <input type="number" id="cropWidth" min="1" value="100">
         <label for="cropHeight">Crop Height:</label>
         <input type="number" id="cropHeight" min="1" value="100">
+        <label for="fileInput">Import Image:</label>
+        <input type="file" id="fileInput" accept="image/*">
     </div>
     <div class="crop-container">
         <canvas id="myCanvas" width="800" height="600"></canvas>
@@ -44,6 +46,7 @@
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
         const cropAreaDiv = document.getElementById('cropArea');
+        const fileInput = document.getElementById('fileInput');
         let currentTool = 'draw';
         let isDrawing = false;
         let brushColor = '#000000'; // Default brush color
@@ -157,7 +160,7 @@
                 const img = new Image();
                 img.onload = () => {
                     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
-                    ctx.drawImage(img, 0, 0);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
                 img.src = dataURL;
             } else {
@@ -175,8 +178,8 @@
                 const rect = canvas.getBoundingClientRect();
                 startX = e.clientX - rect.left;
                 startY = e.clientY - rect.top;
-                cropAreaDiv.style.left = `${startX}px`;
-                cropAreaDiv.style.top = `${startY}px`;
+                cropAreaDiv.style.left = `${e.clientX}px`;
+                cropAreaDiv.style.top = `${e.clientY}px`;
                 cropAreaDiv.style.width = `0px`;
                 cropAreaDiv.style.height = `0px`;
                 cropAreaDiv.style.display = 'block';
@@ -192,11 +195,11 @@
             const height = Math.abs(y - startY);
             cropAreaDiv.style.width = `${width}px`;
             cropAreaDiv.style.height = `${height}px`;
-            if (x < startX) {
-                cropAreaDiv.style.left = `${x}px`;
+            if (e.clientX < startX) {
+                cropAreaDiv.style.left = `${e.clientX}px`;
             }
-            if (y < startY) {
-                cropAreaDiv.style.top = `${y}px`;
+            if (e.clientY < startY) {
+                cropAreaDiv.style.top = `${e.clientY}px`;
             }
         }
 
@@ -219,64 +222,74 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(cropCanvas, 0, 0);
-
-            alert('Crop complete!');
-        }
-
-        function saveState() {
-            if (historyIndex < history.length - 1) {
-                history = history.slice(0, historyIndex + 1);
-            }
-            history.push(canvas.toDataURL());
-            historyIndex++;
+            saveState(); // Save the state after cropping
         }
 
         function undo() {
             if (historyIndex > 0) {
                 historyIndex--;
+                const state = history[historyIndex];
                 const img = new Image();
-                img.onload = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                };
-                img.src = history[historyIndex];
+                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.src = state;
             }
         }
 
         function redo() {
             if (historyIndex < history.length - 1) {
                 historyIndex++;
+                const state = history[historyIndex];
                 const img = new Image();
-                img.onload = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                };
-                img.src = history[historyIndex];
+                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.src = state;
             }
         }
 
-        function handleKeyPress(e) {
-            if (e.ctrlKey && e.key === 'z') {
-                undo();
-            } else if (e.ctrlKey && e.key === 'y') {
-                redo();
+        function saveState() {
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
             }
+            const dataURL = canvas.toDataURL();
+            history.push(dataURL);
+            historyIndex++;
         }
 
-        window.addEventListener('beforeunload', autoSave);
-        window.addEventListener('keydown', handleKeyPress);
+        // Event Listeners for drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
 
+        // Initialize brush color and size
         document.getElementById('colorPicker').addEventListener('input', (e) => {
             brushColor = e.target.value;
         });
 
         document.getElementById('brushSize').addEventListener('input', (e) => {
-            brushSize = e.target.value;
+            brushSize = parseInt(e.target.value, 10);
         });
 
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mousemove', draw);
+        // Import Image File
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        saveState(); // Save state after importing image
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file.');
+            }
+        });
+
+        // Initialize undo/redo
+        saveState(); // Save initial empty state
     </script>
 </body>
 </html>
