@@ -177,13 +177,23 @@
             library.forEach((imgDataURL, index) => {
                 const div = document.createElement('div');
                 div.className = 'library-item';
+                div.onclick = () => loadImageToCanvas(imgDataURL); // Add click event to load image
                 div.innerHTML = `
                     <img src="${imgDataURL}" />
-                    <button class="edit" onclick="editImage(${index})">Edit</button>
-                    <button onclick="deleteImage(${index})">Delete</button>
+                    <button class="edit" onclick="editImage(${index}); event.stopPropagation();">Edit</button>
+                    <button onclick="deleteImage(${index}); event.stopPropagation();">Delete</button>
                 `;
                 imageLibrary.appendChild(div);
             });
+        }
+
+        function loadImageToCanvas(imgDataURL) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = imgDataURL;
         }
 
         function deleteImage(index) {
@@ -237,7 +247,7 @@
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mousemove', draw);
 
-        // Display library on load
+        // Display the library on page load
         displayLibrary();
     </script>
 </body>
