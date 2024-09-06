@@ -235,9 +235,8 @@
         }
 
         function deleteImage(index) {
-            const libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
+            let libraryImages = JSON.parse(localStorage.getItem('imageLibrary')) || [];
             libraryImages.splice(index, 1); // Remove image from array
-            
             localStorage.setItem('imageLibrary', JSON.stringify(libraryImages));
             loadLibrary(); // Reload library
             openManageLibrary(); // Refresh manage library modal
