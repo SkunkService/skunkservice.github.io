@@ -6,7 +6,22 @@
     <style>
         canvas { border: 1px solid black; }
         .toolbar { margin-bottom: 10px; }
-        .toolbar input { margin-right: 10px; }
+        .toolbar input, .toolbar button { margin-right: 10px; }
+        .library-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .library-item {
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+        .library-item img {
+            max-width: 100px;
+            max-height: 100px;
+        }
     </style>
 </head>
 <body>
@@ -24,12 +39,18 @@
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
         <input type="file" id="uploadImage" accept="image/*">
+        <button onclick="openImageUpload()">Upload Image to Library</button>
     </div>
+
     <canvas id="myCanvas" width="800" height="600"></canvas>
+
+    <h3>Image Library</h3>
+    <div id="imageLibrary" class="library-list"></div>
 
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
+        const imageLibrary = document.getElementById('imageLibrary');
         let currentTool = 'draw';
         let isDrawing = false;
         let brushColor = '#000000'; // Default brush color
@@ -123,6 +144,33 @@
             historyIndex++;
         }
 
+        function addImageToLibrary(imageSrc) {
+            const libraryItem = document.createElement('div');
+            libraryItem.classList.add('library-item');
+            libraryItem.innerHTML = `<img src="${imageSrc}" alt="Uploaded Image">`;
+
+            // Click to draw image on canvas
+            libraryItem.addEventListener('click', () => {
+                drawImageOnCanvas(imageSrc);
+            });
+
+            imageLibrary.appendChild(libraryItem);
+        }
+
+        function drawImageOnCanvas(imageSrc) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                saveState(); // Save state after uploading image
+            };
+            img.src = imageSrc;
+        }
+
+        function openImageUpload() {
+            document.getElementById('uploadImage').click();
+        }
+
         // Event Listeners for drawing
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
@@ -148,6 +196,7 @@
                         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         saveState(); // Save state after uploading image
+                        addImageToLibrary(img.src); // Add uploaded image to library
                     };
                     img.src = event.target.result;
                 };
