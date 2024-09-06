@@ -196,7 +196,7 @@
                 libraryDiv.appendChild(container);
             });
 
-            // Add button to add new images to the library
+            // Add button to add current canvas to the library
             const addButton = document.createElement('button');
             addButton.textContent = 'Add Canvas to Library';
             addButton.onclick = () => {
@@ -250,8 +250,8 @@
             if (cropping) {
                 cropping = false;
                 const rect = canvas.getBoundingClientRect();
-                cropWidth = document.getElementById('cropWidth').value;
-                cropHeight = document.getElementById('cropHeight').value;
+                cropWidth = parseInt(document.getElementById('cropWidth').value, 10);
+                cropHeight = parseInt(document.getElementById('cropHeight').value, 10);
                 const imageData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = cropWidth;
