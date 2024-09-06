@@ -49,6 +49,9 @@
         <button onclick="loadDrawing()">Load</button>
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
+        <button onclick="createRecovery()">Create Recovery with File</button>
+        <input type="file" id="loadFile" accept=".json" style="display: none;" onchange="loadRecovery()">
+        <button onclick="document.getElementById('loadFile').click()">Load Recovery with JSON File</button>
         <label for="colorPicker">Brush Color:</label>
         <input type="color" id="colorPicker" value="#000000">
         <label for="brushSize">Brush Size:</label>
@@ -298,6 +301,42 @@ function downloadImage() {
     link.download = 'drawing.png'; // Filename for the downloaded image
     link.click();
 }
+
+        function createRecovery() {
+            const drawingData = {
+                // Replace this with actual canvas data
+                imageData: canvas.toDataURL('image/png')
+            };
+            const blob = new Blob([JSON.stringify(drawingData)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'recovery.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function loadRecovery() {
+            const fileInput = document.getElementById('loadFile');
+            const file = fileInput.files[0];
+            if (file && file.type === 'application/json') {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const data = JSON.parse(event.target.result);
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0);
+                    };
+                    img.src = data.imageData;
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a valid JSON file.');
+            }
+        }
 
     </script>
 </body>
