@@ -7,21 +7,8 @@
         canvas { border: 1px solid black; }
         .toolbar { margin-bottom: 10px; }
         .toolbar input, .toolbar button { margin-right: 10px; }
-        .library-list {
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .library-item {
-            margin: 5px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            padding: 5px;
-        }
-        .library-item img {
-            max-width: 100px;
-            max-height: 100px;
-        }
+        .library { margin-top: 10px; }
+        .library img { width: 100px; height: 75px; margin-right: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -39,18 +26,18 @@
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
         <input type="file" id="uploadImage" accept="image/*">
-        <button onclick="uploadImageToLibrary()">Upload Image to Library</button>
+        <button onclick="addToLibraryFromCanvas()">Add to Library</button>
     </div>
-
+    
     <canvas id="myCanvas" width="800" height="600"></canvas>
 
-    <h3>Image Library</h3>
-    <div id="imageLibrary" class="library-list"></div>
+    <div class="library" id="imageLibrary">
+        <!-- Images will be added here dynamically -->
+    </div>
 
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
-        const imageLibrary = document.getElementById('imageLibrary');
         let currentTool = 'draw';
         let isDrawing = false;
         let brushColor = '#000000'; // Default brush color
@@ -98,6 +85,7 @@
         function saveDrawing() {
             const dataURL = canvas.toDataURL('image/png');
             localStorage.setItem('savedDrawing', dataURL);
+            addToLibrary(dataURL);
             alert('Drawing saved!');
         }
 
@@ -144,19 +132,6 @@
             historyIndex++;
         }
 
-        function addImageToLibrary(imageSrc) {
-            const libraryItem = document.createElement('div');
-            libraryItem.classList.add('library-item');
-            libraryItem.innerHTML = `<img src="${imageSrc}" alt="Uploaded Image">`;
-
-            // Click to draw image on canvas
-            libraryItem.addEventListener('click', () => {
-                drawImageOnCanvas(imageSrc);
-            });
-
-            imageLibrary.appendChild(libraryItem);
-        }
-
         function drawImageOnCanvas(imageSrc) {
             const img = new Image();
             img.onload = () => {
@@ -167,21 +142,18 @@
             img.src = imageSrc;
         }
 
-        function uploadImageToLibrary() {
-            document.getElementById('uploadImage').click();
+        function addToLibrary(dataURL) {
+            const library = document.getElementById('imageLibrary');
+            const img = document.createElement('img');
+            img.src = dataURL;
+            img.onclick = () => drawImageOnCanvas(img.src); // Load image onto canvas when clicked
+            library.appendChild(img);
         }
 
-        function loadLibrary() {
-            const libraryData = localStorage.getItem('imageLibrary');
-            if (libraryData) {
-                const imageList = JSON.parse(libraryData);
-                imageList.forEach(imageSrc => addImageToLibrary(imageSrc));
-            }
-        }
-
-        function saveLibrary() {
-            const images = Array.from(imageLibrary.querySelectorAll('img')).map(img => img.src);
-            localStorage.setItem('imageLibrary', JSON.stringify(images));
+        function addToLibraryFromCanvas() {
+            const dataURL = canvas.toDataURL('image/png');
+            addToLibrary(dataURL);
+            alert('Image added to library!');
         }
 
         // Event Listeners for drawing
@@ -204,14 +176,7 @@
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const imageSrc = event.target.result;
-                        addImageToLibrary(imageSrc); // Add uploaded image to library
-                        drawImageOnCanvas(imageSrc); // Optionally draw image on canvas
-                        saveLibrary(); // Save library to localStorage
-                    };
-                    img.src = event.target.result;
+                    drawImageOnCanvas(event.target.result); // Draw uploaded image on canvas
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -221,9 +186,6 @@
 
         // Initialize undo/redo
         saveState(); // Save initial empty state
-
-        // Load the image library from localStorage
-        loadLibrary();
     </script>
 </body>
 </html>
