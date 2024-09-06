@@ -46,15 +46,19 @@
         let brushSize = 30; // Default brush size
         let history = [];
         let historyIndex = -1;
-        let croppedImage = new Image();
-        let cropStartX, cropStartY;
+        let startX, startY;
+        let cropping = false;
 
         function setTool(tool) {
             currentTool = tool;
-            if (tool === 'fill') {
-                canvas.addEventListener('click', fillCanvas);
+            if (tool === 'crop') {
+                canvas.addEventListener('mousedown', startCrop);
+                canvas.addEventListener('mousemove', onCrop);
+                canvas.addEventListener('mouseup', endCrop);
             } else {
-                canvas.removeEventListener('click', fillCanvas);
+                canvas.removeEventListener('mousedown', startCrop);
+                canvas.removeEventListener('mousemove', onCrop);
+                canvas.removeEventListener('mouseup', endCrop);
             }
         }
 
@@ -112,7 +116,6 @@
                 const state = history[historyIndex];
                 const img = new Image();
                 img.onload = () => {
-                    resizeCanvas(); // Ensure canvas size is set
                     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
@@ -126,7 +129,6 @@
                 const state = history[historyIndex];
                 const img = new Image();
                 img.onload = () => {
-                    resizeCanvas(); // Ensure canvas size is set
                     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
@@ -143,58 +145,47 @@
             historyIndex++;
         }
 
-        function resizeCanvas() {
-            const container = canvas.parentElement;
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        }
-
         function startCrop(e) {
             if (currentTool === 'crop') {
                 const rect = canvas.getBoundingClientRect();
-                cropStartX = e.clientX - rect.left;
-                cropStartY = e.clientY - rect.top;
-                canvas.addEventListener('mousemove', onMouseMove);
-                canvas.addEventListener('mouseup', endCrop);
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                cropping = true;
             }
         }
 
-        function onMouseMove(e) {
-            if (currentTool === 'crop' && cropStartX !== undefined && cropStartY !== undefined) {
+        function onCrop(e) {
+            if (currentTool === 'crop' && cropping) {
                 const rect = canvas.getBoundingClientRect();
                 const currentX = e.clientX - rect.left;
                 const currentY = e.clientY - rect.top;
 
-                // Clear the canvas and redraw the cropped image
-                const cropWidth = Math.abs(currentX - cropStartX);
-                const cropHeight = Math.abs(currentY - cropStartY);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(croppedImage, 0, 0, canvas.width, canvas.height); // Draw original image
-
                 // Draw cropping rectangle
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(croppedImage, 0, 0, canvas.width, canvas.height); // Redraw the image
+
+                const width = currentX - startX;
+                const height = currentY - startY;
                 ctx.strokeStyle = 'red';
-                ctx.strokeRect(cropStartX, cropStartY, cropWidth, cropHeight);
+                ctx.strokeRect(startX, startY, width, height);
             }
         }
 
         function endCrop(e) {
-            if (currentTool === 'crop') {
+            if (currentTool === 'crop' && cropping) {
                 const rect = canvas.getBoundingClientRect();
                 const endX = e.clientX - rect.left;
                 const endY = e.clientY - rect.top;
 
-                const cropWidth = Math.abs(endX - cropStartX);
-                const cropHeight = Math.abs(endY - cropStartY);
+                const width = endX - startX;
+                const height = endY - startY;
 
-                // Apply crop
-                const imageData = ctx.getImageData(cropStartX, cropStartY, cropWidth, cropHeight);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                canvas.width = cropWidth;
-                canvas.height = cropHeight;
+                const imageData = ctx.getImageData(startX, startY, width, height);
+                canvas.width = width;
+                canvas.height = height;
                 ctx.putImageData(imageData, 0, 0);
 
-                canvas.removeEventListener('mousemove', onMouseMove);
-                canvas.removeEventListener('mouseup', endCrop);
+                cropping = false;
                 saveState(); // Save state after cropping
             }
         }
@@ -260,14 +251,6 @@
             reader.readAsDataURL(file);
         }
 
-        function fillCanvas(e) {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            ctx.fillStyle = brushColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
         document.getElementById('uploadImage').addEventListener('change', handleFileUpload);
 
         // Initialize brush settings
@@ -291,7 +274,6 @@
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mousedown', startCrop);
     </script>
 </body>
 </html>
