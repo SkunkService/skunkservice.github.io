@@ -7,14 +7,6 @@
         canvas { border: 1px solid black; }
         .toolbar { margin-bottom: 10px; }
         .toolbar input { margin-right: 10px; }
-        .crop-area {
-            border: 1px dashed red;
-            position: absolute;
-            pointer-events: none;
-        }
-        .crop-container {
-            position: relative;
-        }
     </style>
 </head>
 <body>
@@ -31,29 +23,17 @@
         <input type="color" id="colorPicker" value="#000000">
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
-        <label for="cropWidth">Crop Width:</label>
-        <input type="number" id="cropWidth" min="1" value="100">
-        <label for="cropHeight">Crop Height:</label>
-        <input type="number" id="cropHeight" min="1" value="100">
-        <label for="fileInput">Import Image:</label>
-        <input type="file" id="fileInput" accept="image/*">
+        <input type="file" id="uploadImage" accept="image/*">
     </div>
-    <div class="crop-container">
-        <canvas id="myCanvas" width="800" height="600"></canvas>
-        <div id="cropArea" class="crop-area"></div>
-    </div>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
-        const cropAreaDiv = document.getElementById('cropArea');
-        const fileInput = document.getElementById('fileInput');
         let currentTool = 'draw';
         let isDrawing = false;
         let brushColor = '#000000'; // Default brush color
         let brushSize = 30; // Default brush size
-        let startX, startY;
-        let cropping = false;
-        let cropX, cropY, cropWidth, cropHeight;
         let history = [];
         let historyIndex = -1;
 
@@ -61,15 +41,8 @@
             currentTool = tool;
             if (tool === 'fill') {
                 canvas.addEventListener('click', fillCanvas);
-            } else if (tool === 'crop') {
-                canvas.addEventListener('mousedown', startCrop);
-                canvas.addEventListener('mousemove', updateCrop);
-                canvas.addEventListener('mouseup', finalizeCrop);
             } else {
                 canvas.removeEventListener('click', fillCanvas);
-                canvas.removeEventListener('mousedown', startCrop);
-                canvas.removeEventListener('mousemove', updateCrop);
-                canvas.removeEventListener('mouseup', finalizeCrop);
             }
         }
 
@@ -101,54 +74,6 @@
             ctx.closePath();
         }
 
-        function fillCanvas(e) {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const startColor = getColorAt(x, y, imageData);
-
-            if (startColor) {
-                floodFill(x, y, startColor, imageData);
-            }
-        }
-
-        function getColorAt(x, y, imageData) {
-            const index = (y * imageData.width + x) * 4;
-            return [imageData.data[index], imageData.data[index + 1], imageData.data[index + 2], imageData.data[index + 3]];
-        }
-
-        function floodFill(x, y, startColor, imageData) {
-            const stack = [[x, y]];
-            const targetColor = startColor;
-            const tolerance = 10;
-            const data = imageData.data;
-            const width = imageData.width;
-
-            while (stack.length > 0) {
-                const [x, y] = stack.pop();
-                const index = (y * width + x) * 4;
-                if (!colorsMatch(targetColor, [data[index], data[index + 1], data[index + 2], data[index + 3]], tolerance)) continue;
-
-                data[index] = 0; // Fill color
-                data[index + 1] = 0; // Fill color
-                data[index + 2] = 0; // Fill color
-                data[index + 3] = 255; // Alpha
-
-                if (x > 0) stack.push([x - 1, y]);
-                if (x < width - 1) stack.push([x + 1, y]);
-                if (y > 0) stack.push([x, y - 1]);
-                if (y < imageData.height - 1) stack.push([x, y + 1]);
-            }
-            ctx.putImageData(imageData, 0, 0);
-        }
-
-        function colorsMatch(color1, color2, tolerance) {
-            return Math.abs(color1[0] - color2[0]) <= tolerance &&
-                   Math.abs(color1[1] - color2[1]) <= tolerance &&
-                   Math.abs(color1[2] - color2[2]) <= tolerance;
-        }
-
         function saveDrawing() {
             const dataURL = canvas.toDataURL('image/png');
             localStorage.setItem('savedDrawing', dataURL);
@@ -167,59 +92,6 @@
             } else {
                 alert('No drawing saved.');
             }
-        }
-
-        function autoSave() {
-            saveDrawing();
-        }
-
-        function startCrop(e) {
-            if (currentTool === 'crop') {
-                cropping = true;
-                const rect = canvas.getBoundingClientRect();
-                startX = e.clientX - rect.left;
-                startY = e.clientY - rect.top;
-                cropX = startX;
-                cropY = startY;
-                cropAreaDiv.style.left = `${startX}px`;
-                cropAreaDiv.style.top = `${startY}px`;
-                cropAreaDiv.style.width = `0px`;
-                cropAreaDiv.style.height = `0px`;
-                cropAreaDiv.style.display = 'block';
-            }
-        }
-
-        function updateCrop(e) {
-            if (!cropping) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            cropWidth = Math.abs(x - startX);
-            cropHeight = Math.abs(y - startY);
-            cropX = Math.min(x, startX);
-            cropY = Math.min(y, startY);
-
-            cropAreaDiv.style.left = `${cropX}px`;
-            cropAreaDiv.style.top = `${cropY}px`;
-            cropAreaDiv.style.width = `${cropWidth}px`;
-            cropAreaDiv.style.height = `${cropHeight}px`;
-        }
-
-        function finalizeCrop() {
-            if (!cropping) return;
-            cropping = false;
-            cropAreaDiv.style.display = 'none';
-
-            // Adjust crop dimensions
-            const cropCanvas = document.createElement('canvas');
-            cropCanvas.width = cropWidth;
-            cropCanvas.height = cropHeight;
-            const cropCtx = cropCanvas.getContext('2d');
-            cropCtx.drawImage(canvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(cropCanvas, 0, 0);
-            saveState(); // Save the state after cropping
         }
 
         function undo() {
@@ -265,8 +137,8 @@
             brushSize = parseInt(e.target.value, 10);
         });
 
-        // Import Image File
-        fileInput.addEventListener('change', (e) => {
+        // Upload Image
+        document.getElementById('uploadImage').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -275,7 +147,7 @@
                     img.onload = () => {
                         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        saveState(); // Save state after importing image
+                        saveState(); // Save state after uploading image
                     };
                     img.src = event.target.result;
                 };
