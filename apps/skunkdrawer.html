@@ -53,6 +53,7 @@
         let brushSize = 30; // Default brush size
         let startX, startY;
         let cropping = false;
+        let cropX, cropY, cropWidth, cropHeight;
         let history = [];
         let historyIndex = -1;
 
@@ -178,8 +179,10 @@
                 const rect = canvas.getBoundingClientRect();
                 startX = e.clientX - rect.left;
                 startY = e.clientY - rect.top;
-                cropAreaDiv.style.left = `${e.clientX}px`;
-                cropAreaDiv.style.top = `${e.clientY}px`;
+                cropX = startX;
+                cropY = startY;
+                cropAreaDiv.style.left = `${startX}px`;
+                cropAreaDiv.style.top = `${startY}px`;
                 cropAreaDiv.style.width = `0px`;
                 cropAreaDiv.style.height = `0px`;
                 cropAreaDiv.style.display = 'block';
@@ -191,29 +194,23 @@
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const width = Math.abs(x - startX);
-            const height = Math.abs(y - startY);
-            cropAreaDiv.style.width = `${width}px`;
-            cropAreaDiv.style.height = `${height}px`;
-            if (e.clientX < startX) {
-                cropAreaDiv.style.left = `${e.clientX}px`;
-            }
-            if (e.clientY < startY) {
-                cropAreaDiv.style.top = `${e.clientY}px`;
-            }
+            cropWidth = Math.abs(x - startX);
+            cropHeight = Math.abs(y - startY);
+            cropX = Math.min(x, startX);
+            cropY = Math.min(y, startY);
+
+            cropAreaDiv.style.left = `${cropX}px`;
+            cropAreaDiv.style.top = `${cropY}px`;
+            cropAreaDiv.style.width = `${cropWidth}px`;
+            cropAreaDiv.style.height = `${cropHeight}px`;
         }
 
         function finalizeCrop() {
             if (!cropping) return;
             cropping = false;
             cropAreaDiv.style.display = 'none';
-            const cropWidth = parseInt(document.getElementById('cropWidth').value, 10);
-            const cropHeight = parseInt(document.getElementById('cropHeight').value, 10);
-            const cropRect = cropAreaDiv.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            const cropX = cropRect.left - canvasRect.left;
-            const cropY = cropRect.top - canvasRect.top;
 
+            // Adjust crop dimensions
             const cropCanvas = document.createElement('canvas');
             cropCanvas.width = cropWidth;
             cropCanvas.height = cropHeight;
