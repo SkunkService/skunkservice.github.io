@@ -1,11 +1,219 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Not Available.</title>
-    <meta name="description" content="Not Longer Available.">
+    <title>SkunkDrawer - SkunkService's Website</title>
+    <meta name="description" content="SkunkDrawer is a powerful drawing tool integrated with SkunkService. Create, edit, and manage your drawings easily.">
+    <style>
+        canvas { border: 1px solid black; }
+        .toolbar { margin-bottom: 10px; }
+        .toolbar input, .toolbar button { margin-right: 10px; }
+        .library-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .library-item {
+            margin: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            padding: 5px;
+            position: relative;
+        }
+        .library-item img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+        .library-item button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .library-item button.edit {
+            background-color: blue;
+        }
+    </style>
 </head>
 <body>
-    <h1>Not Available for Drawer.</h1>
-    <p>The SkunkDrawer will not be longer available.</p>
+    <div class="toolbar">
+        <button onclick="setTool('draw')">Draw</button>
+        <button onclick="setTool('eraser')">Eraser</button>
+        <button onclick="setTool('fill')">Fill</button>
+        <button onclick="setTool('crop')">Crop</button>
+        <button onclick="saveDrawing()">Save</button>
+        <button onclick="loadDrawing()">Load</button>
+        <button onclick="undo()">Undo</button>
+        <button onclick="redo()">Redo</button>
+        <label for="colorPicker">Brush Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+        <label for="brushSize">Brush Size:</label>
+        <input type="number" id="brushSize" min="1" value="30">
+        <button onclick="addCurrentCanvasToLibrary()">Add to Library</button>
+    </div>
+
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+
+    <h3>Image Library</h3>
+    <div id="imageLibrary" class="library-list"></div>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        const imageLibrary = document.getElementById('imageLibrary');
+        let currentTool = 'draw';
+        let isDrawing = false;
+        let brushColor = '#000000'; // Default brush color
+        let brushSize = 30; // Default brush size
+        let history = [];
+        let historyIndex = -1;
+
+        function setTool(tool) {
+            currentTool = tool;
+            if (tool === 'fill') {
+                canvas.addEventListener('click', fillCanvas);
+            } else {
+                canvas.removeEventListener('click', fillCanvas);
+            }
+        }
+
+        function startDrawing(e) {
+            if (currentTool === 'draw' || currentTool === 'eraser') {
+                isDrawing = true;
+                draw(e);
+            }
+        }
+
+        function stopDrawing() {
+            if (currentTool === 'draw' || currentTool === 'eraser') {
+                isDrawing = false;
+                ctx.beginPath();
+                saveState(); // Save the state after drawing
+            }
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            ctx.beginPath();
+            ctx.arc(x, y, brushSize / 2, 0, 2 * Math.PI);
+            ctx.fillStyle = currentTool === 'eraser' ? 'white' : brushColor;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function saveDrawing() {
+            const dataURL = canvas.toDataURL('image/png');
+            localStorage.setItem('savedDrawing', dataURL);
+            alert('Drawing saved!');
+        }
+
+        function loadDrawing() {
+            const dataURL = localStorage.getItem('savedDrawing');
+            if (dataURL) {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
+                img.src = dataURL;
+            } else {
+                alert('No drawing saved.');
+            }
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const state = history[historyIndex];
+                const img = new Image();
+                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.src = state;
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                const state = history[historyIndex];
+                const img = new Image();
+                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.src = state;
+            }
+        }
+
+        function saveState() {
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            const dataURL = canvas.toDataURL();
+            history.push(dataURL);
+            historyIndex++;
+        }
+
+        function addCurrentCanvasToLibrary() {
+            const dataURL = canvas.toDataURL('image/png');
+            const libraryItem = document.createElement('div');
+            libraryItem.classList.add('library-item');
+            libraryItem.innerHTML = `<img src="${dataURL}" alt="Canvas Image">
+                                     <button class="edit" onclick="editImage(event)">Edit</button>
+                                     <button onclick="deleteImage(event)">Delete</button>`;
+
+            // Click to draw image on canvas
+            libraryItem.addEventListener('click', () => {
+                drawImageOnCanvas(dataURL);
+            });
+
+            imageLibrary.appendChild(libraryItem);
+        }
+
+        function drawImageOnCanvas(imageSrc) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                saveState(); // Save state after uploading image
+            };
+            img.src = imageSrc;
+        }
+
+        function editImage(event) {
+            event.stopPropagation(); // Prevent triggering the canvas click event
+            const libraryItem = event.target.parentElement;
+            const imageSrc = libraryItem.querySelector('img').src;
+
+            // Draw the image from the library on the canvas for editing
+            drawImageOnCanvas(imageSrc);
+        }
+
+        function deleteImage(event) {
+            event.stopPropagation(); // Prevent triggering the canvas click event
+            const libraryItem = event.target.parentElement;
+            imageLibrary.removeChild(libraryItem);
+        }
+
+        // Event Listeners for drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+
+        // Initialize brush color and size
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            brushColor = e.target.value;
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            brushSize = parseInt(e.target.value, 10);
+        });
+
+        // Initialize undo/redo
+        saveState(); // Save initial empty state
+    </script>
 </body>
 </html>
