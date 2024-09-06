@@ -25,6 +25,8 @@
         <button onclick="setTool('crop')">Crop</button>
         <button onclick="saveDrawing()">Save</button>
         <button onclick="loadDrawing()">Load</button>
+        <button onclick="undo()">Undo</button>
+        <button onclick="redo()">Redo</button>
         <label for="colorPicker">Brush Color:</label>
         <input type="color" id="colorPicker" value="#000000">
         <label for="brushSize">Brush Size:</label>
@@ -48,6 +50,8 @@
         let brushSize = 30; // Default brush size
         let startX, startY;
         let cropping = false;
+        let history = [];
+        let historyIndex = -1;
 
         function setTool(tool) {
             currentTool = tool;
@@ -76,6 +80,7 @@
             if (currentTool === 'draw' || currentTool === 'eraser') {
                 isDrawing = false;
                 ctx.beginPath();
+                saveState(); // Save the state after drawing
             }
         }
 
@@ -164,8 +169,6 @@
             saveDrawing();
         }
 
-        window.addEventListener('beforeunload', autoSave);
-
         function startCrop(e) {
             if (currentTool === 'crop') {
                 cropping = true;
@@ -220,6 +223,49 @@
 
             alert('Crop complete!');
         }
+
+        function saveState() {
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            history.push(canvas.toDataURL());
+            historyIndex++;
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = history[historyIndex];
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = history[historyIndex];
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.ctrlKey && e.key === 'z') {
+                undo();
+            } else if (e.ctrlKey && e.key === 'y') {
+                redo();
+            }
+        }
+
+        window.addEventListener('beforeunload', autoSave);
+        window.addEventListener('keydown', handleKeyPress);
 
         document.getElementById('colorPicker').addEventListener('input', (e) => {
             brushColor = e.target.value;
