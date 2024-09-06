@@ -52,3 +52,13 @@ button img {
     color: #fff; /* White text color on hover */
     border-color: #C2185B; /* Darker pink border on hover */
 }
+
+.beta-button {
+    background-color: #17a2b8; /* Teal color for Beta button */
+    border: 2px solid #117a8b; /* Darker teal border */
+}
+
+.beta-button:hover {
+    background-color: #138496; /* Darker teal on hover */
+    border-color: #0f6c77; /* Even darker teal border */
+}
