@@ -7,6 +7,8 @@
         canvas { border: 1px solid black; }
         .toolbar { margin-bottom: 10px; }
         .toolbar input { margin-right: 10px; }
+        #library { margin-top: 20px; }
+        #library img { max-width: 100px; margin-right: 10px; }
     </style>
 </head>
 <body>
@@ -25,10 +27,11 @@
         <input type="number" id="brushSize" min="1" value="30">
         <input type="file" id="uploadImage" accept="image/*">
         <button onclick="generateJSON()">Generate JSON for Recovery</button>
-        <input type="file" id="jsonFileInput" style="display: none;" />
         <button onclick="triggerFileInput()">Load JSON Recovery</button>
+        <input type="file" id="jsonFileInput" style="display: none;" />
     </div>
     <canvas id="myCanvas" width="800" height="600"></canvas>
+    <div id="library"></div>
 
     <script>
         const canvas = document.getElementById('myCanvas');
@@ -39,6 +42,7 @@
         let brushSize = 30; // Default brush size
         let history = [];
         let historyIndex = -1;
+        const library = [];
 
         function setTool(tool) {
             currentTool = tool;
@@ -129,7 +133,8 @@
         function generateJSON() {
             const drawingDataURL = canvas.toDataURL('image/png');
             const jsonData = {
-                drawing: drawingDataURL
+                drawing: drawingDataURL,
+                library: library
             };
             const blob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
@@ -144,25 +149,36 @@
             document.getElementById('jsonFileInput').click();
         }
 
-        function loadJSON() {
-            const fileInput = document.getElementById('jsonFileInput');
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file && file.type === 'application/json') {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const jsonData = JSON.parse(event.target.result);
-                        const img = new Image();
-                        img.onload = () => {
-                            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-                            ctx.drawImage(img, 0, 0);
-                        };
-                        img.src = jsonData.drawing;
+        function loadJSON(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/json') {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const jsonData = JSON.parse(e.target.result);
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+                        ctx.drawImage(img, 0, 0);
                     };
-                    reader.readAsText(file);
-                } else {
-                    alert('Please select a valid JSON file.');
-                }
+                    img.src = jsonData.drawing;
+                    
+                    // Update library
+                    updateLibrary(jsonData.library);
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a valid JSON file.');
+            }
+        }
+
+        function updateLibrary(images) {
+            const libraryDiv = document.getElementById('library');
+            libraryDiv.innerHTML = ''; // Clear existing library
+            images.forEach(imageDataURL => {
+                const img = document.createElement('img');
+                img.src = imageDataURL;
+                libraryDiv.appendChild(img);
+                library.push(imageDataURL); // Update the library array
             });
         }
 
@@ -194,9 +210,11 @@
             }
         });
 
+        // Handle JSON file input change
+        document.getElementById('jsonFileInput').addEventListener('change', loadJSON);
+
         // Initialize undo/redo
         saveState(); // Save initial empty state
-        loadJSON(); // Set up file input change listener
     </script>
 </body>
 </html>
