@@ -5,11 +5,36 @@
     <meta name="description" content="SkunkDrawer is a powerful drawing tool integrated with SkunkService. Create, edit, and manage your drawings easily.">
     <style>
         body { margin: 0; padding: 0; }
-        canvas { border: 1px solid black; display: block; width: 100%; height: 60vh; }
-        .toolbar { display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
-        .toolbar button, .toolbar input { margin: 5px; }
-        #library { margin-top: 10px; text-align: center; }
-        #library img { max-width: 100px; margin: 5px; cursor: pointer; }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+        }
+        canvas {
+            border: 1px solid black;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure the canvas scales correctly */
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .toolbar button, .toolbar input {
+            margin: 5px;
+        }
+        #library {
+            margin-top: 10px;
+            text-align: center;
+        }
+        #library img {
+            max-width: 100px;
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -31,7 +56,9 @@
         <label for="brushSize">Brush Size:</label>
         <input type="number" id="brushSize" min="1" value="30">
     </div>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <div class="canvas-container">
+        <canvas id="myCanvas"></canvas>
+    </div>
     <div id="library"></div>
 
     <script>
@@ -44,6 +71,14 @@
         let history = [];
         let historyIndex = -1;
         let library = JSON.parse(localStorage.getItem('library')) || [];
+
+        function resizeCanvas() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Initial resize
 
         function setTool(tool) {
             currentTool = tool;
