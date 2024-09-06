@@ -175,6 +175,7 @@
             if (dataURL) {
                 const img = new Image();
                 img.onload = () => {
+                    resizeCanvas(); // Ensure canvas size is set
                     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 };
@@ -207,6 +208,7 @@
                     const json = JSON.parse(e.target.result);
                     const img = new Image();
                     img.onload = () => {
+                        resizeCanvas(); // Ensure canvas size is set
                         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     };
@@ -228,6 +230,7 @@
                 img.onclick = () => {
                     const imgElement = new Image();
                     imgElement.onload = () => {
+                        resizeCanvas(); // Ensure canvas size is set
                         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
                         ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
                     };
@@ -241,11 +244,11 @@
             const dataURL = canvas.toDataURL('image/png');
             library.push(dataURL);
             localStorage.setItem('library', JSON.stringify(library));
-            manageLibrary(); // Refresh the library display
+            manageLibrary(); // Update library display
         }
 
         function saveState() {
-            if (historyIndex < history.length - 1) {
+            if (historyIndex === history.length - 1) {
                 history = history.slice(0, historyIndex + 1);
             }
             history.push(canvas.toDataURL('image/png'));
@@ -257,7 +260,11 @@
                 historyIndex--;
                 const state = history[historyIndex];
                 const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.onload = () => {
+                    resizeCanvas(); // Ensure canvas size is set
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
                 img.src = state;
             }
         }
@@ -267,63 +274,14 @@
                 historyIndex++;
                 const state = history[historyIndex];
                 const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.onload = () => {
+                    resizeCanvas(); // Ensure canvas size is set
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
                 img.src = state;
             }
         }
-
-        // Event Listeners for drawing
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mousemove', draw);
-
-        // Initialize brush color and size
-        document.getElementById('colorPicker').addEventListener('input', (e) => {
-            brushColor = e.target.value;
-        });
-
-        document.getElementById('brushSize').addEventListener('input', (e) => {
-            brushSize = parseInt(e.target.value, 10);
-        });
-
-        // Initialize import image functionality
-        function importImage(e) {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const imgWidth = img.width;
-                        const imgHeight = img.height;
-                        const canvasAspect = canvas.width / canvas.height;
-                        const imgAspect = imgWidth / imgHeight;
-
-                        let drawWidth, drawHeight;
-                        if (imgAspect > canvasAspect) {
-                            drawWidth = canvas.width;
-                            drawHeight = canvas.width / imgAspect;
-                        } else {
-                            drawHeight = canvas.height;
-                            drawWidth = canvas.height * imgAspect;
-                        }
-
-                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
-                        ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
-                        saveState(); // Save state after importing image
-                    };
-                    img.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Please select a valid image file.');
-            }
-        }
-
-        document.getElementById('importImage').addEventListener('change', importImage);
-
-        // Initialize undo/redo
-        saveState(); // Save initial empty state
     </script>
 </body>
 </html>
