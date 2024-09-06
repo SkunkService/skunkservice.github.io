@@ -4,11 +4,12 @@
     <title>SkunkDrawer - SkunkService's Website</title>
     <meta name="description" content="SkunkDrawer is a powerful drawing tool integrated with SkunkService. Create, edit, and manage your drawings easily.">
     <style>
-        canvas { border: 1px solid black; }
-        .toolbar { margin-bottom: 10px; }
-        .toolbar input { margin-right: 10px; }
-        #library { margin-top: 20px; }
-        #library img { max-width: 100px; margin-right: 10px; }
+        body { margin: 0; padding: 0; }
+        canvas { border: 1px solid black; display: block; width: 100%; height: 70vh; }
+        .toolbar { display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+        .toolbar button, .toolbar input { margin: 5px; }
+        #library { margin-top: 10px; text-align: center; }
+        #library img { max-width: 100px; margin: 5px; }
     </style>
 </head>
 <body>
@@ -29,8 +30,9 @@
         <button onclick="generateJSON()">Generate JSON for Recovery</button>
         <button onclick="triggerFileInput()">Load JSON Recovery</button>
         <input type="file" id="jsonFileInput" style="display: none;" />
+        <button onclick="manageLibrary()">Manage Library</button>
     </div>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <canvas id="myCanvas"></canvas>
     <div id="library"></div>
 
     <script>
@@ -43,6 +45,10 @@
         let history = [];
         let historyIndex = -1;
         const library = [];
+
+        // Set canvas size to fit the screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight * 0.7;
 
         function setTool(tool) {
             currentTool = tool;
@@ -79,6 +85,17 @@
             ctx.fillStyle = currentTool === 'eraser' ? 'white' : brushColor;
             ctx.fill();
             ctx.closePath();
+        }
+
+        function fillCanvas(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const color = brushColor;
+
+            // Fill the canvas with the selected color
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
         function saveDrawing() {
@@ -182,6 +199,16 @@
             });
         }
 
+        function manageLibrary() {
+            const libraryDiv = document.getElementById('library');
+            libraryDiv.innerHTML = ''; // Clear existing library
+            library.forEach(imageDataURL => {
+                const img = document.createElement('img');
+                img.src = imageDataURL;
+                libraryDiv.appendChild(img);
+            });
+        }
+
         // Event Listeners for drawing
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
@@ -215,6 +242,16 @@
 
         // Initialize undo/redo
         saveState(); // Save initial empty state
+
+        function drawImageOnCanvas(src) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear existing drawing
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                saveState(); // Save state after uploading image
+            };
+            img.src = src;
+        }
     </script>
 </body>
 </html>
