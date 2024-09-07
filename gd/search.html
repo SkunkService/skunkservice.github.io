@@ -140,10 +140,11 @@
             const pageInfo = document.getElementById('pageInfo');
             resultsContainer.innerHTML = ''; // Clear previous results
 
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            // Using a CORS proxy service
+            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
             const apiUrl = `https://gdbrowser.com/api/search/${query}/${page}`;
-
-            fetch(proxyUrl + apiUrl)
+            
+            fetch(proxyUrl + encodeURIComponent(apiUrl))
                 .then(response => response.json())
                 .then(data => {
                     if (data.length === 0) {
