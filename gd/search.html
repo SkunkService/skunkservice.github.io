@@ -140,12 +140,16 @@
             const pageInfo = document.getElementById('pageInfo');
             resultsContainer.innerHTML = ''; // Clear previous results
 
-            // Using a CORS proxy service
-            const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=';
+            // Direct API URL for debugging purposes
             const apiUrl = `https://gdbrowser.com/api/search/${query}/${page}`;
-            
-            fetch(proxyUrl + encodeURIComponent(apiUrl))
-                .then(response => response.json())
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     console.log('API Response:', data); // Debugging line
                     if (data === -1) {
