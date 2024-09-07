@@ -80,100 +80,6 @@
                 <option value="easy-demon">Easy Demon</option>
                 <option value="medium-demon">Medium Demon</option>
                 <option value="hard-demon">Hard Demon</option>
-            </select>
-            <button onclick="searchLevels()">Search</button>
-        </div>
-        <div id="results" class="results"></div>
-    </div>
-
-    <script>
-        async function searchLevels() {
-            const levelName = document.getElementById('levelName').value.trim();
-            const difficulty = document.getElementById('difficultyFilter').value;
-
-            const apiUrl = `https://gdbrowser.com/api/search/${levelName}`;
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkunkGD - SkunkService's Website</title>
-    <style>
-        body {
-            font-family: 'Press Start 2P', cursive;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            background-color: #222;
-            border-radius: 10px;
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            text-align: center;
-            color: #f0f0f0;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-        .search-bar {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .search-bar input, .search-bar select, .search-bar button {
-            padding: 10px;
-            margin-right: 10px;
-            border: 2px solid #fff;
-            border-radius: 5px;
-            background-color: #444;
-            color: #fff;
-        }
-        .search-bar button {
-            background-color: #555;
-            cursor: pointer;
-        }
-        .search-bar button:hover {
-            background-color: #666;
-        }
-        .results {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 10px;
-        }
-        .result-item {
-            background: #333;
-            border: 2px solid #555;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .result-item h3 {
-            color: #ffcc00;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Geometry Dash Level Search</h1>
-        <div class="search-bar">
-            <input type="text" id="levelName" placeholder="Enter level name">
-            <select id="difficultyFilter">
-                <option value="">All Difficulties</option>
-                <option value="easy">Easy</option>
-                <option value="normal">Normal</option>
-                <option value="hard">Hard</option>
-                <option value="harder">Harder</option>
-                <option value="insane">Insane</option>
-                <option value="auto">Auto</option>
-                <option value="easy-demon">Easy Demon</option>
-                <option value="medium-demon">Medium Demon</option>
-                <option value="hard-demon">Hard Demon</option>
                 <option value="extreme-demon">Extreme Demon</option>
                 <option value="insane-demon">Insane Demon</option>
             </select>
@@ -187,7 +93,10 @@
             const levelName = document.getElementById('levelName').value.trim();
             const difficulty = document.getElementById('difficultyFilter').value;
 
-            const apiUrl = `https://gdbrowser.com/api/search/${levelName}`;
+            let apiUrl = `https://gdbrowser.com/api/search/${levelName}`;
+            if (difficulty) {
+                apiUrl += `?difficulty=${difficulty}`;
+            }
 
             try {
                 const response = await fetch(apiUrl);
