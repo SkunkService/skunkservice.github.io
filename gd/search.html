@@ -147,23 +147,29 @@
             fetch(proxyUrl + encodeURIComponent(apiUrl))
                 .then(response => response.json())
                 .then(data => {
-                    if (data.length === 0) {
-                        resultsContainer.innerHTML = '<p>No results found</p>';
+                    console.log('API Response:', data); // Debugging line
+                    if (Array.isArray(data)) {
+                        if (data.length === 0) {
+                            resultsContainer.innerHTML = '<p>No results found</p>';
+                        } else {
+                            resultsContainer.innerHTML = '';
+                            data.forEach(level => {
+                                const resultDiv = document.createElement('div');
+                                resultDiv.classList.add('result');
+                                resultDiv.innerHTML = `
+                                    <h3>${level.name} by ${level.author}</h3>
+                                    <p>ID: ${level.id}</p>
+                                    <p>Difficulty: ${level.difficulty}</p>
+                                    <p>Downloads: ${level.downloads}</p>
+                                `;
+                                resultsContainer.appendChild(resultDiv);
+                            });
+                            maxPage = Math.ceil(data.length / resultsPerPage); // Calculate max pages based on the result count
+                            pageInfo.innerHTML = `Page ${currentPage} of ${maxPage}`;
+                        }
                     } else {
-                        resultsContainer.innerHTML = '';
-                        data.forEach(level => {
-                            const resultDiv = document.createElement('div');
-                            resultDiv.classList.add('result');
-                            resultDiv.innerHTML = `
-                                <h3>${level.name} by ${level.author}</h3>
-                                <p>ID: ${level.id}</p>
-                                <p>Difficulty: ${level.difficulty}</p>
-                                <p>Downloads: ${level.downloads}</p>
-                            `;
-                            resultsContainer.appendChild(resultDiv);
-                        });
-                        maxPage = Math.ceil(data.length / resultsPerPage); // Calculate max pages based on the result count
-                        pageInfo.innerHTML = `Page ${currentPage} of ${maxPage}`;
+                        console.error('Unexpected API response format:', data);
+                        resultsContainer.innerHTML = '<p>Unexpected response format</p>';
                     }
                 })
                 .catch(error => {
