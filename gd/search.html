@@ -6,108 +6,224 @@
     <title>SkunkGD - SkunkService's Website</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background: #111; /* Dark background */
-            color: #fff; /* Light text color */
-            text-align: center;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #000;
+            color: #fff;
             margin: 0;
             padding: 0;
         }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
         h1 {
-            font-size: 2em;
-            margin-top: 20px;
-            color: #ffcc00; /* Bright yellow for titles */
+            text-align: center;
+            color: #f0f0f0;
+            margin-bottom: 20px;
+            font-size: 2rem;
         }
-        select, input[type="text"] {
-            background: #222; /* Dark background for input */
-            color: #fff; /* Light text color for input */
-            border: 2px solid #ffcc00; /* Yellow border for input */
-            border-radius: 5px;
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input, .search-bar select, .search-bar button {
             padding: 10px;
-            font-size: 1em;
-            margin: 10px;
-        }
-        .level-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px auto;
-            max-width: 600px;
-            text-align: left;
-        }
-        .level-item {
-            background: #333; /* Darker background for list items */
-            border: 1px solid #ffcc00; /* Yellow border for list items */
+            margin-right: 10px;
+            border: 2px solid #fff;
             border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
+            background-color: #444;
+            color: #fff;
         }
-        .level-item:nth-child(even) {
-            background: #444; /* Slightly lighter background for alternate items */
+        .search-bar button {
+            background-color: #555;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #666;
+        }
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        .result-item {
+            background: #333;
+            border: 2px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .result-item h3 {
+            color: #ffcc00;
         }
     </style>
 </head>
 <body>
-    <h1>Search and Filter Levels by Difficulty</h1>
-    <input type="text" id="search-input" placeholder="Search levels..." />
-    <select id="difficulty-filter">
-        <option value="all">All</option>
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-        <option value="harder">Harder</option>
-        <option value="insane">Insane</option>
-        <option value="extreme">Extreme</option>
-    </select>
-
-    <ul id="level-list" class="level-list"></ul>
+    <div class="container">
+        <h1>Geometry Dash Level Search</h1>
+        <div class="search-bar">
+            <input type="text" id="levelName" placeholder="Enter level name">
+            <select id="difficultyFilter">
+                <option value="">All Difficulties</option>
+                <option value="easy">Easy</option>
+                <option value="normal">Normal</option>
+                <option value="hard">Hard</option>
+                <option value="harder">Harder</option>
+                <option value="insane">Insane</option>
+                <option value="auto">Auto</option>
+                <option value="easy-demon">Easy Demon</option>
+                <option value="medium-demon">Medium Demon</option>
+                <option value="hard-demon">Hard Demon</option>
+            </select>
+            <button onclick="searchLevels()">Search</button>
+        </div>
+        <div id="results" class="results"></div>
+    </div>
 
     <script>
-        document.getElementById('search-input').addEventListener('input', function() {
-            const query = this.value;
-            const difficulty = document.getElementById('difficulty-filter').value;
-            fetchLevels(query, difficulty);
-        });
+        async function searchLevels() {
+            const levelName = document.getElementById('levelName').value.trim();
+            const difficulty = document.getElementById('difficultyFilter').value;
 
-        document.getElementById('difficulty-filter').addEventListener('change', function() {
-            const query = document.getElementById('search-input').value;
-            const difficulty = this.value;
-            fetchLevels(query, difficulty);
-        });
+            const apiUrl = `https://gdbrowser.com/api/search/${levelName}`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkunkGD - SkunkService's Website</title>
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            text-align: center;
+            color: #f0f0f0;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input, .search-bar select, .search-bar button {
+            padding: 10px;
+            margin-right: 10px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+        }
+        .search-bar button {
+            background-color: #555;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #666;
+        }
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        .result-item {
+            background: #333;
+            border: 2px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .result-item h3 {
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Geometry Dash Level Search</h1>
+        <div class="search-bar">
+            <input type="text" id="levelName" placeholder="Enter level name">
+            <select id="difficultyFilter">
+                <option value="">All Difficulties</option>
+                <option value="easy">Easy</option>
+                <option value="normal">Normal</option>
+                <option value="hard">Hard</option>
+                <option value="harder">Harder</option>
+                <option value="insane">Insane</option>
+                <option value="auto">Auto</option>
+                <option value="easy-demon">Easy Demon</option>
+                <option value="medium-demon">Medium Demon</option>
+                <option value="hard-demon">Hard Demon</option>
+                <option value="extreme-demon">Extreme Demon</option>
+                <option value="insane-demon">Insane Demon</option>
+            </select>
+            <button onclick="searchLevels()">Search</button>
+        </div>
+        <div id="results" class="results"></div>
+    </div>
 
-        function fetchLevels(query, difficulty) {
-            const apiUrl = `https://gdbrowser.com/api/search/${encodeURIComponent(query)}`;
+    <script>
+        async function searchLevels() {
+            const levelName = document.getElementById('levelName').value.trim();
+            const difficulty = document.getElementById('difficultyFilter').value;
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data || !Array.isArray(data)) {
-                        throw new Error('Invalid response format');
-                    }
-                    displayLevels(data, difficulty);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+            const apiUrl = `https://gdbrowser.com/api/search/${levelName}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (!data || !data.length) {
+                    throw new Error('No levels found');
+                }
+
+                displayResults(data, difficulty);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('results').innerHTML = `<p>Error fetching data: ${error.message}</p>`;
+            }
         }
 
-        function displayLevels(levels, difficulty) {
-            const levelList = document.getElementById('level-list');
-            levelList.innerHTML = ''; // Clear previous results
+        function displayResults(levels, selectedDifficulty) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
 
-            const filteredLevels = levels.filter(level => {
-                return difficulty === 'all' || (level.difficulty && level.difficulty.toLowerCase() === difficulty.toLowerCase());
-            });
-
-            filteredLevels.forEach(level => {
-                const li = document.createElement('li');
-                li.className = 'level-item';
-                li.textContent = `ID: ${level.id}, Name: ${level.name}, Difficulty: ${level.difficulty}`;
-                levelList.appendChild(li);
+            levels.forEach(level => {
+                if (!selectedDifficulty || selectedDifficulty === '' || level.difficulty === selectedDifficulty) {
+                    const levelElement = document.createElement('div');
+                    levelElement.className = 'result-item';
+                    levelElement.innerHTML = `
+                        <h3>${level.name}</h3>
+                        <p>ID: ${level.id}</p>
+                        <p>Difficulty: ${level.difficulty}</p>
+                    `;
+                    resultsContainer.appendChild(levelElement);
+                }
             });
         }
-
-        // Fetch all levels on initial load
-        fetchLevels('', 'all');
     </script>
 </body>
 </html>
