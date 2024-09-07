@@ -59,8 +59,8 @@
         .results-container {
             margin-top: 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-            gap: 20px; /* Spacing between grid items */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
         .result {
             background-color: #222831;
@@ -139,26 +139,23 @@
             const resultsContainer = document.getElementById('results');
             const pageInfo = document.getElementById('pageInfo');
             resultsContainer.innerHTML = ''; // Clear previous results
-
-            // Direct API URL for debugging purposes
-            const apiUrl = `https://gdbrowser.com/api/search/${query}/${page}`;
+            
+            // Use a CORS proxy for development
+            const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+            const apiUrl = `${corsProxy}https://gdbrowser.com/api/search/${query}/${page}`;
 
             fetch(apiUrl)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    if (response.ok) {
+                        return response.json();
                     }
-                    return response.json();
+                    throw new Error('Network response was not ok');
                 })
                 .then(data => {
-                    console.log('API Response:', data); // Debugging line
-                    if (data === -1) {
-                        resultsContainer.innerHTML = '<p>Invalid search query or API error</p>';
-                    } else if (Array.isArray(data)) {
+                    if (Array.isArray(data)) {
                         if (data.length === 0) {
                             resultsContainer.innerHTML = '<p>No results found</p>';
                         } else {
-                            resultsContainer.innerHTML = '';
                             data.forEach(level => {
                                 const resultDiv = document.createElement('div');
                                 resultDiv.classList.add('result');
@@ -175,7 +172,7 @@
                         }
                     } else {
                         console.error('Unexpected API response format:', data);
-                        resultsContainer.innerHTML = '<p>Unexpected response format</p>';
+                        resultsContainer.innerHTML = '<p>Unexpected API response format</p>';
                     }
                 })
                 .catch(error => {
