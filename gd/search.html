@@ -147,6 +147,7 @@
                     if (data.length === 0) {
                         resultsContainer.innerHTML = '<p>No results found</p>';
                     } else {
+                        console.log(data);
                         resultsContainer.innerHTML = '';
                         data.forEach(level => {
                             const resultDiv = document.createElement('div');
