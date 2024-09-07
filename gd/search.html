@@ -6,33 +6,53 @@
     <title>Geometry Dash Level Search</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Press Start 2P', cursive;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #333;
+            color: #fff;
         }
         .container {
             width: 90%;
             max-width: 600px;
-            background: #fff;
+            background: #444;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border: 3px solid #ffcc00;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #000;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            background: #222;
+            color: #fff;
         }
         button {
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 18px;
             border: none;
             border-radius: 5px;
-            background: #007bff;
-            color: #fff;
+            background: #ffcc00;
+            color: #000;
             cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         button:hover {
-            background: #0056b3;
+            background: #ff9900;
         }
         .level-list {
             list-style: none;
@@ -42,9 +62,14 @@
         .level-item {
             padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #ddd;
+            border: 2px solid #ffcc00;
             border-radius: 5px;
-            background: #fff;
+            background: #222;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .level-item:nth-child(odd) {
+            background: #333;
         }
     </style>
 </head>
