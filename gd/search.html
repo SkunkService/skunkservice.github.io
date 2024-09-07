@@ -6,167 +6,76 @@
     <title>Geometry Dash Level Search</title>
     <style>
         body {
-            font-family: 'Verdana', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #1e1e1e;
-            color: #fff;
-        }
-        h1 {
-            text-align: center;
-            color: #f0c;
-            margin-top: 20px;
-            font-size: 36px;
-        }
-        #search-container {
+            font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             margin: 20px;
         }
-        #search-input {
-            width: 300px;
+        select, button {
+            margin: 10px;
             padding: 10px;
-            border: 2px solid #f0c;
-            border-radius: 4px;
-            background-color: #2b2b2b;
-            color: #fff;
-            font-size: 18px;
-            outline: none;
         }
-        #search-button {
-            padding: 10px 20px;
-            margin-left: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #f0c;
-            color: #1e1e1e;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        #search-button:hover {
-            background-color: #e1a1a1;
-        }
-        #difficulty-filters {
+        .level-list {
             display: flex;
-            justify-content: center;
-            margin: 20px;
-        }
-        .filter-button {
-            padding: 10px 20px;
-            margin: 0 5px;
-            border: none;
-            border-radius: 4px;
-            background-color: #f0c;
-            color: #1e1e1e;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .filter-button:hover {
-            background-color: #e1a1a1;
-        }
-        #results {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px;
+            flex-direction: column;
+            align-items: center;
         }
         .level-item {
-            width: 220px;
-            background: linear-gradient(135deg, #3f3f3f, #1e1e1e);
-            border: 2px solid #f0c;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease;
-        }
-        .level-item:hover {
-            transform: scale(1.05);
-        }
-        .level-item h3 {
-            margin: 10px 0;
-            font-size: 20px;
-            color: #f0c;
-        }
-        .level-item p {
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 5px;
         }
     </style>
 </head>
 <body>
     <h1>Geometry Dash Level Search</h1>
-    <div id="search-container">
-        <input type="text" id="search-input" placeholder="Enter level name...">
-        <button id="search-button">Search</button>
-    </div>
-    <div id="difficulty-filters">
-        <button class="filter-button" data-difficulty="">All</button>
-        <button class="filter-button" data-difficulty="Easy">Easy</button>
-        <button class="filter-button" data-difficulty="Medium">Medium</button>
-        <button class="filter-button" data-difficulty="Hard">Hard</button>
-        <button class="filter-button" data-difficulty="Insane">Insane</button>
-    </div>
-    <div id="results">
-        <!-- Example level item -->
-        <div class="level-item">
-            <h3>Level Name: Example Level</h3>
-            <p>Level ID: 12345</p>
-            <p>Author: Example</p>
-            <p>Difficulty: Medium</p>
-        </div>
-        <!-- More level items will be dynamically inserted here -->
-    </div>
-    <script>
-        const searchButton = document.getElementById('search-button');
-        const searchInput = document.getElementById('search-input');
-        const resultsContainer = document.getElementById('results');
-        const filterButtons = document.querySelectorAll('.filter-button');
-        let selectedDifficulty = '';
 
-        searchButton.addEventListener('click', function() {
-            const levelName = searchInput.value;
-            if (!levelName) return;
-            fetch(`https://gdbrowser.com/api/search/${levelName}`)
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty">
+        <option value="all">All</option>
+        <option value="easy">Easy</option>
+        <option value="normal">Normal</option>
+        <option value="hard">Hard</option>
+        <option value="harder">Harder</option>
+        <option value="insane">Insane</option>
+        <option value="demon">Demon</option>
+    </select>
+
+    <button onclick="searchLevels()">Search Levels</button>
+
+    <div class="level-list" id="level-list"></div>
+
+    <script>
+        function searchLevels() {
+            const difficulty = document.getElementById('difficulty').value;
+            const apiUrl = `https://gdbrowser.com/api/search?difficulty=${difficulty}`; // Adjust this URL if necessary
+
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    resultsContainer.innerHTML = '';
-                    if (data.length === 0) {
-                        resultsContainer.innerHTML = '<p style="color: #fff;">No results found.</p>';
-                    } else {
-                        const filteredLevels = selectedDifficulty 
-                            ? data.filter(level => level.difficulty === selectedDifficulty)
-                            : data;
-
-                        filteredLevels.forEach(level => {
-                            const levelItem = document.createElement('div');
-                            levelItem.className = 'level-item';
-                            levelItem.innerHTML = `
-                                <h3>Level Name: ${level.name}</h3>
-                                <p>Level ID: ${level.id}</p>
-                                <p>Author: ${level.author}</p>
-                                <p>Difficulty: ${level.difficulty}</p>
-                            `;
-                            resultsContainer.appendChild(levelItem);
-                        });
-                    }
+                    displayLevels(data);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    resultsContainer.innerHTML = '<p style="color: #fff;">Error fetching data.</p>';
+                    document.getElementById('level-list').innerHTML = 'Error fetching data';
                 });
-        });
+        }
 
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                selectedDifficulty = this.dataset.difficulty;
-                filterButtons.forEach(btn => btn.style.backgroundColor = '#f0c');
-                this.style.backgroundColor = '#e1a1a1';
-                searchButton.click();  // Trigger search with the selected difficulty
+        function displayLevels(data) {
+            const levelList = document.getElementById('level-list');
+            levelList.innerHTML = ''; // Clear existing levels
+
+            if (!data || !data.levels) {
+                levelList.innerHTML = 'No levels found';
+                return;
+            }
+
+            data.levels.forEach(level => {
+                const levelItem = document.createElement('div');
+                levelItem.classList.add('level-item');
+                levelItem.innerHTML = `<strong>ID:</strong> ${level.id} <br> <strong>Name:</strong> ${level.name}`;
+                levelList.appendChild(levelItem);
             });
-        });
+        }
     </script>
 </body>
 </html>
