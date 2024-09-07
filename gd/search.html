@@ -57,22 +57,20 @@
             font-size: 20px;
         }
         .results-container {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-    gap: 20px; /* Spacing between grid items */
-}
-
-.result {
-    background-color: #222831;
-    border: 3px solid #00ADB5;
-    padding: 15px;
-    border-radius: 5px;
-    color: #EEEEEE;
-    box-shadow: 0 0 10px #00ADB5;
-    text-align: left;
-}
-
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+            gap: 20px; /* Spacing between grid items */
+        }
+        .result {
+            background-color: #222831;
+            border: 3px solid #00ADB5;
+            padding: 15px;
+            border-radius: 5px;
+            color: #EEEEEE;
+            box-shadow: 0 0 10px #00ADB5;
+            text-align: left;
+        }
         .result h3 {
             margin: 0;
             font-size: 18px;
@@ -141,19 +139,22 @@
             const resultsContainer = document.getElementById('results');
             const pageInfo = document.getElementById('pageInfo');
             resultsContainer.innerHTML = ''; // Clear previous results
-            fetch(`https://gdbrowser.com/api/search/${query}/${page}`)
+
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const apiUrl = `https://gdbrowser.com/api/search/${query}/${page}`;
+
+            fetch(proxyUrl + apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     if (data.length === 0) {
                         resultsContainer.innerHTML = '<p>No results found</p>';
                     } else {
-                        console.log(data);
                         resultsContainer.innerHTML = '';
                         data.forEach(level => {
                             const resultDiv = document.createElement('div');
                             resultDiv.classList.add('result');
                             resultDiv.innerHTML = `
-                                <h3>${level.name} by ${level.creator}</h3>
+                                <h3>${level.name} by ${level.author}</h3>
                                 <p>ID: ${level.id}</p>
                                 <p>Difficulty: ${level.difficulty}</p>
                                 <p>Downloads: ${level.downloads}</p>
