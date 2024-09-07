@@ -57,17 +57,22 @@
             font-size: 20px;
         }
         .results-container {
-            margin-top: 20px;
-        }
-        .result {
-            background-color: #222831;
-            border: 3px solid #00ADB5;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            color: #EEEEEE;
-            box-shadow: 0 0 10px #00ADB5;
-        }
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Spacing between grid items */
+}
+
+.result {
+    background-color: #222831;
+    border: 3px solid #00ADB5;
+    padding: 15px;
+    border-radius: 5px;
+    color: #EEEEEE;
+    box-shadow: 0 0 10px #00ADB5;
+    text-align: left;
+}
+
         .result h3 {
             margin: 0;
             font-size: 18px;
@@ -78,6 +83,32 @@
             font-size: 14px;
             color: #EEEEEE;
         }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: 3px solid #00ADB5;
+            background-color: #FF5722;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: transform 0.2s ease;
+        }
+        .pagination button:hover {
+            background-color: #00ADB5;
+            border-color: #FF5722;
+            transform: scale(1.05);
+        }
+        .pagination span {
+            color: #EEEEEE;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -87,21 +118,36 @@
         <button class="search-button" onclick="searchLevel()">Search</button>
 
         <div id="results" class="results-container"></div>
+        
+        <div class="pagination">
+            <button onclick="prevPage()">Previous</button>
+            <span id="pageInfo"></span>
+            <button onclick="nextPage()">Next</button>
+        </div>
     </div>
 
     <script>
+        let currentPage = 1;
+        let maxPage = 1;
+        const resultsPerPage = 10; // Adjust the number of results per page
+
         function searchLevel() {
             const searchInput = document.getElementById('searchInput').value;
-            const resultsContainer = document.getElementById('results');
-            resultsContainer.innerHTML = ''; // Clear previous results
+            currentPage = 1; // Reset to first page for new search
+            fetchLevels(searchInput, currentPage);
+        }
 
-            // Fetch level data from GDBrowser API
-            fetch(`https://gdbrowser.com/api/search/${searchInput}`)
+        function fetchLevels(query, page) {
+            const resultsContainer = document.getElementById('results');
+            const pageInfo = document.getElementById('pageInfo');
+            resultsContainer.innerHTML = ''; // Clear previous results
+            fetch(`https://gdbrowser.com/api/search/${query}/${page}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.length === 0) {
                         resultsContainer.innerHTML = '<p>No results found</p>';
                     } else {
+                        resultsContainer.innerHTML = '';
                         data.forEach(level => {
                             const resultDiv = document.createElement('div');
                             resultDiv.classList.add('result');
@@ -113,12 +159,30 @@
                             `;
                             resultsContainer.appendChild(resultDiv);
                         });
+                        maxPage = Math.ceil(data.length / resultsPerPage); // Calculate max pages based on the result count
+                        pageInfo.innerHTML = `Page ${currentPage} of ${maxPage}`;
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                     resultsContainer.innerHTML = '<p>Error fetching data</p>';
                 });
+        }
+
+        function prevPage() {
+            const searchInput = document.getElementById('searchInput').value;
+            if (currentPage > 1) {
+                currentPage--;
+                fetchLevels(searchInput, currentPage);
+            }
+        }
+
+        function nextPage() {
+            const searchInput = document.getElementById('searchInput').value;
+            if (currentPage < maxPage) {
+                currentPage++;
+                fetchLevels(searchInput, currentPage);
+            }
         }
     </script>
 </body>
