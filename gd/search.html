@@ -148,7 +148,9 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('API Response:', data); // Debugging line
-                    if (Array.isArray(data)) {
+                    if (data === -1) {
+                        resultsContainer.innerHTML = '<p>Invalid search query or API error</p>';
+                    } else if (Array.isArray(data)) {
                         if (data.length === 0) {
                             resultsContainer.innerHTML = '<p>No results found</p>';
                         } else {
