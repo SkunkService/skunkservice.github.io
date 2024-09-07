@@ -3,199 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geometry Dash Level Search</title>
+    <title>Search Levels</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
         body {
-            font-family: 'Press Start 2P', cursive;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #222831;
-            background-image: radial-gradient(circle, #00ADB5, #393E46, #FF5722);
-            background-size: cover;
+            background-color: #f0f0f0;
         }
-        .search-container {
-            text-align: center;
-            background-color: #393E46;
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
             padding: 20px;
-            border: 4px solid #00ADB5;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #00ADB5;
-        }
-        .search-box {
-            padding: 15px;
-            width: 280px;
-            border: 3px solid #FF5722;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 16px;
-            background-color: #EEEEEE;
+            max-width: 400px;
+            width: 100%;
         }
-        .search-button {
-            padding: 10px 30px;
-            border: 3px solid #00ADB5;
-            border-radius: 5px;
-            background-color: #FF5722;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            transition: transform 0.2s ease;
-        }
-        .search-button:hover {
-            background-color: #00ADB5;
-            border-color: #FF5722;
-            transform: scale(1.05);
+        .container > * {
+            margin: 0;
         }
         h1 {
-            color: #00ADB5;
-            text-shadow: 2px 2px #FF5722;
-            font-size: 20px;
-        }
-        .results-container {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .result {
-            background-color: #222831;
-            border: 3px solid #00ADB5;
-            padding: 15px;
-            border-radius: 5px;
-            color: #EEEEEE;
-            box-shadow: 0 0 10px #00ADB5;
-            text-align: left;
-        }
-        .result h3 {
             margin: 0;
-            font-size: 18px;
-            color: #FF5722;
+            font-size: 24px;
+            text-align: center;
         }
-        .result p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #EEEEEE;
-        }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .pagination button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border: 3px solid #00ADB5;
-            background-color: #FF5722;
-            color: white;
-            cursor: pointer;
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 14px;
-            transition: transform 0.2s ease;
         }
-        .pagination button:hover {
-            background-color: #00ADB5;
-            border-color: #FF5722;
-            transform: scale(1.05);
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .pagination span {
-            color: #EEEEEE;
-            font-size: 14px;
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f7f7f7;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: auto;
         }
     </style>
 </head>
 <body>
-    <div class="search-container">
-        <h1>Search Geometry Dash Levels</h1>
-        <input type="text" id="searchInput" class="search-box" placeholder="Enter level name or ID...">
-        <button class="search-button" onclick="searchLevel()">Search</button>
-
-        <div id="results" class="results-container"></div>
-        
-        <div class="pagination">
-            <button onclick="prevPage()">Previous</button>
-            <span id="pageInfo"></span>
-            <button onclick="nextPage()">Next</button>
-        </div>
+    <div class="container">
+        <h1>Search Levels</h1>
+        <input type="text" id="search-input" placeholder="Enter level ID">
+        <button id="search-button">Search</button>
+        <pre id="result"></pre>
     </div>
 
     <script>
-        let currentPage = 1;
-        let maxPage = 1;
-        const resultsPerPage = 10; // Adjust the number of results per page
+        document.getElementById('search-button').addEventListener('click', () => {
+            const levelId = document.getElementById('search-input').value;
+            const url = `https://gdbrowser.com/api/search/e/${levelId}`;
 
-        function searchLevel() {
-            const searchInput = document.getElementById('searchInput').value;
-            currentPage = 1; // Reset to first page for new search
-            fetchLevels(searchInput, currentPage);
-        }
-
-        function fetchLevels(query, page) {
-            const resultsContainer = document.getElementById('results');
-            const pageInfo = document.getElementById('pageInfo');
-            resultsContainer.innerHTML = ''; // Clear previous results
-            
-            // Use a CORS proxy for development
-            const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-            const apiUrl = `${corsProxy}https://gdbrowser.com/api/search/${query}/${page}`;
-
-            fetch(apiUrl)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/plain' // Adjust if API returns in another format
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
                     throw new Error('Network response was not ok');
-                })
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        if (data.length === 0) {
-                            resultsContainer.innerHTML = '<p>No results found</p>';
-                        } else {
-                            data.forEach(level => {
-                                const resultDiv = document.createElement('div');
-                                resultDiv.classList.add('result');
-                                resultDiv.innerHTML = `
-                                    <h3>${level.name} by ${level.author}</h3>
-                                    <p>ID: ${level.id}</p>
-                                    <p>Difficulty: ${level.difficulty}</p>
-                                    <p>Downloads: ${level.downloads}</p>
-                                `;
-                                resultsContainer.appendChild(resultDiv);
-                            });
-                            maxPage = Math.ceil(data.length / resultsPerPage); // Calculate max pages based on the result count
-                            pageInfo.innerHTML = `Page ${currentPage} of ${maxPage}`;
-                        }
-                    } else {
-                        console.error('Unexpected API response format:', data);
-                        resultsContainer.innerHTML = '<p>Unexpected API response format</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    resultsContainer.innerHTML = '<p>Error fetching data</p>';
-                });
-        }
-
-        function prevPage() {
-            const searchInput = document.getElementById('searchInput').value;
-            if (currentPage > 1) {
-                currentPage--;
-                fetchLevels(searchInput, currentPage);
-            }
-        }
-
-        function nextPage() {
-            const searchInput = document.getElementById('searchInput').value;
-            if (currentPage < maxPage) {
-                currentPage++;
-                fetchLevels(searchInput, currentPage);
-            }
-        }
+                }
+                return response.text(); // Use .text() for plain text responses
+            })
+            .then(data => {
+                document.getElementById('result').textContent = data;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById('result').textContent = 'Error fetching data';
+            });
+        });
     </script>
 </body>
 </html>
