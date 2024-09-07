@@ -46,7 +46,25 @@
         #search-button:hover {
             background-color: #e1a1a1;
         }
-        .result-container {
+        #difficulty-filters {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+        .filter-button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f0c;
+            color: #1e1e1e;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .filter-button:hover {
+            background-color: #e1a1a1;
+        }
+        #results {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -84,7 +102,14 @@
         <input type="text" id="search-input" placeholder="Enter level name...">
         <button id="search-button">Search</button>
     </div>
-    <div id="results" class="result-container">
+    <div id="difficulty-filters">
+        <button class="filter-button" data-difficulty="">All</button>
+        <button class="filter-button" data-difficulty="Easy">Easy</button>
+        <button class="filter-button" data-difficulty="Medium">Medium</button>
+        <button class="filter-button" data-difficulty="Hard">Hard</button>
+        <button class="filter-button" data-difficulty="Insane">Insane</button>
+    </div>
+    <div id="results">
         <!-- Example level item -->
         <div class="level-item">
             <h3>Level Name: Example Level</h3>
@@ -95,18 +120,27 @@
         <!-- More level items will be dynamically inserted here -->
     </div>
     <script>
-        document.getElementById('search-button').addEventListener('click', function() {
-            const levelName = document.getElementById('search-input').value;
+        const searchButton = document.getElementById('search-button');
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('results');
+        const filterButtons = document.querySelectorAll('.filter-button');
+        let selectedDifficulty = '';
+
+        searchButton.addEventListener('click', function() {
+            const levelName = searchInput.value;
             if (!levelName) return;
             fetch(`https://gdbrowser.com/api/search/${levelName}`)
                 .then(response => response.json())
                 .then(data => {
-                    const resultsContainer = document.getElementById('results');
                     resultsContainer.innerHTML = '';
                     if (data.length === 0) {
                         resultsContainer.innerHTML = '<p style="color: #fff;">No results found.</p>';
                     } else {
-                        data.forEach(level => {
+                        const filteredLevels = selectedDifficulty 
+                            ? data.filter(level => level.difficulty === selectedDifficulty)
+                            : data;
+
+                        filteredLevels.forEach(level => {
                             const levelItem = document.createElement('div');
                             levelItem.className = 'level-item';
                             levelItem.innerHTML = `
@@ -121,9 +155,17 @@
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    const resultsContainer = document.getElementById('results');
                     resultsContainer.innerHTML = '<p style="color: #fff;">Error fetching data.</p>';
                 });
+        });
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                selectedDifficulty = this.dataset.difficulty;
+                filterButtons.forEach(btn => btn.style.backgroundColor = '#f0c');
+                this.style.backgroundColor = '#e1a1a1';
+                searchButton.click();  // Trigger search with the selected difficulty
+            });
         });
     </script>
 </body>
