@@ -6,9 +6,9 @@
     <title>Geometry Dash Level Search</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: #f1f1f1;
+            font-family: 'Press Start 2P', cursive; /* Font similar to Geometry Dash */
+            background-color: #000000;
+            color: #ffffff;
             text-align: center;
             margin: 0;
             padding: 0;
@@ -19,6 +19,26 @@
         .search-container {
             margin-bottom: 20px;
         }
+        #search-input {
+            padding: 10px;
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            background: #222222;
+            color: #ffffff;
+            font-size: 16px;
+        }
+        #search-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #ffcc00;
+            color: #000000;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #search-button:hover {
+            background: #ffaa00;
+        }
         #level-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -28,12 +48,14 @@
             margin: 0;
         }
         .level-item {
-            background: #333;
+            background: #333333;
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            color: #f1f1f1;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+            color: #ffcc00;
+            font-size: 18px;
             text-align: center;
+            border: 2px solid #ffcc00; /* Adding border to match the style */
         }
     </style>
 </head>
@@ -88,3 +110,4 @@
     </script>
 </body>
 </html>
+
