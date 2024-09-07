@@ -139,10 +139,17 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Fetched data:', data); // Log the data to see its structure
+
+                    // Check if levels property exists
+                    if (!data.levels) {
+                        throw new Error('No levels property found in response data');
+                    }
+
                     const levels = data.levels; // Assuming data.levels contains the array of levels
 
                     levels.forEach(level => {
-                        if (!difficulty || level.difficulty === difficulty) {
+                        if (level.difficulty && (!difficulty || level.difficulty === difficulty)) {
                             const levelItem = document.createElement('div');
                             levelItem.className = 'level-item';
                             levelItem.innerHTML = `
