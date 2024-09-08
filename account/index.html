@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+      <div id="acc-view-box" style="display: none;">
+          <p id="username">Username: User</p>
+          <p id="nickname">Nickname: @username</p>
+            <p id="acc-verified">Account Verification: Unverified</p>
+            <img id="icon" src="https://via.placeholder.com/100" alt="User Icon">
+            <button id="edit-profile-btn">Customize Account</button>
+            <div id="in-edit-profile" style="display: none;">
+            <input placeholder="Type your Username here" type="text" id="username-inp">
+            <input placeholder="Type your Nickname here" type="text" id="nickname-inp">
+            <input placeholder="Icon User here (Optional)" type="file" id="icon-file">
+            <button id="apply-profile">Apply Profile</button>
+            <p id="message"></p>
+            </div>
+        </div>
+</body>
+</html>
