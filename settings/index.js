@@ -8,21 +8,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const accViewBox = document.getElementById('acc-view-box');
     const editProfileButton = document.getElementById('edit-profile-btn');
     const inEditProfileDiv = document.getElementById('in-edit-profile');
-    const usernameInput = document.getElementById('username-inp');
-    const nicknameInput = document.getElementById('nickname-inp');
-    const iconFileInput = document.getElementById('icon-file');
     const applyProfileButton = document.getElementById('apply-profile');
-    const messageParagraph = document.getElementById('message');
-    const usernameParagraph = document.getElementById('username');
-    const nicknameParagraph = document.getElementById('nickname');
-    const iconImage = document.getElementById('icon');
     const resultMessageDiv = document.getElementById('result-message');
+    const usernameDisplay = document.getElementById('username');
+    const nicknameDisplay = document.getElementById('nickname');
+    const accVerifiedDisplay = document.getElementById('acc-verified');
+    const icon = document.getElementById('icon');
 
     // Load settings from localStorage
     const loadSettings = () => {
         const darkMode = localStorage.getItem('darkMode') === 'true';
+        const accountVerified = localStorage.getItem('accountVerified') === 'true';
+
         darkModeCheckbox.checked = darkMode;
         document.body.classList.toggle('dark-mode', darkMode);
+
+        accViewBox.style.display = 'block';
+        accVerifiedDisplay.textContent = `Account Verification: ${accountVerified ? 'Verified' : 'Unverified'}`;
+
+        const savedUsername = localStorage.getItem('username');
+        const savedNickname = localStorage.getItem('nickname');
+        const savedIcon = localStorage.getItem('icon');
+
+        if (savedUsername) {
+            usernameDisplay.textContent = `Username: ${savedUsername}`;
+        }
+        if (savedNickname) {
+            nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
+        }
+        if (savedIcon) {
+            icon.src = savedIcon;
+        }
     };
 
     // Save settings to localStorage
@@ -33,71 +49,61 @@ document.addEventListener('DOMContentLoaded', () => {
         resultMessageDiv.textContent = 'Settings saved!';
     });
 
-    // Handle delete permanently button
-    deletePermanentlyButton.addEventListener('click', () => {
-        if (confirm('Are you sure you want to delete all data permanently?')) {
-            localStorage.clear();
-            resultMessageDiv.textContent = 'All data deleted permanently!';
-        }
-    });
-
-    // Handle delete verified data button
-    deleteVerifiedButton.addEventListener('click', () => {
-        if (confirm('Are you sure you want to delete verified data?')) {
-            localStorage.removeItem('username');
-            localStorage.removeItem('nickname');
-            localStorage.removeItem('userIcon');
-            resultMessageDiv.textContent = 'Verified data deleted!';
-        }
-    });
-
-    // Handle account view button
+    // Toggle account view box
     accViewButton.addEventListener('click', () => {
         accViewBox.style.display = accViewBox.style.display === 'none' ? 'block' : 'none';
-        // Load profile data
-        const username = localStorage.getItem('username') || 'User';
-        const nickname = localStorage.getItem('nickname') || '@username';
-        const userIcon = localStorage.getItem('userIcon');
-
-        usernameParagraph.textContent = `Username: ${username}`;
-        nicknameParagraph.textContent = `Nickname: ${nickname}`;
-        if (userIcon) {
-            iconImage.src = userIcon;
-            iconImage.style.display = 'block';
-        } else {
-            iconImage.style.display = 'none';
-        }
     });
 
-    // Handle edit profile button
+    // Edit profile
     editProfileButton.addEventListener('click', () => {
         inEditProfileDiv.style.display = inEditProfileDiv.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Handle apply profile button
+    // Apply profile changes
     applyProfileButton.addEventListener('click', () => {
-        const username = usernameInput.value.trim();
-        const nickname = nicknameInput.value.trim();
-        const iconFile = iconFileInput.files[0];
+        const username = document.getElementById('username-inp').value;
+        const nickname = document.getElementById('nickname-inp').value;
+        const iconFile = document.getElementById('icon-file').files[0];
 
-        if (username) localStorage.setItem('username', username);
-        if (nickname) localStorage.setItem('nickname', nickname);
-
+        if (username) {
+            localStorage.setItem('username', username);
+            usernameDisplay.textContent = `Username: ${username}`;
+        }
+        if (nickname) {
+            localStorage.setItem('nickname', nickname);
+            nicknameDisplay.textContent = `Nickname: @${nickname}`;
+        }
         if (iconFile) {
             const reader = new FileReader();
-            reader.onloadend = () => {
-                localStorage.setItem('userIcon', reader.result);
-                iconImage.src = reader.result;
-                iconImage.style.display = 'block';
+            reader.onload = (e) => {
+                icon.src = e.target.result;
+                localStorage.setItem('icon', e.target.result);
             };
             reader.readAsDataURL(iconFile);
         }
 
-        messageParagraph.textContent = 'Profile updated!';
-        inEditProfileDiv.style.display = 'none';
-        accViewBox.style.display = 'none'; // Hide account view box after updating profile
+        resultMessageDiv.textContent = 'Profile updated!';
     });
 
-    // Initial settings load
+    // Delete Permanently Data
+    deletePermanentlyButton.addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete all data permanently?')) {
+            localStorage.clear();
+            resultMessageDiv.textContent = 'All data deleted permanently.';
+        }
+    });
+
+    // Delete Verified Data
+    deleteVerifiedButton.addEventListener('click', () => {
+        if (confirm('Are you sure you want to delete verified data?')) {
+            localStorage.removeItem('username');
+            localStorage.removeItem('nickname');
+            localStorage.removeItem('icon');
+            accVerifiedDisplay.textContent = 'Account Verification: Unverified';
+            resultMessageDiv.textContent = 'Verified data deleted.';
+        }
+    });
+
+    // Load settings on page load
     loadSettings();
 });
