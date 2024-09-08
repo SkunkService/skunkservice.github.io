@@ -65,17 +65,46 @@ button:disabled {
     margin-top: 20px;
     display: flex;
     align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+#acc-view-box p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
 }
 
 #acc-view-box img {
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 50px; /* Adjusted icon size */
+    height: 50px; /* Adjusted icon size */
     margin-right: 20px;
+    border: 2px solid #007bff;
+}
+
+#edit-profile-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+#edit-profile-btn:hover {
+    background-color: #218838;
 }
 
 #in-edit-profile {
     margin-top: 20px;
+    display: none;
 }
 
 #in-edit-profile input {
@@ -89,7 +118,7 @@ button:disabled {
 }
 
 #in-edit-profile button {
-    background-color: #28a745;
+    background-color: #007bff;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -101,7 +130,7 @@ button:disabled {
 }
 
 #in-edit-profile button:hover {
-    background-color: #218838;
+    background-color: #0056b3;
 }
 
 #result-message {
@@ -110,6 +139,7 @@ button:disabled {
     color: #d9534f;
 }
 
+/* Dark Mode Styles */
 .dark-mode {
     background-color: #333;
     color: #fff;
