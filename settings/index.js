@@ -1,110 +1,120 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('settings-form');
+    const settingsForm = document.getElementById('settings-form');
     const darkModeCheckbox = document.getElementById('dark-mode');
-    const resultMessage = document.getElementById('result-message');
+    const deletePermanentlyBtn = document.getElementById('delete-permanently');
+    const deleteVerifiedBtn = document.getElementById('delete-verified');
+    const authGoogleBtn = document.getElementById('auth-google-btn');
+    const accViewBtn = document.getElementById('acc-view-btn');
     const accViewBox = document.getElementById('acc-view-box');
     const editProfileBtn = document.getElementById('edit-profile-btn');
     const inEditProfile = document.getElementById('in-edit-profile');
     const applyProfileBtn = document.getElementById('apply-profile');
-    const usernameInput = document.getElementById('username-inp');
+    const usernameInp = document.getElementById('username-inp');
+    const nicknameInp = document.getElementById('nickname-inp');
     const iconFile = document.getElementById('icon-file');
     const message = document.getElementById('message');
 
-    // Load saved settings from localStorage
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    darkModeCheckbox.checked = darkMode;
+    // Load settings and profile from localStorage
+    loadSettings();
+    loadProfile();
 
-    // Apply dark mode if enabled
-    if (darkMode) {
-        document.body.classList.add('dark-mode');
+    // Event listeners
+    settingsForm.addEventListener('submit', handleSettingsSubmit);
+    deletePermanentlyBtn.addEventListener('click', handleDeletePermanently);
+    deleteVerifiedBtn.addEventListener('click', handleDeleteVerified);
+    authGoogleBtn.addEventListener('click', handleAuthGoogle);
+    accViewBtn.addEventListener('click', toggleAccountView);
+    editProfileBtn.addEventListener('click', toggleEditProfile);
+    applyProfileBtn.addEventListener('click', handleProfileApply);
+
+    function loadSettings() {
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        darkModeCheckbox.checked = darkMode;
+        document.body.classList.toggle('dark-mode', darkMode);
     }
 
-    // Load and apply saved profile data
-    const savedUsername = localStorage.getItem('username');
-    const savedIcon = localStorage.getItem('icon');
+    function loadProfile() {
+        const profile = JSON.parse(localStorage.getItem('profile')) || {};
+        const usernameElement = document.getElementById('username');
+        const nicknameElement = document.getElementById('nickname');
+        const iconElement = document.getElementById('icon');
 
-    if (savedUsername) {
-        document.getElementById('username').textContent = `Username: ${savedUsername}`;
+        if (profile.username) {
+            usernameElement.textContent = `Username: ${profile.username}`;
+        }
+        if (profile.nickname) {
+            nicknameElement.textContent = `Nickname: @${profile.nickname}`;
+        }
+        if (profile.icon) {
+            iconElement.src = profile.icon;
+        }
     }
 
-    if (savedIcon) {
-        document.getElementById('icon').src = savedIcon;
-    }
-
-    // Handle form submission
-    form.addEventListener('submit', (event) => {
+    function handleSettingsSubmit(event) {
         event.preventDefault();
+        const darkMode = darkModeCheckbox.checked;
+        localStorage.setItem('darkMode', darkMode);
+        document.body.classList.toggle('dark-mode', darkMode);
+        showMessage('Settings saved.');
+    }
 
-        // Save settings to localStorage
-        const isDarkMode = darkModeCheckbox.checked;
-        localStorage.setItem('darkMode', isDarkMode);
-
-        // Apply dark mode
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-
-        resultMessage.textContent = 'Settings saved successfully!';
-    });
-
-    // Handle Delete Permanently Datas
-    document.getElementById('delete-permanently').addEventListener('click', () => {
+    function handleDeletePermanently() {
         if (confirm('Are you sure you want to delete all data permanently? This action cannot be undone.')) {
-            // Clear all localStorage data
             localStorage.clear();
-            resultMessage.textContent = 'All data has been deleted permanently.';
-            // Clear profile display
-            document.getElementById('username').textContent = 'Username:';
-            document.getElementById('icon').src = '';
+            showMessage('All data has been deleted.');
         }
-    });
+    }
 
-    // Handle Delete Verified Datas
-    document.getElementById('delete-verified').addEventListener('click', () => {
-        if (confirm('Are you sure you want to delete verified data? This action cannot be undone.')) {
-            // Remove specific item from localStorage
-            localStorage.removeItem('captchaVerified');
-            resultMessage.textContent = 'Verified data has been deleted.';
+    function handleDeleteVerified() {
+        if (confirm('Are you sure you want to delete verified data?')) {
+            localStorage.removeItem('profile');
+            loadProfile(); // Update profile view
+            showMessage('Verified data has been deleted.');
         }
-    });
+    }
 
-    // Handle Authenticate with Google
-    document.getElementById('auth-google-btn').addEventListener('click', () => {
+    function handleAuthGoogle() {
         // Placeholder for Google authentication logic
-        resultMessage.textContent = 'Google authentication is not yet implemented.';
-    });
+        showMessage('Google authentication not implemented.');
+    }
 
-    // Handle Account View
-    document.getElementById('acc-view-btn').addEventListener('click', () => {
+    function toggleAccountView() {
         accViewBox.style.display = accViewBox.style.display === 'none' ? 'block' : 'none';
-    });
+    }
 
-    editProfileBtn.addEventListener('click', () => {
+    function toggleEditProfile() {
         inEditProfile.style.display = inEditProfile.style.display === 'none' ? 'block' : 'none';
-    });
+    }
 
-    applyProfileBtn.addEventListener('click', () => {
-        const newUsername = usernameInput.value.trim();
-        const iconFileInput = iconFile.files[0];
+    function handleProfileApply() {
+        const username = usernameInp.value.trim();
+        const nickname = nicknameInp.value.trim();
+        const icon = iconFile.files[0];
+        const profile = {};
 
-        if (newUsername) {
-            localStorage.setItem('username', newUsername);
-            document.getElementById('username').textContent = `Username: ${newUsername}`;
-        }
+        if (username) profile.username = username;
+        if (nickname) profile.nickname = nickname;
 
-        if (iconFileInput) {
+        if (icon) {
             const reader = new FileReader();
-            reader.onload = (event) => {
-                const iconDataUrl = event.target.result;
-                localStorage.setItem('icon', iconDataUrl);
-                document.getElementById('icon').src = iconDataUrl;
+            reader.onloadend = () => {
+                profile.icon = reader.result;
+                saveProfile(profile);
             };
-            reader.readAsDataURL(iconFileInput);
+            reader.readAsDataURL(icon);
+        } else {
+            saveProfile(profile);
         }
+    }
 
-        message.textContent = 'Profile updated successfully!';
-        inEditProfile.style.display = 'none';
-    });
+    function saveProfile(profile) {
+        localStorage.setItem('profile', JSON.stringify(profile));
+        loadProfile(); // Update profile view
+        showMessage('Profile updated.');
+    }
+
+    function showMessage(msg) {
+        message.textContent = msg;
+        setTimeout(() => { message.textContent = ''; }, 3000);
+    }
 });
