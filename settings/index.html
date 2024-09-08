@@ -19,6 +19,19 @@
         <div class="settings-actions">
             <button id="delete-permanently" class="button">Delete Permanently Datas</button>
             <button id="delete-verified" class="button">Delete Verified Datas</button>
+            <button id="auth-google-btn" class="button">Authenticate with Google</button>
+            <button id="acc-view-btn" class="button">Account View</button>
+            <div id="acc-view-box">
+                <p id="username">Username: User</p>
+                <img id="icon" class="icon-100px"></img>
+                <button id="edit-profile-btn">Customize Account</button>
+                <div id="in-edit-profile" style="display: none;">
+                    <input placeholder="Type your Username here" type="string" id="username-inp"></input>
+                    <input placeholder="Icon User here (Optional)" type="file" id="icon-file"></input>
+                    <button id="apply-profile">Apply Profile</button>
+                    <p id="message"></p>
+                </div>
+            </div>
         </div>
         <div id="result-message"></div>
     </div>
