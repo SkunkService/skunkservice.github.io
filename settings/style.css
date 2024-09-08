@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -80,12 +81,11 @@ button:disabled {
 
 #acc-view-box img {
     display: block;
-    width: 100px;   /* Fixed width for square */
-    height: 100px;  /* Fixed height for square */
-    object-fit: cover; /* Ensures it fits without distortion */
-    border-radius: 50%; /* Keeps the image round */
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
 }
-
 
 #edit-profile-btn {
     background-color: #28a745;
@@ -132,6 +132,44 @@ button:disabled {
 
 #in-edit-profile button:hover {
     background-color: #0056b3;
+}
+
+#result-message {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #d9534f;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark-mode .container {
+    background-color: #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+body.dark-mode button {
+    background-color: #0056b3;
+}
+
+body.dark-mode button:hover {
+    background-color: #003d7a;
+}
+
+body.dark-mode #acc-view-box {
+    background-color: #555;
+    border-color: #666;
+}
+
+body.dark-mode #acc-view-box p {
+    color: #fff;
+}
+
+body.dark-mode #result-message {
+    color: #f08080;
 }
 
 #result-message {
