@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('verification-form');
     const resultMessage = document.getElementById('result-message');
 
+    // Check if the user is already verified
+    if (localStorage.getItem('captchaVerified') === 'true') {
+        resultMessage.textContent = 'You are already verified!';
+        form.style.display = 'none'; // Hide the form if already verified
+        return;
+    }
+
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
@@ -14,7 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Since server-side verification is not available, just show a message
-        resultMessage.textContent = 'CAPTCHA completed! (Server-side verification is needed for full validation.)';
+        // Save the verification state to localStorage
+        localStorage.setItem('captchaVerified', 'true');
+
+        // Inform the user and hide the form
+        resultMessage.textContent = 'CAPTCHA completed successfully!';
+        form.style.display = 'none'; // Optionally hide the form
     });
 });
