@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Page</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Cloudflare Turnstile script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Verification Required</h1>
+        <p class="message">Please verify that you are not a robot by completing the CAPTCHA below.</p>
+        <form id="verification-form">
+            <!-- Cloudflare Turnstile widget -->
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAAi9J2Y6H-Xd2ei-"></div>
+            <button type="submit" class="button">Verify</button>
+        </form>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
