@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark mode */
 }
 
 .container {
@@ -14,6 +15,7 @@ body {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for dark mode */
 }
 
 .title {
@@ -81,10 +83,10 @@ button:disabled {
 
 #acc-view-box img {
     display: block;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 100px;   /* Fixed width for square */
+    height: 100px;  /* Fixed height for square */
+    object-fit: cover; /* Ensures it fits without distortion */
+    border-radius: 0; /* Square corners */
 }
 
 #edit-profile-btn {
@@ -141,39 +143,56 @@ button:disabled {
 }
 
 /* Dark Mode Styles */
-body.dark-mode {
+.dark-mode {
     background-color: #333;
     color: #fff;
 }
 
-body.dark-mode .container {
+.dark-mode .container {
     background-color: #444;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-body.dark-mode button {
-    background-color: #0056b3;
+.dark-mode .title {
+    color: #fff;
 }
 
-body.dark-mode button:hover {
+.dark-mode button {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.dark-mode button:hover {
     background-color: #003d7a;
 }
 
-body.dark-mode #acc-view-box {
+.dark-mode #acc-view-box {
     background-color: #555;
     border-color: #666;
 }
 
-body.dark-mode #acc-view-box p {
+.dark-mode #acc-view-box p {
+    color: #ddd;
+}
+
+.dark-mode #acc-view-box img {
+    border-radius: 0; /* Ensure the square shape */
+}
+
+.dark-mode #in-edit-profile input {
+    border: 1px solid #666;
+    background-color: #666;
     color: #fff;
 }
 
-body.dark-mode #result-message {
-    color: #f08080;
+.dark-mode #in-edit-profile button {
+    background-color: #0056b3;
 }
 
-#result-message {
-    margin-top: 20px;
-    font-size: 1rem;
-    color: #d9534f;
+.dark-mode #in-edit-profile button:hover {
+    background-color: #003d7a;
+}
+
+.dark-mode #result-message {
+    color: #f44336;
 }
