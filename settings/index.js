@@ -96,14 +96,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delete Verified Data
     deleteVerifiedButton.addEventListener('click', () => {
         if (confirm('Are you sure you want to delete verified data?')) {
-            localStorage.removeItem('username');
-            localStorage.removeItem('nickname');
-            localStorage.removeItem('icon');
+            localStorage.removeItem('captchaVerified');
             accVerifiedDisplay.textContent = 'Account Verification: Unverified';
             resultMessageDiv.textContent = 'Verified data deleted.';
         }
     });
 
+    // Check if the account is verified with captcha
+    const isVerified = localStorage.getItem('captchaVerified') === 'true';
+
+    if (isVerified) {
+        accVerifiedDisplay.textContent = 'Account Verification: Verified';
+    } else {
+        accVerifiedDisplay.textContent = 'Account Verification: Unverified';
+    }
+    
     // Load settings on page load
     loadSettings();
 });
