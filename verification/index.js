@@ -5,15 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        // Check if the CAPTCHA response is available
-        const captchaResponse = document.querySelector('input[name="cf-turnstile-response"]')?.value;
-        
+        // Check if CAPTCHA response is present
+        const captchaResponseField = document.querySelector('input[name="cf-turnstile-response"]');
+        const captchaResponse = captchaResponseField ? captchaResponseField.value : null;
+
         if (!captchaResponse) {
-            resultMessage.textContent = 'Please complete the CAPTCHA.';
+            resultMessage.textContent = 'CAPTCHA not completed or response not found.';
             return;
         }
 
-        // Inform the user that CAPTCHA was completed (in a real case, server-side verification is needed)
-        resultMessage.textContent = 'CAPTCHA completed! (Server-side verification is not implemented.)';
+        // Since server-side verification is not available, just show a message
+        resultMessage.textContent = 'CAPTCHA completed! (Server-side verification is needed for full validation.)';
     });
 });
