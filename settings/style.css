@@ -82,11 +82,18 @@ button:disabled {
     color: #333;
 }
 
+/* Ensuring icon is a circle */
 #acc-view-box img {
     width: 100px; /* Ensure image is a square */
     height: 100px; /* Ensure image is a square */
     object-fit: cover; /* Cover the area */
     border-radius: 50%; /* Make the image circular */
+    border: 2px solid #ddd; /* Optional border */
+}
+
+/* Optional: Adjust border color for dark mode */
+.dark-mode #acc-view-box img {
+    border: 2px solid #666;
 }
 
 #edit-profile-btn {
@@ -168,8 +175,4 @@ button:disabled {
 
 .dark-mode #acc-view-box p {
     color: #fff;
-}
-
-.dark-mode #acc-view-box img {
-    border-radius: 50%; /* Ensure circular appearance in dark mode */
 }
