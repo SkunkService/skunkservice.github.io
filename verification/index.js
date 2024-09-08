@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('verification-form');
     const resultMessage = document.getElementById('result-message');
 
+    // Debugging: Check if localStorage is accessible and check its content
+    console.log('localStorage.getItem("captchaVerified"):', localStorage.getItem('captchaVerified'));
+
     // Check if the user is already verified
     if (localStorage.getItem('captchaVerified') === 'true') {
         resultMessage.textContent = 'You are already verified!';
@@ -16,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const captchaResponseField = document.querySelector('input[name="cf-turnstile-response"]');
         const captchaResponse = captchaResponseField ? captchaResponseField.value : null;
 
+        console.log('CAPTCHA response:', captchaResponse);
+
         if (!captchaResponse) {
             resultMessage.textContent = 'CAPTCHA not completed or response not found.';
             return;
@@ -23,9 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save the verification state to localStorage
         localStorage.setItem('captchaVerified', 'true');
+        console.log('Verification state saved to localStorage');
 
         // Inform the user and hide the form
         resultMessage.textContent = 'CAPTCHA completed successfully!';
         form.style.display = 'none'; // Optionally hide the form
     });
 });
+
