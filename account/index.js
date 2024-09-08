@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const accViewButton = document.getElementById('acc-view-btn');
     const accViewBox = document.getElementById('acc-view-box');
     const editProfileButton = document.getElementById('edit-profile-btn');
     const inEditProfileDiv = document.getElementById('in-edit-profile');
@@ -35,11 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.src = savedIcon;
         }
     };
-
-    // Toggle account view box
-    accViewButton.addEventListener('click', () => {
-        accViewBox.style.display = accViewBox.style.display === 'none' ? 'block' : 'none';
-    });
 
     // Edit profile
     editProfileButton.addEventListener('click', () => {
