@@ -79,11 +79,13 @@ button:disabled {
     color: #333;
 }
 
-/* Ensure the image scales to 100px and maintains aspect ratio */
+/* Reset potential conflicting styles */
 #acc-view-box img {
-    width: 100px; /* Set width */
-    height: 100px; /* Set height */
-    object-fit: cover; /* Ensure the image covers the area */
+    display: block; /* Ensure no inline elements are affecting sizing */
+    max-width: 100px; /* Ensure it doesn’t exceed 100px */
+    max-height: 100px; /* Ensure it doesn’t exceed 100px */
+    width: 100%; /* Scale the width to 100px */
+    height: auto; /* Maintain aspect ratio */
     border-radius: 50%; /* Ensure it remains circular */
     border: none; /* Remove any border if added */
 }
