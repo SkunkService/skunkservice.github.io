@@ -64,6 +64,7 @@ button:disabled {
 #acc-view-box {
     margin-top: 20px;
     display: flex;
+    flex-direction: column; /* Adjusted for vertical layout */
     align-items: center;
     padding: 10px;
     background-color: #f9f9f9;
@@ -73,7 +74,7 @@ button:disabled {
 }
 
 #acc-view-box p {
-    margin: 0;
+    margin: 5px 0; /* Adjusted margin */
     font-size: 1.2rem;
     color: #333;
 }
@@ -82,7 +83,7 @@ button:disabled {
     border-radius: 50%;
     width: 50px; /* Adjusted icon size */
     height: 50px; /* Adjusted icon size */
-    margin-right: 20px;
+    margin-bottom: 10px; /* Margin between image and button */
     object-fit: cover; /* Ensures the image fits within the defined dimensions */
 }
 
