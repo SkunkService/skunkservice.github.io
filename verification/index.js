@@ -5,14 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        // Check if CAPTCHA is completed
-        const response = document.querySelector('.cf-turnstile-response').value;
-        if (!response) {
+        // Get the CAPTCHA response value from the hidden input field
+        const captchaResponse = document.getElementById('cf-chl-widget-1d0zi_response').value;
+        
+        if (!captchaResponse) {
             resultMessage.textContent = 'Please complete the CAPTCHA.';
             return;
         }
 
-        // Since we can't verify the CAPTCHA server-side, display a message
+        // Display a success message since server-side verification isn't implemented
         resultMessage.textContent = 'CAPTCHA completed! (Server-side verification is not implemented.)';
+
+        // Optionally, you can redirect or perform other actions here
     });
 });
