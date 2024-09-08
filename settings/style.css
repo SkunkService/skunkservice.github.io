@@ -84,7 +84,6 @@ button:disabled {
     height: 50px; /* Adjusted icon size */
     margin-right: 20px;
     object-fit: cover; /* Ensures the image fits within the defined dimensions */
-    display: block;
 }
 
 #edit-profile-btn {
