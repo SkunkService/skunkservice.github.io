@@ -2,9 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('verification-form');
     const resultMessage = document.getElementById('result-message');
 
-    // Debugging: Check if localStorage is accessible and check its content
-    console.log('localStorage.getItem("captchaVerified"):', localStorage.getItem('captchaVerified'));
-
     // Check if the user is already verified
     if (localStorage.getItem('captchaVerified') === 'true') {
         resultMessage.textContent = 'You are already verified!';
@@ -36,3 +33,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Debugging: Check if localStorage is accessible and check its content
+console.log('localStorage.getItem("captchaVerified"):', localStorage.getItem('captchaVerified'));
