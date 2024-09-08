@@ -79,12 +79,13 @@ button:disabled {
     color: #333;
 }
 
+/* Ensure the image scales to 100px and maintains aspect ratio */
 #acc-view-box img {
-    border-radius: 50%;
-    width: 100px; /* Updated icon size */
-    height: 100px; /* Updated icon size */
-    margin-bottom: 10px; /* Margin between image and button */
-    object-fit: cover; /* Ensures the image covers the dimensions */
+    width: 100px; /* Set width */
+    height: 100px; /* Set height */
+    object-fit: cover; /* Ensure the image covers the area */
+    border-radius: 50%; /* Ensure it remains circular */
+    border: none; /* Remove any border if added */
 }
 
 #edit-profile-btn {
