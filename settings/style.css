@@ -87,7 +87,9 @@ button:disabled {
     width: 100px;
     height: 100px;
     object-fit: cover;
-    border-radius: 50%; /* Make the image circular */
+    border-radius: 50%; /* Ensure circular appearance */
+    border: 1px solid #ddd; /* Optional: border to highlight the circle */
+    box-shadow: 0 0 5px rgba(0,0,0,0.2); /* Optional: shadow for a more defined circle */
 }
 
 #edit-profile-btn {
@@ -172,5 +174,5 @@ button:disabled {
 }
 
 .dark-mode #acc-view-box img {
-    border-radius: 50%; /* Ensure the image is circular in dark mode */
+    border-radius: 50%; /* Ensure circular appearance in dark mode */
 }
