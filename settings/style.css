@@ -83,13 +83,10 @@ button:disabled {
 }
 
 #acc-view-box img {
-    display: block;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%; /* Ensure circular appearance */
-    border: 1px solid #ddd; /* Optional: border to highlight the circle */
-    box-shadow: 0 0 5px rgba(0,0,0,0.2); /* Optional: shadow for a more defined circle */
+    width: 100px; /* Ensure image is a square */
+    height: 100px; /* Ensure image is a square */
+    object-fit: cover; /* Cover the area */
+    border-radius: 50%; /* Make the image circular */
 }
 
 #edit-profile-btn {
