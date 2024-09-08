@@ -15,7 +15,7 @@ body {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for dark mode */
+    transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for dark mode */
 }
 
 .title {
@@ -73,6 +73,7 @@ button:disabled {
     border-radius: 8px;
     border: 1px solid #ddd;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for dark mode */
 }
 
 #acc-view-box p {
@@ -83,9 +84,9 @@ button:disabled {
 
 #acc-view-box img {
     display: block;
-    width: 100px;   /* Fixed width for square */
-    height: 100px;  /* Fixed height for square */
-    object-fit: cover; /* Ensures it fits without distortion */
+    width: 100px;  /* Fixed width for square */
+    height: 100px; /* Fixed height for square */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
     border-radius: 0; /* Square corners */
 }
 
@@ -150,16 +151,11 @@ button:disabled {
 
 .dark-mode .container {
     background-color: #444;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-.dark-mode .title {
-    color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.7);
 }
 
 .dark-mode button {
     background-color: #0056b3;
-    color: #fff;
 }
 
 .dark-mode button:hover {
@@ -172,27 +168,5 @@ button:disabled {
 }
 
 .dark-mode #acc-view-box p {
-    color: #ddd;
-}
-
-.dark-mode #acc-view-box img {
-    border-radius: 0; /* Ensure the square shape */
-}
-
-.dark-mode #in-edit-profile input {
-    border: 1px solid #666;
-    background-color: #666;
     color: #fff;
-}
-
-.dark-mode #in-edit-profile button {
-    background-color: #0056b3;
-}
-
-.dark-mode #in-edit-profile button:hover {
-    background-color: #003d7a;
-}
-
-.dark-mode #result-message {
-    color: #f44336;
 }
