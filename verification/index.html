@@ -1,25 +1,37 @@
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verification Page</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Cloudflare Turnstile script -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-</head>
-<body>
-    <div class="container">
-        <h1 class="title">Verification Required</h1>
-        <p class="message">Please verify that you are not a robot by completing the CAPTCHA below.</p>
-        <form id="verification-form">
-            <!-- Cloudflare Turnstile widget -->
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAAi9J2Y6H-Xd2ei-"></div>
-            <button type="submit" class="button">Verify</button>
-        </form>
-        <div id="result-message"></div>
-    </div>
-    <script src="index.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('verification-form');
+    const resultMessage = document.getElementById('result-message');
+
+    // Debugging: Check if localStorage is accessible and check its content
+    console.log('localStorage.getItem("captchaVerified"):', localStorage.getItem('captchaVerified'));
+
+    // Check if the user is already verified
+    if (localStorage.getItem('captchaVerified') === 'true') {
+        resultMessage.textContent = 'You are already verified!';
+        form.style.display = 'none'; // Hide the form if already verified
+        return;
+    }
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Check if CAPTCHA response is present
+        const captchaResponseField = document.querySelector('input[name="cf-turnstile-response"]');
+        const captchaResponse = captchaResponseField ? captchaResponseField.value : null;
+
+        console.log('CAPTCHA response:', captchaResponse);
+
+        if (!captchaResponse) {
+            resultMessage.textContent = 'CAPTCHA not completed or response not found.';
+            return;
+        }
+
+        // Save the verification state to localStorage
+        localStorage.setItem('captchaVerified', 'true');
+        console.log('Verification state saved to localStorage');
+
+        // Inform the user and hide the form
+        resultMessage.textContent = 'CAPTCHA completed successfully!';
+        form.style.display = 'none'; // Optionally hide the form
+    });
+});
