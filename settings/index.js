@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load settings from localStorage
     const loadSettings = () => {
         const darkMode = localStorage.getItem('darkMode') === 'true';
-        const accountVerified = localStorage.getItem('accountVerified') === 'true';
+        const isVerified = localStorage.getItem('captchaVerified') === 'true';
 
         darkModeCheckbox.checked = darkMode;
         document.body.classList.toggle('dark-mode', darkMode);
 
         accViewBox.style.display = 'block';
-        accVerifiedDisplay.textContent = `Account Verification: ${accountVerified ? 'Verified' : 'Unverified'}`;
+        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
 
         const savedUsername = localStorage.getItem('username');
         const savedNickname = localStorage.getItem('nickname');
@@ -104,13 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if the account is verified with captcha
     const isVerified = localStorage.getItem('captchaVerified') === 'true';
+    accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
 
-    if (isVerified) {
-        accVerifiedDisplay.textContent = 'Account Verification: Verified';
-    } else {
-        accVerifiedDisplay.textContent = 'Account Verification: Unverified';
-    }
-    
     // Load settings on page load
     loadSettings();
 });
