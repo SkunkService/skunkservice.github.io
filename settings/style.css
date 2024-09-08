@@ -80,12 +80,12 @@ button:disabled {
 
 #acc-view-box img {
     display: block;
-    width: 100px;   /* Fixed width */
-    height: 100px;  /* Fixed height to ensure a square */
-    object-fit: contain; /* Keeps the image inside the box, maintaining aspect ratio */
-    border-radius: 0;  /* Remove this line if you don't want rounded corners */
-    background-color: #f0f0f0; /* Optional background to see the square area */
+    width: 100px;   /* Fixed width for square */
+    height: 100px;  /* Fixed height for square */
+    object-fit: cover; /* Ensures it fits without distortion */
+    border-radius: 50%; /* Keeps the image round */
 }
+
 
 #edit-profile-btn {
     background-color: #28a745;
