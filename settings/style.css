@@ -5,7 +5,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark mode */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -15,7 +15,7 @@ body {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for dark mode */
+    transition: background 0.3s, box-shadow 0.3s;
 }
 
 .title {
@@ -73,7 +73,7 @@ button:disabled {
     border-radius: 8px;
     border: 1px solid #ddd;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for dark mode */
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 #acc-view-box p {
@@ -84,10 +84,10 @@ button:disabled {
 
 #acc-view-box img {
     display: block;
-    width: 100px;  /* Fixed width for square */
-    height: 100px; /* Fixed height for square */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
-    border-radius: 0; /* Square corners */
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0;
 }
 
 #edit-profile-btn {
