@@ -64,7 +64,7 @@ button:disabled {
 #acc-view-box {
     margin-top: 20px;
     display: flex;
-    flex-direction: column; /* Adjusted for vertical layout */
+    flex-direction: column;
     align-items: center;
     padding: 10px;
     background-color: #f9f9f9;
@@ -74,20 +74,18 @@ button:disabled {
 }
 
 #acc-view-box p {
-    margin: 5px 0; /* Adjusted margin */
+    margin: 5px 0;
     font-size: 1.2rem;
     color: #333;
 }
 
-/* Reset potential conflicting styles */
 #acc-view-box img {
-    display: block; /* Ensure no inline elements are affecting sizing */
-    max-width: 100px; /* Ensure it doesn’t exceed 100px */
-    max-height: 100px; /* Ensure it doesn’t exceed 100px */
-    width: 100%; /* Scale the width to 100px */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 50%; /* Ensure it remains circular */
-    border: none; /* Remove any border if added */
+    display: block;
+    width: 100px; /* Fixed width */
+    height: 100px; /* Fixed height */
+    object-fit: cover; /* Ensures the image covers the dimensions */
+    border-radius: 50%; /* Circular image */
+    border: none; /* Ensure no border */
 }
 
 #edit-profile-btn {
