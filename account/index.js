@@ -17,15 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedIcon = localStorage.getItem('icon');
         const isVerified = localStorage.getItem('captchaVerified') === 'true';
 
-        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+        if (accVerifiedDisplay) {
+            accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+        }
 
-        if (savedUsername) {
+        if (savedUsername && usernameDisplay) {
             usernameDisplay.textContent = `Username: ${savedUsername}`;
         }
-        if (savedNickname) {
+        if (savedNickname && nicknameDisplay) {
             nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
         }
-        if (savedIcon) {
+        if (savedIcon && icon) {
             icon.src = savedIcon;
         }
     };
@@ -33,47 +35,68 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings(); // Load settings when the page loads
 
     // Edit profile toggle
-    editProfileButton.addEventListener('click', () => {
-        if (inEditProfileDiv.style.display === 'none' || inEditProfileDiv.style.display === '') {
-            inEditProfileDiv.style.display = 'block';
-        } else {
-            inEditProfileDiv.style.display = 'none';
-        }
-    });
+    if (editProfileButton && inEditProfileDiv) {
+        editProfileButton.addEventListener('click', () => {
+            // Toggle display of the edit profile section
+            if (inEditProfileDiv.style.display === 'none' || inEditProfileDiv.style.display === '') {
+                inEditProfileDiv.style.display = 'block';
+            } else {
+                inEditProfileDiv.style.display = 'none';
+            }
+        });
+    }
 
     // Apply profile changes
-    applyProfileButton.addEventListener('click', () => {
-        const username = document.getElementById('username-inp').value;
-        const nickname = document.getElementById('nickname-inp').value;
-        const iconFile = document.getElementById('icon-file').files[0];
+    if (applyProfileButton) {
+        applyProfileButton.addEventListener('click', () => {
+            const username = document.getElementById('username-inp')?.value;
+            const nickname = document.getElementById('nickname-inp')?.value;
+            const iconFile = document.getElementById('icon-file')?.files[0];
 
-        if (username) {
-            localStorage.setItem('username', username);
-            usernameDisplay.textContent = `Username: ${username}`;
-        }
-        if (nickname) {
-            localStorage.setItem('nickname', nickname);
-            nicknameDisplay.textContent = `Nickname: @${nickname}`;
-        }
-        if (iconFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                icon.src = e.target.result;
-                localStorage.setItem('icon', e.target.result);
-            };
-            reader.readAsDataURL(iconFile);
-        }
+            if (username) {
+                localStorage.setItem('username', username);
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = `Username: ${username}`;
+                }
+            }
+            if (nickname) {
+                localStorage.setItem('nickname', nickname);
+                if (nicknameDisplay) {
+                    nicknameDisplay.textContent = `Nickname: @${nickname}`;
+                }
+            }
+            if (iconFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (icon) {
+                        icon.src = e.target.result;
+                        localStorage.setItem('icon', e.target.result);
+                    }
+                };
+                reader.readAsDataURL(iconFile);
+            }
 
-        resultMessageDiv.textContent = 'Profile updated!';
-    });
+            if (resultMessageDiv) {
+                resultMessageDiv.textContent = 'Profile updated!';
+            }
+        });
+    }
 
     // Filter icon - Apply CSS filter
-    filterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'blur(5px)'; // Apply blur filter
-    });
+    if (filterIconBtn && icon) {
+        filterIconBtn.addEventListener('click', () => {
+            if (icon) {
+                icon.style.filter = 'blur(5px)'; // Apply blur filter
+            }
+        });
+    }
 
     // Unfilter icon - Remove CSS filter
-    unfilterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'none'; // Remove filter
-    });
+    if (unfilterIconBtn && icon) {
+        unfilterIconBtn.addEventListener('click', () => {
+            if (icon) {
+                icon.style.filter = 'none'; // Remove filter
+            }
+        });
+    }
 });
