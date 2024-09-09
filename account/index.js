@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const icon = document.getElementById('icon');
     const filterIconBtn = document.getElementById('filter-icon');
     const unfilterIconBtn = document.getElementById('unfilter-icon');
+    const viewIconLink = document.getElementById('view-icon');
+    const iconBox = document.getElementById('icon-box');
 
     // Load settings from localStorage
     const loadSettings = () => {
@@ -72,5 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Unfilter icon - Remove CSS filter
     unfilterIconBtn.addEventListener('click', () => {
         icon.style.filter = 'none';
+    });
+
+    // View icon functionality - Toggle visibility of the icon box
+    viewIconLink.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent default link behavior
+
+        // Toggle visibility of the icon box
+        if (iconBox.hidden) {
+            iconBox.hidden = false;
+        } else {
+            iconBox.hidden = true;
+        }
     });
 });
