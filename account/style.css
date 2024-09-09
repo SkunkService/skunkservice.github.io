@@ -5,43 +5,151 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ensure it takes up the full viewport height */
+    max-width: 900px;
+    margin: 0 auto;
     padding: 20px;
-    box-sizing: border-box;
-}
-
-/* Style for the account view box */
-#acc-view-box {
-    padding: 20px;
-    text-align: center;
-    background: #f9f9f9;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px; /* Space below the account view box */
+    transition: background 0.3s, box-shadow 0.3s;
 }
 
-/* Style for the icon box */
+.title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.settings-actions {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.setting {
+    margin-bottom: 15px;
+}
+
+.setting label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.setting input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#acc-view-box {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+#acc-view-box p {
+    margin: 5px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#icon {
+    width: 250px; /* Set width */
+    height: 250px; /* Set height */
+    object-fit: cover; /* Ensure the image covers the container */
+    border-radius: 50%; /* Makes the image a circle */
+    border: 2px solid #ddd; /* Optional border for clarity */
+}
+
+#edit-profile-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+#edit-profile-btn:hover {
+    background-color: #218838;
+}
+
+#profile-form {
+    margin-top: 20px;
+}
+
+#profile-form input {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+#profile-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+#profile-form button:hover {
+    background-color: #0056b3;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #d9534f;
+}
+
 #icon-box {
     padding: 20px;
     text-align: center;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    position: fixed; /* Fixed position to ensure it stays in place */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Center align using transform */
-    max-width: 90%; /* Responsive width */
-    z-index: 1000; /* Ensure it appears above other content */
 }
 
-/* Button styling */
 #gotoprofile {
     margin-bottom: 10px;
     background-color: #007bff;
@@ -72,56 +180,35 @@ body {
     height: auto;
 }
 
-/* Style for the buttons */
-button {
-    background-color: #007bff;
+/* Dark Mode Styles */
+.dark-mode {
+    background-color: #333;
     color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-right: 10px;
-    transition: background-color 0.3s;
 }
 
-button:hover {
+.dark-mode .container {
+    background-color: #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.7);
+}
+
+.dark-mode button {
     background-color: #0056b3;
 }
 
-button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
+.dark-mode button:hover {
+    background-color: #003d7a;
 }
 
-form input[type="text"], form input[type="file"] {
-    display: block;
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    width: 100%;
+.dark-mode #acc-view-box {
+    background-color: #555;
+    border-color: #666;
 }
 
-form button {
-    background-color: #007bff;
+.dark-mode #acc-view-box p {
     color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: 10px;
-    transition: background-color 0.3s;
 }
 
-form button:hover {
-    background-color: #0056b3;
-}
-
-#message {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: #d9534f;
+/* Icon Styles */
+#icon {
+    border-color: transparent; /* Ensure no color change for the icon */
 }
