@@ -83,8 +83,8 @@ button:disabled {
 }
 
 #acc-view-box img {
-    width: 100px; /* Ensure equal width and height for a perfect circle */
-    height: 100px;
+    width: 250px; /* Ensure equal width and height for a perfect circle */
+    height: 250px;
     object-fit: cover;
     border-radius: 50%; /* Makes the image a circle */
     border: 2px solid #ddd; /* Optional border for clarity */
