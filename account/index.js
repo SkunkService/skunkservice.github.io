@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterIconBtn = document.getElementById('filter-icon');
     const unfilterIconBtn = document.getElementById('unfilter-icon');
     const viewIconLink = document.getElementById('view-icon');
+    const goToProfileButton = document.getElementById('gotoprofile');
 
     // Load settings from localStorage
     const loadSettings = () => {
@@ -86,5 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
             iconCheck.src = iconSrc;
             iconBox.hidden = false; // Show the icon box
         }
+    });
+
+    // Go to Profile - Hide icon box and show profile view
+    goToProfileButton.addEventListener('click', () => {
+        iconBox.hidden = true; // Hide the icon box
+        accViewBox.scrollIntoView(); // Scroll to the profile view
     });
 });
