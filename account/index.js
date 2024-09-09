@@ -1,32 +1,56 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const viewIcon = document.getElementById('view-icon');
-    const iconBox = document.getElementById('icon-box');
-    const filterIcon = document.getElementById('filter-icon');
-    const unfilterIcon = document.getElementById('unfilter-icon');
-    const icon = document.getElementById('icon');
-    const iconFileInput = document.getElementById('icon-file');
+    const accViewBox = document.getElementById('acc-view-box');
+    const editProfileButton = document.getElementById('edit-profile-btn');
+    const inEditProfileDiv = document.getElementById('in-edit-profile');
     const applyProfileButton = document.getElementById('apply-profile');
-    const message = document.getElementById('message');
+    const resultMessageDiv = document.getElementById('message');
+    const usernameDisplay = document.getElementById('username');
+    const nicknameDisplay = document.getElementById('nickname');
+    const accVerifiedDisplay = document.getElementById('acc-verified');
+    const icon = document.getElementById('icon');
+    const filterIconBtn = document.getElementById('filter-icon');
+    const unfilterIconBtn = document.getElementById('unfilter-icon');
 
-    // Toggle visibility of the icon box
-    viewIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        iconBox.hidden = !iconBox.hidden;
+    // Load settings from localStorage
+    const loadSettings = () => {
+        const savedUsername = localStorage.getItem('username');
+        const savedNickname = localStorage.getItem('nickname');
+        const savedIcon = localStorage.getItem('icon');
+        const isVerified = localStorage.getItem('captchaVerified') === 'true';
+
+        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+
+        if (savedUsername) {
+            usernameDisplay.textContent = `Username: ${savedUsername}`;
+        }
+        if (savedNickname) {
+            nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
+        }
+        if (savedIcon) {
+            icon.src = savedIcon;
+        }
+    };
+
+    loadSettings(); // Load settings when the page loads
+
+    // Edit profile toggle
+    editProfileButton.addEventListener('click', () => {
+        inEditProfileDiv.style.display = inEditProfileDiv.style.display === 'none' ? 'block' : 'none';
     });
 
     // Apply profile changes
     applyProfileButton.addEventListener('click', () => {
         const username = document.getElementById('username-inp').value;
         const nickname = document.getElementById('nickname-inp').value;
-        const iconFile = iconFileInput.files[0];
+        const iconFile = document.getElementById('icon-file').files[0];
 
         if (username) {
             localStorage.setItem('username', username);
-            document.getElementById('username').textContent = `Username: ${username}`;
+            usernameDisplay.textContent = `Username: ${username}`;
         }
         if (nickname) {
             localStorage.setItem('nickname', nickname);
-            document.getElementById('nickname').textContent = `Nickname: @${nickname}`;
+            nicknameDisplay.textContent = `Nickname: @${nickname}`;
         }
         if (iconFile) {
             const reader = new FileReader();
@@ -37,35 +61,16 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(iconFile);
         }
 
-        message.textContent = 'Profile updated!';
+        resultMessageDiv.textContent = 'Profile updated!';
     });
 
     // Filter icon - Apply CSS filter
-    filterIcon.addEventListener('click', () => {
-        icon.style.filter = 'blur(5px)'; // Apply blur filter
+    filterIconBtn.addEventListener('click', () => {
+        icon.style.filter = 'blur(5px)'; // Apply blur effect
     });
 
     // Unfilter icon - Remove CSS filter
-    unfilterIcon.addEventListener('click', () => {
-        icon.style.filter = 'none'; // Remove filter
+    unfilterIconBtn.addEventListener('click', () => {
+        icon.style.filter = 'none';
     });
-
-    // Load settings from localStorage on page load
-    const loadSettings = () => {
-        const savedUsername = localStorage.getItem('username');
-        const savedNickname = localStorage.getItem('nickname');
-        const savedIcon = localStorage.getItem('icon');
-
-        if (savedUsername) {
-            document.getElementById('username').textContent = `Username: ${savedUsername}`;
-        }
-        if (savedNickname) {
-            document.getElementById('nickname').textContent = `Nickname: @${savedNickname}`;
-        }
-        if (savedIcon) {
-            icon.src = savedIcon;
-        }
-    };
-
-    loadSettings();
 });
