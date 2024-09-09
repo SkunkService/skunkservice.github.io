@@ -1,94 +1,73 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const accViewBox = document.getElementById('acc-view-box');
-    const editProfileButton = document.getElementById('edit-profile-btn');
-    const inEditProfileDiv = document.getElementById('profile-form');
-    const applyProfileButton = document.getElementById('apply-profile');
-    const resultMessageDiv = document.getElementById('message');
-    const usernameDisplay = document.getElementById('username');
-    const nicknameDisplay = document.getElementById('nickname');
-    const accVerifiedDisplay = document.getElementById('acc-verified');
-    const icon = document.getElementById('icon');
-    const filterIconBtn = document.getElementById('filter-icon');
-    const unfilterIconBtn = document.getElementById('unfilter-icon');
+    const viewIcon = document.getElementById('view-icon');
     const iconBox = document.getElementById('icon-box');
-    const goToProfileButton = document.getElementById('gotoprofile');
+    const gotoprofile = document.getElementById('gotoprofile');
+    const filterIcon = document.getElementById('filter-icon');
+    const unfilterIcon = document.getElementById('unfilter-icon');
+    const icon = document.getElementById('icon');
+    const iconFileInput = document.getElementById('icon-file');
+    const applyProfileButton = document.getElementById('apply-profile');
+    const message = document.getElementById('message');
 
-    // Load settings from localStorage
-    const loadSettings = () => {
-        const savedUsername = localStorage.getItem('username');
-        const savedNickname = localStorage.getItem('nickname');
-        const savedIcon = localStorage.getItem('icon');
-        const isVerified = localStorage.getItem('captchaVerified') === 'true';
-        const isBlurred = localStorage.getItem('iconBlurred') === 'true';
+    // Toggle the visibility of the icon box
+    viewIcon.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default action
+        iconBox.hidden = !iconBox.hidden;
+    });
 
-        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+    // Go to profile button action (for demonstration purposes)
+    gotoprofile.addEventListener('click', () => {
+        window.location.href = '/profile'; // Replace with actual profile URL or action
+    });
 
-        if (savedUsername) {
-            usernameDisplay.textContent = `Username: ${savedUsername}`;
-        }
-        if (savedNickname) {
-            nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
-        }
-        if (savedIcon) {
-            icon.src = savedIcon;
-        }
-        if (isBlurred) {
-            icon.style.filter = 'blur(5px)';
-        }
-    };
+    // Filter icon user (for demonstration, adds a blur effect)
+    filterIcon.addEventListener('click', () => {
+        icon.style.filter = 'blur(5px)';
+        localStorage.setItem('iconFiltered', 'true');
+    });
 
-    loadSettings(); // Load settings when the page loads
-
-    // Edit profile toggle
-    editProfileButton.addEventListener('click', () => {
-        inEditProfileDiv.style.display = inEditProfileDiv.style.display === 'none' ? 'block' : 'none';
+    // Unfilter icon user (for demonstration, removes blur effect)
+    unfilterIcon.addEventListener('click', () => {
+        icon.style.filter = 'none';
+        localStorage.setItem('iconFiltered', 'false');
     });
 
     // Apply profile changes
     applyProfileButton.addEventListener('click', () => {
         const username = document.getElementById('username-inp').value;
         const nickname = document.getElementById('nickname-inp').value;
-        const iconFile = document.getElementById('icon-file').files[0];
+        const iconFile = iconFileInput.files[0];
 
         if (username) {
-            localStorage.setItem('username', username);
-            usernameDisplay.textContent = `Username: ${username}`;
+            document.getElementById('username').textContent = `Username: ${username}`;
         }
         if (nickname) {
-            localStorage.setItem('nickname', nickname);
-            nicknameDisplay.textContent = `Nickname: @${nickname}`;
+            document.getElementById('nickname').textContent = `Nickname: @${nickname}`;
         }
+
         if (iconFile) {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = function(e) {
                 icon.src = e.target.result;
-                localStorage.setItem('icon', e.target.result);
+                localStorage.setItem('iconSrc', e.target.result);
             };
             reader.readAsDataURL(iconFile);
         }
 
-        resultMessageDiv.textContent = 'Profile updated!';
+        message.textContent = 'Profile updated successfully!';
     });
 
-    // Apply blur effect and save to localStorage
-    filterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'blur(5px)'; // Apply blur effect
-        localStorage.setItem('iconBlurred', 'true');
-    });
-
-    // Remove blur effect and save to localStorage
-    unfilterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'none';
-        localStorage.setItem('iconBlurred', 'false');
-    });
-
-    // Show icon box and center it
-    function showIconBox() {
-        iconBox.hidden = false;
+    // Load saved icon state from localStorage
+    const savedIconSrc = localStorage.getItem('iconSrc');
+    if (savedIconSrc) {
+        icon.src = savedIconSrc;
     }
 
-    // Go to profile button action
-    goToProfileButton.addEventListener('click', () => {
-        showIconBox(); // Show the icon box when the button is clicked
-    });
+    // Load saved filter state from localStorage
+    const iconFiltered = localStorage.getItem('iconFiltered');
+    if (iconFiltered === 'true') {
+        icon.style.filter = 'blur(5px)';
+    } else {
+        icon.style.filter = 'none';
+    }
 });
