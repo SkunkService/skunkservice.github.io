@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const accViewBox = document.getElementById('acc-view-box');
     const editProfileButton = document.getElementById('edit-profile-btn');
     const inEditProfileDiv = document.getElementById('in-edit-profile');
     const applyProfileButton = document.getElementById('apply-profile');
@@ -35,7 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Edit profile toggle
     editProfileButton.addEventListener('click', () => {
-        inEditProfileDiv.style.display = inEditProfileDiv.style.display === 'none' ? 'block' : 'none';
+        if (inEditProfileDiv.style.display === 'none' || inEditProfileDiv.style.display === '') {
+            inEditProfileDiv.style.display = 'block';
+        } else {
+            inEditProfileDiv.style.display = 'none';
+        }
     });
 
     // Apply profile changes
@@ -66,11 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter icon - Apply CSS filter
     filterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'blur(5px)'; // Apply blur effect
+        icon.style.filter = 'blur(5px)'; // Apply blur filter
     });
 
     // Unfilter icon - Remove CSS filter
     unfilterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'none';
+        icon.style.filter = 'none'; // Remove filter
     });
 });
