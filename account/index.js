@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedNickname = localStorage.getItem('nickname');
         const savedIcon = localStorage.getItem('icon');
         const isVerified = localStorage.getItem('captchaVerified') === 'true';
+        const isBlurred = localStorage.getItem('iconBlurred') === 'true';
 
         accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
 
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (savedIcon) {
             icon.src = savedIcon;
+        }
+        if (isBlurred) {
+            icon.style.filter = 'blur(5px)';
         }
     };
 
@@ -66,14 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
         resultMessageDiv.textContent = 'Profile updated!';
     });
 
-    // Filter icon - Apply CSS filter
+    // Apply blur effect and save to localStorage
     filterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'blur(5px)'; // You can adjust this filter as needed
+        icon.style.filter = 'blur(5px)'; // Apply blur effect
+        localStorage.setItem('iconBlurred', 'true');
     });
 
-    // Unfilter icon - Remove CSS filter
+    // Remove blur effect and save to localStorage
     unfilterIconBtn.addEventListener('click', () => {
         icon.style.filter = 'none';
+        localStorage.setItem('iconBlurred', 'false');
     });
 
     // Show icon box and center it
