@@ -10,26 +10,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const icon = document.getElementById('icon');
 
     // Load settings from localStorage
-    const loadSettings = () => {
-        const isVerified = localStorage.getItem('captchaVerified') === 'true';
+const loadSettings = () => {
+    const isVerified = localStorage.getItem('captchaVerified') === 'true';
 
-        accViewBox.style.display = 'block';
-        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+    accViewBox.style.display = 'block';
+    accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
 
-        const savedUsername = localStorage.getItem('username');
-        const savedNickname = localStorage.getItem('nickname');
-        const savedIcon = localStorage.getItem('icon');
+    const savedUsername = localStorage.getItem('username');
+    const savedNickname = localStorage.getItem('nickname');
+    const savedIcon = localStorage.getItem('icon');
 
-        if (savedUsername) {
-            usernameDisplay.textContent = `Username: ${savedUsername}`;
-        }
-        if (savedNickname) {
-            nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
-        }
-        if (savedIcon) {
-            icon.src = savedIcon;
-        }
-    };
+    console.log('Loaded Username:', savedUsername);
+    console.log('Loaded Nickname:', savedNickname);
+    console.log('Loaded Icon:', savedIcon);
+
+    if (savedUsername) {
+        usernameDisplay.textContent = `Username: ${savedUsername}`;
+    } else {
+        console.log('No saved username found.');
+    }
+
+    if (savedNickname) {
+        nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
+    } else {
+        console.log('No saved nickname found.');
+    }
+
+    if (savedIcon) {
+        icon.src = savedIcon;
+    } else {
+        console.log('No saved icon found.');
+    }
+};
 
     // Edit profile
     editProfileButton.addEventListener('click', () => {
