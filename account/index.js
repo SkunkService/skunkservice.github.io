@@ -20,26 +20,15 @@ const loadSettings = () => {
     const savedNickname = localStorage.getItem('nickname');
     const savedIcon = localStorage.getItem('icon');
 
-    console.log('Loaded Username:', savedUsername);
-    console.log('Loaded Nickname:', savedNickname);
-    console.log('Loaded Icon:', savedIcon);
-
     if (savedUsername) {
         usernameDisplay.textContent = `Username: ${savedUsername}`;
-    } else {
-        console.log('No saved username found.');
     }
-
     if (savedNickname) {
         nicknameDisplay.textContent = `Nickname: @${savedNickname}`;
-    } else {
-        console.log('No saved nickname found.');
     }
-
     if (savedIcon) {
-        icon.src = savedIcon;
-    } else {
-        console.log('No saved icon found.');
+        console.log('Loading Icon:', savedIcon); // Debug log to check if the icon URL is retrieved
+        icon.src = savedIcon;  // Apply the icon source
     }
 };
 
@@ -72,9 +61,9 @@ const loadSettings = () => {
             const iconURL = e.target.result;
             icon.src = iconURL;
             localStorage.setItem('icon', iconURL);
-            console.log('Saved Icon:', iconURL);
+            console.log('Saved Icon:', iconURL); // Debug log
         };
-        reader.readAsDataURL(iconFile);
+        reader.readAsDataURL(iconFile);  // Ensure it is reading as a Data URL
     }
 
     resultMessageDiv.textContent = 'Profile updated!';
