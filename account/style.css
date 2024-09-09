@@ -175,3 +175,34 @@ button:disabled {
 #acc-view-box img {
     border-color: transparent; /* Ensure no color change for the icon */
 }
+
+#icon-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: opacity 0.3s;
+    /* Add a more visible style when the icon is being viewed */
+    position: absolute; /* Position absolutely for proper visibility */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Make sure it's on top of other elements */
+}
+
+/* Hide the icon box */
+#icon-box[hidden] {
+    display: none;
+}
+
+#icon-checks {
+    text-align: center;
+}
+
+#icon-check {
+    max-width: 100%;
+    height: auto;
+}
