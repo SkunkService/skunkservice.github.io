@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const darkMode = localStorage.getItem('darkMode') === 'true';
         const isVerified = localStorage.getItem('captchaVerified') === 'true';
 
-        darkModeCheckbox.checked = darkMode;
         document.body.classList.toggle('dark-mode', darkMode);
 
         accViewBox.style.display = 'block';
