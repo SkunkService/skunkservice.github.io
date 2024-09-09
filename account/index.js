@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter icon - Apply CSS filter
     filterIconBtn.addEventListener('click', () => {
-        icon.style.filter = 'grayscale(100%)'; // You can adjust this filter as needed
+        icon.style.filter = 'blur(5px)'; // You can adjust this filter as needed
     });
 
     // Unfilter icon - Remove CSS filter
