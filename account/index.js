@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editProfileButton = document.getElementById('edit-profile-btn');
     const inEditProfileDiv = document.getElementById('in-edit-profile');
     const applyProfileButton = document.getElementById('apply-profile');
-    const resultMessageDiv = document.getElementById('result-message');
+    const resultMessageDiv = document.getElementById('message');
     const usernameDisplay = document.getElementById('username');
     const nicknameDisplay = document.getElementById('nickname');
     const accVerifiedDisplay = document.getElementById('acc-verified');
@@ -11,10 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load settings from localStorage
     const loadSettings = () => {
-        const darkMode = localStorage.getItem('darkMode') === 'true';
         const isVerified = localStorage.getItem('captchaVerified') === 'true';
-
-        document.body.classList.toggle('dark-mode', darkMode);
 
         accViewBox.style.display = 'block';
         accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
@@ -68,4 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if the account is verified with captcha
     const isVerified = localStorage.getItem('captchaVerified') === 'true';
     accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+
+    // Call loadSettings on DOMContentLoaded
+    loadSettings();
 });
