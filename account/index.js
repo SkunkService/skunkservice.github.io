@@ -94,4 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         iconBox.hidden = true; // Hide the icon box
         accViewBox.scrollIntoView(); // Scroll to the profile view
     });
+
+    // Log for debugging
+    console.log('Icon box hidden status:', iconBox.hidden);
 });
