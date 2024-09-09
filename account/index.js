@@ -50,29 +50,35 @@ const loadSettings = () => {
 
     // Apply profile changes
     applyProfileButton.addEventListener('click', () => {
-        const username = document.getElementById('username-inp').value;
-        const nickname = document.getElementById('nickname-inp').value;
-        const iconFile = document.getElementById('icon-file').files[0];
+    const username = document.getElementById('username-inp').value;
+    const nickname = document.getElementById('nickname-inp').value;
+    const iconFile = document.getElementById('icon-file').files[0];
 
-        if (username) {
-            localStorage.setItem('username', username);
-            usernameDisplay.textContent = `Username: ${username}`;
-        }
-        if (nickname) {
-            localStorage.setItem('nickname', nickname);
-            nicknameDisplay.textContent = `Nickname: @${nickname}`;
-        }
-        if (iconFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                icon.src = e.target.result;
-                localStorage.setItem('icon', e.target.result);
-            };
-            reader.readAsDataURL(iconFile);
-        }
+    if (username) {
+        localStorage.setItem('username', username);
+        usernameDisplay.textContent = `Username: ${username}`;
+        console.log('Saved Username:', username);
+    }
 
-        resultMessageDiv.textContent = 'Profile updated!';
-    });
+    if (nickname) {
+        localStorage.setItem('nickname', nickname);
+        nicknameDisplay.textContent = `Nickname: @${nickname}`;
+        console.log('Saved Nickname:', nickname);
+    }
+
+    if (iconFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const iconURL = e.target.result;
+            icon.src = iconURL;
+            localStorage.setItem('icon', iconURL);
+            console.log('Saved Icon:', iconURL);
+        };
+        reader.readAsDataURL(iconFile);
+    }
+
+    resultMessageDiv.textContent = 'Profile updated!';
+});
 
     // Check if the account is verified with captcha
     const isVerified = localStorage.getItem('captchaVerified') === 'true';
