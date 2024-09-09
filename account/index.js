@@ -8,10 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const nicknameDisplay = document.getElementById('nickname');
     const accVerifiedDisplay = document.getElementById('acc-verified');
     const icon = document.getElementById('icon');
+    const iconBox = document.getElementById('icon-box');
+    const iconCheck = document.getElementById('icon-check');
     const filterIconBtn = document.getElementById('filter-icon');
     const unfilterIconBtn = document.getElementById('unfilter-icon');
     const viewIconLink = document.getElementById('view-icon');
-    const iconBox = document.getElementById('icon-box');
 
     // Load settings from localStorage
     const loadSettings = () => {
@@ -57,8 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (iconFile) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                icon.src = e.target.result;
-                localStorage.setItem('icon', e.target.result);
+                const iconSrc = e.target.result;
+                icon.src = iconSrc;
+                localStorage.setItem('icon', iconSrc);
             };
             reader.readAsDataURL(iconFile);
         }
@@ -76,15 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.style.filter = 'none';
     });
 
-    // View icon functionality - Toggle visibility of the icon box
+    // View icon - Show icon in the icon box
     viewIconLink.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent default link behavior
-
-        // Toggle visibility of the icon box
-        if (iconBox.hidden) {
-            iconBox.hidden = false;
-        } else {
-            iconBox.hidden = true;
+        event.preventDefault();
+        const iconSrc = icon.src;
+        if (iconSrc) {
+            iconCheck.src = iconSrc;
+            iconBox.hidden = false; // Show the icon box
         }
     });
 });
