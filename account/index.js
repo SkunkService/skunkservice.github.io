@@ -20,13 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/profile'; // Replace with actual profile URL or action
     });
 
-    // Filter icon user (for demonstration, adds a blur effect)
+    // Filter icon user (adds a blur effect)
     filterIcon.addEventListener('click', () => {
         icon.style.filter = 'blur(5px)';
         localStorage.setItem('iconFiltered', 'true');
     });
 
-    // Unfilter icon user (for demonstration, removes blur effect)
+    // Unfilter icon user (removes blur effect)
     unfilterIcon.addEventListener('click', () => {
         icon.style.filter = 'none';
         localStorage.setItem('iconFiltered', 'false');
@@ -40,16 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (username) {
             document.getElementById('username').textContent = `Username: ${username}`;
+            localStorage.setItem('username', username);
         }
         if (nickname) {
             document.getElementById('nickname').textContent = `Nickname: @${nickname}`;
+            localStorage.setItem('nickname', nickname);
         }
 
         if (iconFile) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                icon.src = e.target.result;
-                localStorage.setItem('iconSrc', e.target.result);
+                const iconSrc = e.target.result;
+                icon.src = iconSrc;
+                localStorage.setItem('iconSrc', iconSrc);
             };
             reader.readAsDataURL(iconFile);
         }
@@ -57,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         message.textContent = 'Profile updated successfully!';
     });
 
-    // Load saved icon state from localStorage
+    // Load saved icon source from localStorage
     const savedIconSrc = localStorage.getItem('iconSrc');
     if (savedIconSrc) {
         icon.src = savedIconSrc;
@@ -69,5 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.style.filter = 'blur(5px)';
     } else {
         icon.style.filter = 'none';
+    }
+
+    // Load saved username and nickname from localStorage
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+        document.getElementById('username').textContent = `Username: ${savedUsername}`;
+    }
+
+    const savedNickname = localStorage.getItem('nickname');
+    if (savedNickname) {
+        document.getElementById('nickname').textContent = `Nickname: @${savedNickname}`;
     }
 });
