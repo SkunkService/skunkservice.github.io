@@ -3,32 +3,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const editProfileButton = document.getElementById('edit-profile-btn');
     const inEditProfileDiv = document.getElementById('in-edit-profile');
     const applyProfileButton = document.getElementById('apply-profile');
-    const resultMessageDiv = document.getElementById('message'); // Fixed ID reference
+    const resultMessageDiv = document.getElementById('message');
     const usernameDisplay = document.getElementById('username');
     const nicknameDisplay = document.getElementById('nickname');
     const accVerifiedDisplay = document.getElementById('acc-verified');
     const icon = document.getElementById('icon');
-
-    // Debugging Step: Output to check initialization
-    console.log("Script loaded and DOM is ready.");
+    const filterIconBtn = document.getElementById('filter-icon');
+    const unfilterIconBtn = document.getElementById('unfilter-icon');
 
     // Load settings from localStorage
     const loadSettings = () => {
-        const isVerified = localStorage.getItem('captchaVerified') === 'true';
-
-        // Debugging Step: Checking verification status
-        console.log("Verification Status: ", isVerified);
-
-        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
-
         const savedUsername = localStorage.getItem('username');
         const savedNickname = localStorage.getItem('nickname');
         const savedIcon = localStorage.getItem('icon');
+        const isVerified = localStorage.getItem('captchaVerified') === 'true';
 
-        // Debugging Step: Checking what is stored in localStorage
-        console.log("Loaded Username: ", savedUsername);
-        console.log("Loaded Nickname: ", savedNickname);
-        console.log("Loaded Icon: ", savedIcon);
+        accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
 
         if (savedUsername) {
             usernameDisplay.textContent = `Username: ${savedUsername}`;
@@ -41,10 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Call loadSettings function on page load
-    loadSettings();
+    loadSettings(); // Load settings when the page loads
 
-    // Edit profile
+    // Edit profile toggle
     editProfileButton.addEventListener('click', () => {
         inEditProfileDiv.style.display = inEditProfileDiv.style.display === 'none' ? 'block' : 'none';
     });
@@ -54,11 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('username-inp').value;
         const nickname = document.getElementById('nickname-inp').value;
         const iconFile = document.getElementById('icon-file').files[0];
-
-        // Debugging Step: Checking user input values
-        console.log("Entered Username: ", username);
-        console.log("Entered Nickname: ", nickname);
-        console.log("Selected Icon File: ", iconFile);
 
         if (username) {
             localStorage.setItem('username', username);
@@ -73,8 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.onload = (e) => {
                 icon.src = e.target.result;
                 localStorage.setItem('icon', e.target.result);
-                // Debugging Step: Confirm the image is being processed
-                console.log("Icon uploaded and stored.");
             };
             reader.readAsDataURL(iconFile);
         }
@@ -82,7 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
         resultMessageDiv.textContent = 'Profile updated!';
     });
 
-    // Check if the account is verified with captcha
-    const isVerified = localStorage.getItem('captchaVerified') === 'true';
-    accVerifiedDisplay.textContent = `Account Verification: ${isVerified ? 'Verified' : 'Unverified'}`;
+    // Filter icon - Apply CSS filter
+    filterIconBtn.addEventListener('click', () => {
+        icon.style.filter = 'grayscale(100%)'; // You can adjust this filter as needed
+    });
+
+    // Unfilter icon - Remove CSS filter
+    unfilterIconBtn.addEventListener('click', () => {
+        icon.style.filter = 'none';
+    });
 });
