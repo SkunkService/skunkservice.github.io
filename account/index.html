@@ -12,7 +12,7 @@
             <p id="username">Username: User</p>
             <p id="nickname">Nickname: @username</p>
             <p id="acc-verified">Account Verification: Unverified</p>
-            <img id="icon" src="https://via.placeholder.com/250" alt="User Icon" width="250" height="250">
+            <a id="view-icon"><img id="icon" src="https://via.placeholder.com/250" alt="User Icon" width="250" height="250"></a>
             <button id="filter-icon">Filter Icon User</button>
             <button id="unfilter-icon">Unfilter Icon User</button>
             <button id="edit-profile-btn">Customize Account</button>
@@ -24,7 +24,14 @@
                 <p id="message"></p>
             </div>
         </div>
-        <script src="index.js"></script>
     </div>
+
+    <div class="container" id="icon-box" hidden>
+        <div id="icon-checks" class="icon-checks">
+            <img id="icon-check" src="https://via.placeholder.com/250" alt="User Icon" width="1000" height="1000">
+        </div>
+    </div>
+
+    <script src="index.js"></script>
 </body>
 </html>
