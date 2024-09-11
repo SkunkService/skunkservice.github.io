@@ -78,6 +78,11 @@ setTimeout(() => {
         accessStudio.addEventListener("click", () => {
             window.open(`https://vimeo.com/manage/${username}`, '_blank');
         });
+    } else if (typeStudio === "tiktok") {
+        accessStudio.textContent = "Visit TikTok Profile";
+        accessStudio.addEventListener("click", () => {
+            window.open(`https://www.tiktok.com/@${username}`, '_blank');
+        });
     } else {
         console.error("Invalid studio type specified.");
         return;
