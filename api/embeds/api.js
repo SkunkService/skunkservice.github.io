@@ -83,5 +83,5 @@ Include this <span> element in the body of your HTML document where you want
 the custom embed to appear. Additionally, make sure to link to this JavaScript file:
 
 <!-- Link to the external JavaScript file -->
-<script src="api.js"></script>
+<script src="https://raw.githubusercontent.com/SkunkService/skunkservice.github.io/main/api/embeds/api.js"></script>
 */
