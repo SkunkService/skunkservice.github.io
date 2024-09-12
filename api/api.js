@@ -171,5 +171,8 @@ console.log(`Made for SkunkService's API\n-\nWelcome to SkunkService's API for W
 
 /*
 This allows you to use the following script tag for integration:
+Old Example:
 <script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io/api/api.js"></script>
+Latest Example:
+<script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io@main/api/api.js"></script>
 */
