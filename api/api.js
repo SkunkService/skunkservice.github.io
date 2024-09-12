@@ -124,8 +124,24 @@ async function getSkunkServiceAPI() {
 
 async function useNodeJS() {
   try {
-    // Node.js related code should be executed on the server-side
-    console.log("You activated the NPM.js and Node.js to use Utility");
+    // Check if we are in a Node.js environment
+    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+      console.log(`Node.js version: ${process.version}`);
+      
+      // Example: Output environment variables
+      console.log("Environment Variables:", process.env);
+      
+      // Example: Simulate doing something with the current process
+      console.log(`Current working directory: ${process.cwd()}`);
+      
+      // Exit after a certain condition (for example, after logging the version)
+      setTimeout(() => {
+        console.log("Exiting process...");
+        process.exit(0);  // Exit the process (0 means success)
+      }, 3000);
+    } else {
+      console.error("Node.js environment not detected.");
+    }
   } catch (error) {
     console.error("Error activating Node.js:", error);
   }
