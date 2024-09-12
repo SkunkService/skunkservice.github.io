@@ -1,4 +1,4 @@
-async function createElement(elementType, id = null, classAttr = null, className = null, name = null) {
+async function createElement(elementType, parent, id = null, classAttr = null, className = null, name = null) {
   // Create an element of the specified type
   const element = document.createElement(elementType);
 
@@ -8,8 +8,55 @@ async function createElement(elementType, id = null, classAttr = null, className
   if (className) element.className = className;
   if (name) element.setAttribute("name", name);
 
+  // Append to parent
+  if (parent) {
+    parent.appendChild(element);
+  } else {
+    console.error("[REQUIRED]: Parent element is required.");
+  }
+
   // Return the created element
   return element;
+}
+
+async function setPropertyElement(id, properties) {
+  // Retrieve the element by id
+  const element = document.getElementById(id);
+  
+  if (element) {
+    // Set properties on the element
+    for (const [key, value] of Object.entries(properties)) {
+      if (key === 'id') {
+        element.id = value;
+      } else if (key === 'class') {
+        element.setAttribute('class', value);
+      } else if (key === 'classname') {
+        element.className = value;
+      } else if (key === 'name') {
+        element.setAttribute('name', value);
+      } else {
+        // Handle any additional properties if needed
+        element.setAttribute(key, value);
+      }
+    }
+    
+    console.log(`[Element]: Properties updated for element with id '${id}'.`);
+  } else {
+    console.error(`[REQUIRED]: Element with id '${id}' not found.`);
+  }
+}
+
+async function setTextContent(id, content) {
+  // Retrieve the element by id
+  const element = document.getElementById(id);
+  
+  if (element) {
+    // Set the text content
+    element.textContent = content;
+    console.log(`[Element]: Text content set for element with id '${id}'.`);
+  } else {
+    console.error(`[REQUIRED]: Element with id '${id}' not found.`);
+  }
 }
 
 async function addGsapScript() {
@@ -76,16 +123,48 @@ async function getSkunkServiceAPI() {
 }
 
 async function useNodeJS() {
-  if (typeof process !== 'undefined' && process.version) {
-    if (process.version < "v22.6.0") {
-      console.log("Node.js Available Versions: 22.6.0 and Latest.");
-      console.log("Node.js utility function is activated.");
-    } else {
-      console.log(`Node.js Version: ${process.version} is not Available for this Version.`);
-    }
-  } else {
-    console.log("This function is intended for use in a Node.js environment.");
+  try {
+    // Node.js related code should be executed on the server-side
+    console.log("You activated the NPM.js and Node.js to use Utility");
+  } catch (error) {
+    console.error("Error activating Node.js:", error);
   }
+}
+
+async function utilities() {
+  console.log(`Available Utilities and Functions:\n`);
+  
+  console.log(`1. createElement(elementType, parent, id, classAttr, className, name)`);
+  console.log(`   - Creates a new HTML element of the specified type and appends it to the parent element.`);
+  
+  console.log(`2. setPropertyElement(id, properties)`);
+  console.log(`   - Updates the properties of an existing element identified by the given id.`);
+  
+  console.log(`3. setTextContent(id, content)`);
+  console.log(`   - Sets the text content of an element identified by the given id.`);
+  
+  console.log(`4. addGsapScript()`);
+  console.log(`   - Adds the GSAP library script to the document.`);
+  
+  console.log(`5. open(url)`);
+  console.log(`   - Opens the specified URL in a new browser tab.`);
+  
+  console.log(`6. openPopout(url, width, height)`);
+  console.log(`   - Opens the specified URL in a popout window with the given width and height.`);
+  
+  console.log(`7. addLS(name, value)`);
+  console.log(`   - Adds an item to localStorage with the given name and value.`);
+  
+  console.log(`8. getLS(name)`);
+  console.log(`   - Retrieves an item from localStorage by its name.`);
+  
+  console.log(`9. getSkunkServiceAPI()`);
+  console.log(`   - Logs the script tag needed to integrate the SkunkService API.`);
+  
+  console.log(`10. useNodeJS()`);
+  console.log(`    - Placeholder function for Node.js related operations (executed server-side).`);
+  
+  console.log(`\nFor more details on each function, refer to the code comments and documentation.`);
 }
 
 console.log(`Made for SkunkService's API\n-\nWelcome to SkunkService's API for Website Controller`);
