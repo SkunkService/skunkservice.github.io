@@ -125,7 +125,7 @@ async function getSkunkServiceAPI() {
 async function useNodeJS() {
   if (typeof process !== 'undefined' && process.version) {
     const currentVersion = process.version.replace('v', '').split('.').map(Number); // Split version into [major, minor, patch]
-    const requiredVersion = [22, 6, 0]; // Minimum required version: v22.6.0
+    const requiredVersion = [18, 20, 4]; // Minimum required version: v22.6.0
 
     // Compare versions
     if (
