@@ -123,27 +123,22 @@ async function getSkunkServiceAPI() {
 }
 
 async function useNodeJS() {
-  try {
-    // Check if we are in a Node.js environment
-    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
-      console.log(`Node.js version: ${process.version}`);
-      
-      // Example: Output environment variables
-      console.log("Environment Variables:", process.env);
-      
-      // Example: Simulate doing something with the current process
-      console.log(`Current working directory: ${process.cwd()}`);
-      
-      // Exit after a certain condition (for example, after logging the version)
-      setTimeout(() => {
-        console.log("Exiting process...");
-        process.exit(0);  // Exit the process (0 means success)
-      }, 3000);
+  if (typeof process !== 'undefined' && process.version) {
+    const currentVersion = process.version.replace('v', '').split('.').map(Number); // Split version into [major, minor, patch]
+    const requiredVersion = [22, 6, 0]; // Minimum required version: v22.6.0
+
+    // Compare versions
+    if (
+      currentVersion[0] > requiredVersion[0] || 
+      (currentVersion[0] === requiredVersion[0] && currentVersion[1] >= requiredVersion[1])
+    ) {
+      console.log(`Node.js Version: ${process.version} is Available.`);
+      console.log("Node.js utility function is activated.");
     } else {
-      console.error("Node.js environment not detected.");
+      console.log(`Node.js Version: ${process.version} does not meet the minimum requirement (v22.6.0).`);
     }
-  } catch (error) {
-    console.error("Error activating Node.js:", error);
+  } else {
+    console.log("This function is intended for use in a Node.js environment.");
   }
 }
 
