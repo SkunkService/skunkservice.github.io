@@ -1,14 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Execute reCAPTCHA
     grecaptcha.ready(function() {
         grecaptcha.execute().then(function(token) {
-            // Set the token in the hidden field
             document.getElementById('recaptchaToken').value = token;
 
-            // Remove the hidden attribute from the content
-            document.getElementById('content').removeAttribute('hidden');
-
-            // Optionally, hide the reCAPTCHA form if you don't need it after verification
-            document.getElementById('recaptcha').setAttribute('hidden', 'true');
+            // Hide reCAPTCHA and show content
+            document.getElementById('recaptcha').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }).catch(function(error) {
+            console.error('Error during reCAPTCHA execution:', error);
         });
+    }).catch(function(error) {
+        console.error('Error during reCAPTCHA ready:', error);
     });
 });
