@@ -142,6 +142,61 @@ async function useNodeJS() {
   }
 }
 
+// Moves an element by a specified number of pixels in the x and y directions
+function moveElement(id, x, y) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    // Set position style to relative if it's not already set
+    if (window.getComputedStyle(element).position === 'static') {
+      element.style.position = 'relative';
+    }
+    
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+
+    console.log(`[Element]: Moved element with id '${id}' to (${x}, ${y}).`);
+  } else {
+    console.error(`[REQUIRED]: Element with id '${id}' not found.`);
+  }
+}
+
+// Moves an element with a tweening effect using GSAP
+function moveElementWithTween(idOrClass, x, y, duration = 1, easingStyle = 'power1.inOut') {
+  // Check if GSAP is loaded
+  if (typeof gsap !== 'undefined') {
+    const element = document.getElementById(idOrClass) || document.querySelector(idOrClass);
+
+    if (element) {
+      gsap.to(element, {
+        x: x,
+        y: y,
+        duration: duration,
+        ease: easingStyle
+      });
+
+      console.log(`[Element]: Tween animation started for element with id or class '${idOrClass}' to (${x}, ${y}) over ${duration} seconds.`);
+    } else {
+      console.error(`[REQUIRED]: Element with id or class '${idOrClass}' not found.`);
+    }
+  } else {
+    console.error("[ERROR]: GSAP library is not loaded.");
+  }
+}
+
+async function fetchElement(selector) {
+  // Retrieve the element using querySelector (for id, class, tag, etc.)
+  const element = document.querySelector(selector);
+  
+  if (element) {
+    console.log(`[Element]: Element matching '${selector}' found.`);
+    return element;
+  } else {
+    console.error(`[REQUIRED]: Element matching '${selector}' not found.`);
+    return null;
+  }
+}
+
 async function utilities() {
   console.log(`Available Utilities and Functions:\n`);
   
@@ -176,6 +231,7 @@ async function utilities() {
   console.log(`    - Placeholder function for Node.js related operations (executed server-side).`);
   
   console.log(`\nFor more details on each function, refer to the code comments and documentation.`);
+  console.log("SkunkService API v1.1");
 }
 
 console.log(`Made for SkunkService's API\n-\nWelcome to SkunkService's API for Website Controller`);
