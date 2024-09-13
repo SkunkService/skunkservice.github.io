@@ -10,8 +10,14 @@
     <meta property="og:description" content="We actually job for SkunkService. Developed by SkunkPlatform" />
     <meta property="og:image" content="https://cdn-icons-png.freepik.com/512/5539/5539679.png" />
     <meta property="og:url" content="https://skunkservice.github.io" />
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfvmUAqAAAAAM2GeTExVazkD2heVs2TwDekLHiI"></script>
 </head>
 <body>
+    <div id="recaptcha" hidden>
+        <form id="myForm">
+            <button id="recaptchaButton">Verify</button>
+        </form>
+    </div>
     <h1>What would you go this Pages?</h1>
     <div class="button-container">
         <button onclick='window.open("https://skunkservice.github.io/Skunk-Application")'>
@@ -41,5 +47,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io@main/api/api.js"></script>
+    <script src="recaptcha.js"></script>
 </body>
 </html>
