@@ -125,7 +125,7 @@ async function getSkunkServiceAPI() {
 async function useNodeJS() {
   if (typeof process !== 'undefined' && process.version) {
     const currentVersion = process.version.replace('v', '').split('.').map(Number); // Split version into [major, minor, patch]
-    const requiredVersion = [18, 20, 4]; // Minimum required version: v22.6.0
+    const requiredVersion = [10, 0, 0];
 
     // Compare versions
     if (
@@ -135,7 +135,7 @@ async function useNodeJS() {
       console.log(`Node.js Version: ${process.version} is Available.`);
       console.log("Node.js utility function is activated.");
     } else {
-      console.log(`Node.js Version: ${process.version} does not meet the minimum requirement (v22.6.0).`);
+      console.log(`Node.js Version: ${process.version} does not meet the minimum requirement (v10.0.0 or Latest Version).`);
     }
   } else {
     console.log("This function is intended for use in a Node.js environment.");
