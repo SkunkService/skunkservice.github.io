@@ -12,11 +12,11 @@
     <meta property="og:url" content="https://skunkservice.github.io" />
 </head>
 <body>
-    <div id="recaptcha" hidden>
+    <div id="recaptcha">
         <!-- Form for sending data to Formspree with reCAPTCHA -->
-        <form id="myForm" action="https://formspree.io/f/mgvwbyae" method="POST">
-            <input type="hidden" name="recaptcha-token" id="recaptchaToken">
-            <button id="submitButton" type="submit">Submit</button>
+        <form id="myForm" action="submit.php" method="POST">
+            <div id="recaptcha" class="g-recaptcha" data-sitekey="6Lfl1EAqAAAAAAT-_MiS2IsM5mdd1EZkJnskhiS4"></div>
+            <button type="submit">Submit</button>
         </form>
     </div>
 
