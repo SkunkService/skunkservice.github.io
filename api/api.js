@@ -67,7 +67,7 @@ async function addGsapScript() {
   console.log("GSAP Script Added.");
 }
 
-async function open(url) {
+async function openWeb(url) {
   if (url) {
     window.open(url, "_blank");
     console.log("[API]: Website Successfully Opened.");
@@ -157,7 +157,7 @@ async function utilities() {
   console.log(`4. addGsapScript()`);
   console.log(`   - Adds the GSAP library script to the document.`);
   
-  console.log(`5. open(url)`);
+  console.log(`5. openWeb(url)`);
   console.log(`   - Opens the specified URL in a new browser tab.`);
   
   console.log(`6. openPopout(url, width, height)`);
