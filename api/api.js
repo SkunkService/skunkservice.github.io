@@ -197,6 +197,107 @@ async function fetchElement(selector) {
   }
 }
 
+async function summonConsoleWithHTML() {
+  // Create a div element for the console display area
+  const consoleDiv = document.createElement('div');
+
+  // Style the div to look like a console
+  consoleDiv.style.position = 'fixed';
+  consoleDiv.style.bottom = '40px';
+  consoleDiv.style.left = '0';
+  consoleDiv.style.width = '100%';
+  consoleDiv.style.height = '200px';
+  consoleDiv.style.backgroundColor = '#000';
+  consoleDiv.style.color = '#0f0';
+  consoleDiv.style.padding = '10px';
+  consoleDiv.style.overflowY = 'scroll';
+  consoleDiv.style.fontFamily = 'monospace';
+  consoleDiv.style.zIndex = '1000';
+
+  // Create an input element for user commands, styled like a console prompt
+  const consoleInput = document.createElement('input');
+  consoleInput.type = 'text';
+  consoleInput.placeholder = '>';
+  consoleInput.style.position = 'fixed';
+  consoleInput.style.bottom = '0';
+  consoleInput.style.left = '0';
+  consoleInput.style.width = '100%';
+  consoleInput.style.padding = '10px';
+  consoleInput.style.backgroundColor = '#111';
+  consoleInput.style.color = '#0f0';
+  consoleInput.style.border = 'none';
+  consoleInput.style.fontFamily = 'monospace';
+  consoleInput.style.fontSize = '14px';
+  consoleInput.style.zIndex = '1001';
+
+  // Add the console div and input to the body
+  document.body.appendChild(consoleDiv);
+  document.body.appendChild(consoleInput);
+
+  // Function to log messages to the custom console
+  window.customConsoleLog = function(message) {
+    const p = document.createElement('p');
+    p.innerText = message;
+    consoleDiv.appendChild(p);
+    consoleDiv.scrollTop = consoleDiv.scrollHeight; // Auto-scroll to the bottom
+  };
+
+  // Event listener to execute commands when the user presses Enter
+  consoleInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      const command = consoleInput.value.trim();
+      if (command) {
+        customConsoleLog(`> ${command}`);  // Log the command
+        executeCommand(command);  // Execute the command
+        consoleInput.value = '';  // Clear the input field
+      }
+    }
+  });
+
+  // Function to execute user commands
+  function executeCommand(command) {
+    try {
+      // Evaluate the command like in a devtools console
+      const result = eval(command);
+      customConsoleLog(result !== undefined ? result : 'undefined');
+    } catch (error) {
+      customConsoleLog(`Error: ${error.message}`);
+    }
+  }
+
+  // Initial message
+  customConsoleLog("Welcome to SkunkService's Console\nYou can type with the Commands.");
+}
+
+// Usage example:
+summonConsoleWithHTML();
+
+// Function to send feedback with a message to a Discord webhook
+async function feedback(message) {
+  const url = "https://discord.com/api/webhooks/1251445860252913675/AhDR5MEFVKeCwxKWCH3EDQpOK4IKgR6B2lMY7FCSHZWNmoAiOCHPLvTw9UMw6ymPx1zD";
+  await sendDiscordWebhook(url, { content: message });
+}
+
+// Function to handle sending data to a Discord webhook
+async function discordWebhook(url, data) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error sending webhook: ${response.statusText}`);
+  }
+}
+
+// Function to send a message to a Discord webhook without a server
+async function sendDiscordWebhook(url, data) {
+  await discordWebhook(url, data);
+}
+
 async function utilities() {
   console.log(`Available Utilities and Functions:\n`);
   
