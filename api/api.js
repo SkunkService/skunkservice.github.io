@@ -213,6 +213,7 @@ async function summonConsoleWithHTML() {
   consoleDiv.style.overflowY = 'scroll';
   consoleDiv.style.fontFamily = 'monospace';
   consoleDiv.style.zIndex = '1000';
+  consoleDiv.style.cursor = 'move'; // Indicate it's draggable
 
   // Create an input element for user commands, styled like a console prompt
   const consoleInput = document.createElement('input');
@@ -233,6 +234,30 @@ async function summonConsoleWithHTML() {
   // Add the console div and input to the body
   document.body.appendChild(consoleDiv);
   document.body.appendChild(consoleInput);
+
+  // Make the consoleDiv draggable
+  let isDragging = false;
+  let offsetX, offsetY;
+
+  consoleDiv.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    offsetX = e.clientX - consoleDiv.offsetLeft;
+    offsetY = e.clientY - consoleDiv.offsetTop;
+    consoleDiv.style.cursor = 'grabbing'; // Change cursor on drag
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (isDragging) {
+      consoleDiv.style.left = `${e.clientX - offsetX}px`;
+      consoleDiv.style.top = `${e.clientY - offsetY}px`;
+      consoleDiv.style.bottom = 'unset'; // Disable bottom positioning to allow dragging
+    }
+  });
+
+  document.addEventListener('mouseup', function() {
+    isDragging = false;
+    consoleDiv.style.cursor = 'move'; // Revert cursor when not dragging
+  });
 
   // Function to log messages to the custom console
   window.customConsoleLog = function(message) {
@@ -268,9 +293,6 @@ async function summonConsoleWithHTML() {
   // Initial message
   customConsoleLog("Welcome to SkunkService's Console\nYou can type with the Commands.");
 }
-
-// Usage example:
-summonConsoleWithHTML();
 
 // Function to send feedback with a message to a Discord webhook
 async function feedback(message) {
