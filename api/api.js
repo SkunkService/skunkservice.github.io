@@ -323,11 +323,13 @@ async function sendDiscordWebhook(url, data) {
 async function utilities() {
   console.log(`Available Utilities and Functions:\n`);
   
-  console.log(`1. createElement(elementType, parent, id, classAttr, className, name)`);
+  console.log(`1. createElement(elementType, parent, options)`);
   console.log(`   - Creates a new HTML element of the specified type and appends it to the parent element.`);
+  console.log(`   - Options include 'id', 'classAttr', 'className', 'name'.`);
   
   console.log(`2. setPropertyElement(id, properties)`);
   console.log(`   - Updates the properties of an existing element identified by the given id.`);
+  console.log(`   - Properties can include 'id', 'class', 'classname', 'name', and any additional attributes.`);
   
   console.log(`3. setTextContent(id, content)`);
   console.log(`   - Sets the text content of an element identified by the given id.`);
@@ -335,25 +337,44 @@ async function utilities() {
   console.log(`4. addGsapScript()`);
   console.log(`   - Adds the GSAP library script to the document.`);
   
-  console.log(`5. openWeb(url)`);
-  console.log(`   - Opens the specified URL in a new browser tab.`);
+  console.log(`5. openWindow(url, options)`);
+  console.log(`   - Opens the specified URL in a new browser tab or a popout window.`);
+  console.log(`   - Options include 'width', 'height', and 'popout' (boolean).`);
   
-  console.log(`6. openPopout(url, width, height)`);
-  console.log(`   - Opens the specified URL in a popout window with the given width and height.`);
+  console.log(`6. manageLS(name, value)`);
+  console.log(`   - Manages localStorage items.`);
+  console.log(`   - If 'value' is provided, adds or updates the item in localStorage.`);
+  console.log(`   - If 'value' is null, retrieves the item from localStorage.`);
   
-  console.log(`7. addLS(name, value)`);
-  console.log(`   - Adds an item to localStorage with the given name and value.`);
-  
-  console.log(`8. getLS(name)`);
-  console.log(`   - Retrieves an item from localStorage by its name.`);
-  
-  console.log(`9. getSkunkServiceAPI()`);
+  console.log(`7. getSkunkServiceAPI()`);
   console.log(`   - Logs the script tag needed to integrate the SkunkService API.`);
   
-  console.log(`10. useNodeJS()`);
-  console.log(`    - Placeholder function for Node.js related operations (executed server-side).`);
+  console.log(`8. useNodeJS()`);
+  console.log(`   - Placeholder function for Node.js related operations (executed server-side).`);
   
-  console.log(`\nFor more details on each function, refer to the code comments and documentation.`);
+  console.log(`9. moveElement(id, x, y)`);
+  console.log(`   - Moves an element by a specified number of pixels in the x and y directions.`);
+  
+  console.log(`10. moveElementWithTween(idOrClass, x, y, duration, easingStyle)`);
+  console.log(`    - Moves an element with a tweening effect using GSAP.`);
+  console.log(`    - Options include 'duration' and 'easingStyle'.`);
+  
+  console.log(`11. fetchElement(selector)`);
+  console.log(`    - Retrieves an element using querySelector (for id, class, tag, etc.).`);
+  
+  console.log(`12. summonConsoleWithHTML()`);
+  console.log(`    - Creates a custom console on the webpage for logging and command execution.`);
+  
+  console.log(`13. feedback(message)`);
+  console.log(`    - Sends feedback messages to a Discord webhook.`);
+  
+  console.log(`14. discordWebhook(url, data)`);
+  console.log(`    - Sends data to a Discord webhook.`);
+  
+  console.log(`15. sendDiscordWebhook(url, data)`);
+  console.log(`    - Handles sending data to a Discord webhook without a server.`);
+
+  console.log("\nFor more details on each function, refer to the code comments and documentation.");
   console.log("SkunkService API v1.1");
 }
 
