@@ -10,14 +10,15 @@ if (isNode()) {
     console.log("require() is Creating...");
     console.log("If you are on localhost or GitHub Pages, you can use with require.");
     
+    // Using async function to handle asynchronous tasks properly
     async function require(path) {
         if (path.endsWith('.json')) {
             try {
-                const response = await fetch(path);
+                const response = await fetch(path);  // Use await to handle the promise
                 if (!response.ok) {
                     throw new Error(`Failed to load JSON from ${path}`);
                 }
-                const data = await response.json();
+                const data = await response.json();  // Await the resolution of the JSON data
                 return data;
             } catch (error) {
                 console.error(error);
