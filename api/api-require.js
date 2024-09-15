@@ -37,7 +37,15 @@ if (isNode()) {
         }
     }
 
-    isCreated = true;  // Marcar como creado después de la definición
+    isCreated = true;
 }
 
 console.log(`require() creation status: ${isCreated ? 'Created' : 'Not Created'}`);
+
+/*
+This allows you to use the following script tag for integration:
+Old Example:
+<script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io/api/api-require.js"></script>
+Latest Example:
+<script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io@main/api/api-require.js"></script>
+*/
