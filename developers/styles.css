@@ -2,8 +2,8 @@
 body, h1, h2, h3, p, ul, li {
     margin: 0;
     padding: 0;
-    color: #e0e0e0; /* Light text color for dark theme */
-    background-color: #121212; /* Dark background color */
+    color: #333; /* Dark text color for light theme */
+    background-color: #f5f5f5; /* Light background color */
 }
 
 .i-container {
@@ -21,10 +21,11 @@ body, h1, h2, h3, p, ul, li {
 }
 
 header {
-    background: #1e1e1e; /* Darker background for header */
-    color: #e0e0e0;
+    background: #ffffff; /* Light background for header */
+    color: #333; /* Dark text color */
     padding: 10px 0;
     text-align: center;
+    border-bottom: 1px solid #ddd; /* Light border for header */
 }
 
 header h1 {
@@ -42,7 +43,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #9cdcfe; /* Lighter color for links */
+    color: #007acc; /* Darker color for links */
     text-decoration: none;
 }
 
@@ -55,11 +56,11 @@ main {
 }
 
 section {
-    background: #2d2d2d; /* Darker background for sections */
+    background: #ffffff; /* Light background for sections */
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lighter shadow for sections */
 }
 
 button {
@@ -78,13 +79,14 @@ button:hover {
 }
 
 footer {
-    background: #1e1e1e; /* Darker background for footer */
-    color: #e0e0e0;
+    background: #ffffff; /* Light background for footer */
+    color: #333; /* Dark text color */
     text-align: center;
     padding: 10px 0;
     position: fixed;
     width: 100%;
     bottom: 0;
+    border-top: 1px solid #ddd; /* Light border for footer */
 }
 
 /* Responsive design */
@@ -102,8 +104,8 @@ footer {
 
 /* Styling for the .source class */
 .source {
-    background-color: #2d2d2d; /* Dark background for code blocks */
-    border: 1px solid #3c3c3c; /* Slightly lighter border */
+    background-color: #1e1e1e; /* Dark background for code blocks */
+    border: 1px solid #333; /* Darker border */
     border-radius: 5px;
     padding: 15px;
     margin: 1rem 0;
