@@ -14,13 +14,17 @@ body, h1, h2, h3, p, ul, li {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ajusta el tamaño según sea necesario */
+    width: 200px; /* Ajusta el tamaño del contenedor */
+    height: 200px; /* Ajusta la altura también */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    border: 1px solid #ccc; /* Opcional, para visualizar mejor el contenedor */
 }
 
 .i-mini {
-    width: 50px; /* Ajusta el tamaño que prefieras */
+    width: 50px; /* Ajusta el tamaño de la imagen */
     height: auto;
 }
+
 
 header {
     background: #333;
