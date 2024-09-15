@@ -5,19 +5,17 @@ body, h1, h2, h3, p, ul, li {
 }
 
 .i-container {
-    position: relative;
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    align-items: flex-start; /* Align items to the top */
     width: 100%; /* Adjust as needed */
-    height: auto; /* Let height adjust based on content */
-    padding: 10px; /* Optional: Adjust padding if needed */
-    box-sizing: border-box; /* Ensure padding is included in total height */
+    height: auto; /* Adjust based on content */
+    padding: 10px; /* Add padding if needed */
 }
 
 .dev-i-mini {
-    position: absolute;
-    right: 10px; /* Adjust as needed */
-    top: 10px; /* Adjust as needed */
-    width: 100px; /* Set to the icon's width */
-    height: 100px; /* Set to the icon's height */
+    width: 50px; /* Adjust width to fit the layout */
+    height: 50px; /* Adjust height to fit the layout */
 }
 
 header {
