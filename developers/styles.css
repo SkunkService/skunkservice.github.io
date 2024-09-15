@@ -4,27 +4,21 @@ body, h1, h2, h3, p, ul, li {
     padding: 0;
 }
 
-.i-center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .i-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px; /* Ajusta el tamaño del contenedor */
-    height: 50px; /* Ajusta la altura también */
-    margin: 0 auto; /* Centra el contenedor horizontalmente */
-    border: 1px solid #ccc; /* Opcional, para visualizar mejor el contenedor */
+    position: relative;
+    width: 100%; /* Adjust as needed */
+    height: auto; /* Let height adjust based on content */
+    padding: 10px; /* Optional: Adjust padding if needed */
+    box-sizing: border-box; /* Ensure padding is included in total height */
 }
 
-.i-mini {
-    width: 50px; /* Ajusta el tamaño de la imagen */
-    height: auto;
+.dev-i-mini {
+    position: absolute;
+    right: 10px; /* Adjust as needed */
+    top: 10px; /* Adjust as needed */
+    width: 100px; /* Set to the icon's width */
+    height: 100px; /* Set to the icon's height */
 }
-
 
 header {
     background: #333;
