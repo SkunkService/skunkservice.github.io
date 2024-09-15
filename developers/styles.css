@@ -2,6 +2,8 @@
 body, h1, h2, h3, p, ul, li {
     margin: 0;
     padding: 0;
+    color: #e0e0e0; /* Light text color for dark theme */
+    background-color: #121212; /* Dark background color */
 }
 
 .i-container {
@@ -19,8 +21,8 @@ body, h1, h2, h3, p, ul, li {
 }
 
 header {
-    background: #333;
-    color: #fff;
+    background: #1e1e1e; /* Darker background for header */
+    color: #e0e0e0;
     padding: 10px 0;
     text-align: center;
 }
@@ -40,7 +42,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #fff;
+    color: #9cdcfe; /* Lighter color for links */
     text-decoration: none;
 }
 
@@ -53,15 +55,15 @@ main {
 }
 
 section {
-    background: #fff;
+    background: #2d2d2d; /* Darker background for sections */
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 button {
-    background-color: #007bff;
+    background-color: #007acc; /* Darker blue for button */
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -72,12 +74,12 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #005a9e;
 }
 
 footer {
-    background: #333;
-    color: #fff;
+    background: #1e1e1e; /* Darker background for footer */
+    color: #e0e0e0;
     text-align: center;
     padding: 10px 0;
     position: fixed;
@@ -100,13 +102,13 @@ footer {
 
 /* Styling for the .source class */
 .source {
-    background-color: #f5f5f5; /* Light background color similar to VS Code's editor */
-    border: 1px solid #d4d4d4; /* Light border color */
+    background-color: #2d2d2d; /* Dark background for code blocks */
+    border: 1px solid #3c3c3c; /* Slightly lighter border */
     border-radius: 5px;
     padding: 15px;
     margin: 1rem 0;
     font-family: 'Fira Code', 'Courier New', Courier, monospace; /* VS Code uses Fira Code or similar */
-    color: #333;
+    color: #e0e0e0; /* Light text color */
     overflow-x: auto;
     white-space: pre; /* Preserve whitespace and line breaks */
 }
