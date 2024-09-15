@@ -14,8 +14,8 @@ body, h1, h2, h3, p, ul, li {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px; /* Ajusta el tamaño del contenedor */
-    height: 200px; /* Ajusta la altura también */
+    width: 100px; /* Ajusta el tamaño del contenedor */
+    height: 100px; /* Ajusta la altura también */
     margin: 0 auto; /* Centra el contenedor horizontalmente */
     border: 1px solid #ccc; /* Opcional, para visualizar mejor el contenedor */
 }
