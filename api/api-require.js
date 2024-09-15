@@ -1,12 +1,15 @@
-// api-require.js
-
 function isNode() {
     return typeof require !== 'undefined' && typeof module !== 'undefined' && module.exports;
 }
 
+let isCreated = false;
+
 if (isNode()) {
     console.log("Already in a Node.js environment for require().");
 } else {
+    console.log("require() is Creating...");
+    console.log("If you are on localhost or GitHub Pages, you can use with require.");
+    
     async function require(path) {
         if (path.endsWith('.json')) {
             try {
@@ -33,4 +36,8 @@ if (isNode()) {
             throw new Error(`Unsupported file type for path: ${path}`);
         }
     }
+
+    isCreated = true;  // Marcar como creado después de la definición
 }
+
+console.log(`require() creation status: ${isCreated ? 'Created' : 'Not Created'}`);
