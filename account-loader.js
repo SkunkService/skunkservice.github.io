@@ -13,3 +13,22 @@ document.getElementById('has-verified').textContent = `Verification Status: ${ve
 
 // Set the icon source
 document.querySelector('.account-icon').src = savedIcon;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('toggle-account');
+    const accountBox = document.getElementById('account-box');
+    
+    // Set initial state for the account box
+    let isVisible = false;
+
+    toggleButton.addEventListener('click', () => {
+        if (isVisible) {
+            accountBox.style.display = 'none'; // Hide account box
+            toggleButton.textContent = 'Show Account'; // Update button text
+        } else {
+            accountBox.style.display = 'block'; // Show account box
+            toggleButton.textContent = 'Hide Account'; // Update button text
+        }
+        isVisible = !isVisible; // Toggle visibility state
+    });
+});
