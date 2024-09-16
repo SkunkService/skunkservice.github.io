@@ -99,3 +99,18 @@ button img {
   font-weight: bold; /* Makes the verification status stand out */
   color: #007bff; /* Color of the verification status text */
 }
+
+/* Styling for the toggle button */
+#toggle-account {
+  margin-top: 10px; /* Adds space between the toggle button and other elements */
+  padding: 10px; /* Adds padding to the button */
+  background-color: #007bff; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Removes default border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+#toggle-account:hover {
+  background-color: #0056b3; /* Darker background on hover */
+}
