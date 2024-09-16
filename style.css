@@ -63,18 +63,18 @@ button img {
     border-color: #0f6c77; /* Even darker teal border */
 }
 
-/* Account pop-out container */
+/* Container for account-related elements */
 .acc-container {
-  position: fixed; /* Ensures it stays in place on the screen */
-  right: 0; /* Aligns the container to the right */
-  bottom: 0; /* Aligns the container to the bottom */
-  width: 200px; /* Adjust width as needed */
-  padding: 10px; /* Space inside the container */
-  background-color: #f9f9f9; /* Background color of the container */
-  border: 1px solid #ddd; /* Border color of the container */
-  border-radius: 8px; /* Rounded corners for the container */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
-  font-family: Arial, sans-serif; /* Font style for the text */
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 200px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
 
 /* Styling for the account icon */
