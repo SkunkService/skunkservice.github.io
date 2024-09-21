@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('icon-modal');
     const modalImg = document.getElementById('icon-preview');
     const closeBtn = document.getElementsByClassName('close')[0];
+    const viewIconLink = document.getElementById('view-icon'); // Link for viewing icon
 
     // Función que guarda y actualiza los datos
     const updateLocalStorageAndDisplay = (key, value, displayElement, prefix) => {
@@ -112,20 +113,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Modal de vista previa del icono
-    if (icon) {
-        icon.addEventListener('click', () => {
+    // Mostrar modal al hacer clic en el enlace de visualización del icono
+    if (viewIconLink && icon) {
+        viewIconLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Evitar comportamiento por defecto de los <a>
             modal.style.display = 'block';
-            modalImg.src = icon.src;
+            modalImg.src = icon.src; // Mostrar el icono actual en el modal
         });
     }
 
+    // Cerrar modal
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
         });
     }
 
+    // Cerrar modal al hacer clic fuera de la imagen
     window.addEventListener('click', (e) => {
         if (e.target == modal) {
             modal.style.display = 'none';
