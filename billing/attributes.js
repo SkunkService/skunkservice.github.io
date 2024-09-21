@@ -4,11 +4,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add click event listener to each button
     urlButtons.forEach(button => {
-        // Add click event listener
         button.addEventListener('click', function() {
-            // Redirect to the Ko-Fi page using the url attribute
             const url = this.getAttribute('url');
-            window.location.href = url;
+            const urlType = this.getAttribute('url-type');
+
+            if (urlType === 'newtab') {
+                window.open(url, '_blank');
+            } else if (urlType === 'href') {
+                window.location.href = url;
+            } else if (urlType === 'popout') {
+                // Customize the popout behavior as needed
+                window.open(url, 'popoutWindow', 'width=600,height=400');
+            }
         });
     });
 });
