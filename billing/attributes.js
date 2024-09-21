@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Define dimensions based on popout-size
             let width, height;
             switch (popoutSize) {
-                case 'phone-size':
+                case 'phone':
                     width = 375;
                     height = 667;
                     break;
