@@ -138,4 +138,53 @@ body {
 /* Dark Mode Styles */
 .dark-mode {
     background-color: #333;
-    colo
+    color: #f4f4f4;
+}
+
+.dark-mode .container {
+    background: #444;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode #acc-view-box {
+    background-color: #555;
+    border-color: #888;
+}
+
+.dark-mode #acc-view-box p {
+    color: #f4f4f4;
+}
+
+.dark-mode #icon {
+    border-color: #888;
+}
+
+.dark-mode #edit-profile-btn {
+    background-color: #6c757d;
+}
+
+.dark-mode #edit-profile-btn:hover {
+    background-color: #5a6268;
+}
+
+.dark-mode #profile-form input {
+    background-color: #666;
+    color: #f4f4f4;
+    border-color: #888;
+}
+
+.dark-mode #profile-form button {
+    background-color: #28a745;
+}
+
+.dark-mode #profile-form button:hover {
+    background-color: #218838;
+}
+
+.dark-mode #message {
+    color: #ffc107;
+}
+
+.dark-mode #icon-box {
+    background-color: #444;
+}
