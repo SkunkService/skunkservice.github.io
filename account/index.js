@@ -13,9 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('icon-modal');
     const modalImg = document.getElementById('icon-preview');
     const closeBtn = document.getElementsByClassName('close')[0];
-    const viewIconLink = document.getElementById('view-icon'); // Link for viewing icon
+    const viewIconLink = document.getElementById('view-icon');
 
-    // Función que guarda y actualiza los datos
     const updateLocalStorageAndDisplay = (key, value, displayElement, prefix) => {
         localStorage.setItem(key, value);
         if (displayElement) {
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Cargar configuraciones desde localStorage
     const loadSettings = () => {
         const savedUsername = localStorage.getItem('username');
         const savedNickname = localStorage.getItem('nickname');
@@ -45,17 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Ejecutar carga de settings
     loadSettings();
 
-    // Toggle de edición de perfil
     if (editProfileButton && profileForm) {
         editProfileButton.addEventListener('click', () => {
-            profileForm.style.display = (profileForm.style.display === 'none' || profileForm.style.display === '') ? 'block' : 'none';
+            profileForm.style.display = profileForm.style.display === 'none' || profileForm.style.display === '' ? 'block' : 'none';
         });
     }
 
-    // Mostrar vista previa del icono cargado
     if (iconFileInput) {
         iconFileInput.addEventListener('change', () => {
             const iconFile = iconFileInput.files[0];
@@ -71,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Aplicar cambios al perfil
     if (applyProfileButton) {
         applyProfileButton.addEventListener('click', () => {
             const username = document.getElementById('username-inp')?.value;
@@ -99,37 +93,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Filtrar icono
     if (filterIconBtn && icon) {
         filterIconBtn.addEventListener('click', () => {
             icon.style.filter = 'blur(5px)';
         });
     }
 
-    // Quitar filtro del icono
     if (unfilterIconBtn && icon) {
         unfilterIconBtn.addEventListener('click', () => {
             icon.style.filter = 'none';
         });
     }
 
-    // Mostrar modal al hacer clic en el enlace de visualización del icono
     if (viewIconLink && icon) {
         viewIconLink.addEventListener('click', (e) => {
-            e.preventDefault(); // Evitar comportamiento por defecto de los <a>
+            e.preventDefault();
             modal.style.display = 'block';
-            modalImg.src = icon.src; // Mostrar el icono actual en el modal
+            modalImg.src = icon.src;
         });
     }
 
-    // Cerrar modal
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
         });
     }
 
-    // Cerrar modal al hacer clic fuera de la imagen
     window.addEventListener('click', (e) => {
         if (e.target == modal) {
             modal.style.display = 'none';
