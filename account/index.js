@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const editProfileButton = document.getElementById('edit-profile-btn');
-    const inEditProfileDiv = document.getElementById('in-edit-profile');
+    const profileForm = document.getElementById('profile-form');
     const applyProfileButton = document.getElementById('apply-profile');
     const resultMessageDiv = document.getElementById('message');
     const usernameDisplay = document.getElementById('username');
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const icon = document.getElementById('icon');
     const filterIconBtn = document.getElementById('filter-icon');
     const unfilterIconBtn = document.getElementById('unfilter-icon');
+    const iconFileInput = document.getElementById('icon-file');
 
     // Load settings from localStorage
     const loadSettings = () => {
@@ -35,13 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings(); // Load settings when the page loads
 
     // Edit profile toggle
-    if (editProfileButton && inEditProfileDiv) {
+    if (editProfileButton && profileForm) {
         editProfileButton.addEventListener('click', () => {
             // Toggle display of the edit profile section
-            if (inEditProfileDiv.style.display === 'none' || inEditProfileDiv.style.display === '') {
-                inEditProfileDiv.style.display = 'block';
+            if (profileForm.style.display === 'none' || profileForm.style.display === '') {
+                profileForm.style.display = 'block';
             } else {
-                inEditProfileDiv.style.display = 'none';
+                profileForm.style.display = 'none';
+            }
+        });
+    }
+
+    // Preview icon as soon as it's uploaded
+    if (iconFileInput) {
+        iconFileInput.addEventListener('change', () => {
+            const iconFile = iconFileInput.files[0];
+            if (iconFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (icon) {
+                        icon.src = e.target.result; // Set preview image
+                    }
+                };
+                reader.readAsDataURL(iconFile); // Read file and convert to base64
             }
         });
     }
@@ -51,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyProfileButton.addEventListener('click', () => {
             const username = document.getElementById('username-inp')?.value;
             const nickname = document.getElementById('nickname-inp')?.value;
-            const iconFile = document.getElementById('icon-file')?.files[0];
+            const iconFile = iconFileInput?.files[0];
 
             if (username) {
                 localStorage.setItem('username', username);
