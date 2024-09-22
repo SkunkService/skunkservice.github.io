@@ -20,13 +20,19 @@ function hideModal() {
     document.getElementById('black-background').hidden = true;
 }
 
+// Function to validate the invite link
+function validateInviteLink(link) {
+    const discordInvitePattern = /^https:\/\/discord\.gg\/[A-Za-z0-9]+$/;
+    return discordInvitePattern.test(link);
+}
+
 reviewGuildButton.addEventListener('click', async () => {
   // Get the invite link from the input field
   const inviteLink = inviteLinkInput.value;
 
-  // Basic validation (optional, improve based on your needs)
-  if (!inviteLink.startsWith('https://discord.gg/')) {
-    alert('Please enter a valid Discord invite link.');
+  // Validate the invite link
+  if (!validateInviteLink(inviteLink)) {
+    showModal('Invalid Link', 'Please enter a valid Discord invite link.');
     return;
   }
 
@@ -46,14 +52,14 @@ reviewGuildButton.addEventListener('click', async () => {
       throw new Error('Error sending webhook: ' + response.statusText);
     }
 
-    // Handle successful webhook response (e.g., display a success message)
-    console.log('Webhook sent successfully!');
-    alert('Server review request sent!');
+    // Display success message in the modal
+    showModal('Success!', 'Server review request sent successfully.');
   } catch (error) {
-    // Handle error (e.g., display an error message)
+    // Handle error and display error message in the modal
+    showModal('Error', 'Error sending review request. Please try again later.');
     console.error('Error sending webhook:', error);
-    alert('Error sending review request. Please try again.');
   }
 });
+
 // Hide modal when clicking the "OK" button inside the alert
 document.getElementById('ok-alert').addEventListener('click', hideModal);
