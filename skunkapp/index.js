@@ -78,3 +78,13 @@ reviewGuildButton.addEventListener('click', async () => {
 
 // Hide modal when clicking the "OK" button inside the alert
 document.getElementById('ok-alert').addEventListener('click', hideModal);
+
+document.getElementById('authorize-btn').addEventListener('click', () => {
+    const clientId = '1257962930863865866'; // Your Discord app client ID
+    const redirectUri = 'https://skunkservice.github.io/skunkapp/';
+    const permissions = '8'; // Adjust as needed
+    const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
+
+    // Open the authorization URL in a popout window
+    window.open(url, 'popout', 'width=800,height=600');
+});
