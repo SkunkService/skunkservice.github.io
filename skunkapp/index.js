@@ -1,5 +1,8 @@
 const reviewGuildButton = document.getElementById('review-guild');
 const inviteLinkInput = document.getElementById('invitelink-review');
+const setupBody = document.getElementById('setup-body');
+const feedbackBody = document.getElementById('feedback-body');
+const reportProblemBody = document.getElementById('report-problem-body');
 
 // Function to show modal with dynamic title and description
 function showModal(title, description) {
@@ -7,18 +10,17 @@ function showModal(title, description) {
     const modalDescription = document.getElementById('description-alert');
     const blackBackground = document.getElementById('black-background');
 
-    // Set the title and description
     modalTitle.textContent = title;
     modalDescription.textContent = description;
 
-    // Display the modal
     blackBackground.hidden = false;
     blackBackground.style.display = "flex";
 }
 
 // Function to hide modal
 function hideModal() {
-    document.getElementById('black-background').hidden = true;
+    const blackBackground = document.getElementById('black-background');
+    blackBackground.hidden = true;
     blackBackground.style.display = "none";
 }
 
@@ -28,39 +30,50 @@ function validateInviteLink(link) {
     return discordInvitePattern.test(link);
 }
 
+// Toggle visibility of sections
+function toggleSection(showSection) {
+    setupBody.hidden = true;
+    feedbackBody.hidden = true;
+    reportProblemBody.hidden = true;
+    
+    if (showSection === 'setup') setupBody.hidden = false;
+    else if (showSection === 'feedback') feedbackBody.hidden = false;
+    else if (showSection === 'report') reportProblemBody.hidden = false;
+}
+
+// Button event listeners
+document.getElementById('setup-btn').addEventListener('click', () => toggleSection('setup'));
+document.getElementById('feedback-btn').addEventListener('click', () => toggleSection('feedback'));
+document.getElementById('report-problem-btn').addEventListener('click', () => toggleSection('report'));
+
 reviewGuildButton.addEventListener('click', async () => {
-  // Get the invite link from the input field
-  const inviteLink = inviteLinkInput.value;
+    const inviteLink = inviteLinkInput.value;
 
-  // Validate the invite link
-  if (!validateInviteLink(inviteLink)) {
-    showModal('Invalid Link', 'Please enter a valid Discord invite link.');
-    return;
-  }
-
-  try {
-    // Replace with your actual Discord webhook URL
-    const response = await fetch('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        content: `A new guild review request with invite link: ${inviteLink}`
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Error sending webhook: ' + response.statusText);
+    if (!validateInviteLink(inviteLink)) {
+        showModal('Invalid Link', 'Please enter a valid Discord invite link.');
+        return;
     }
 
-    // Display success message in the modal
-    showModal('Success!', 'Server review request sent successfully.');
-  } catch (error) {
-    // Handle error and display error message in the modal
-    showModal('Error', 'Error sending review request. Please try again later.');
-    console.error('Error sending webhook:', error);
-  }
+    try {
+        const response = await fetch('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: `A new guild review request with invite link: ${inviteLink}`
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error sending webhook: ' + response.statusText);
+        }
+
+        showModal('Success!', 'Server review request sent successfully.');
+    } catch (error) {
+        showModal('Error', 'Error sending review request. Please try again later.');
+        console.error('Error sending webhook:', error);
+    }
 });
 
 // Hide modal when clicking the "OK" button inside the alert
