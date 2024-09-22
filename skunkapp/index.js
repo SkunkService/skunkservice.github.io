@@ -45,9 +45,11 @@ function toggleSection(showSection) {
 }
 
 // Function to send feedback or report to the webhook
-async function sendToWebhook(url, content) {
+async function sendToWebhook(content) {
+    const webhookUrl = 'https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa'; // Replace with your actual webhook URL
+
     try {
-        const response = await fetch(url, {
+        const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -71,6 +73,7 @@ document.getElementById('setup-btn').addEventListener('click', () => toggleSecti
 document.getElementById('feedback-btn').addEventListener('click', () => toggleSection('feedback'));
 document.getElementById('report-problem-btn').addEventListener('click', () => toggleSection('report'));
 
+// Handle feedback form submission
 feedbackForm.addEventListener('submit', (event) => {
     event.preventDefault(); // Prevent default form submission
 
@@ -79,9 +82,10 @@ feedbackForm.addEventListener('submit', (event) => {
     const comments = document.getElementById('feedback-comments').value;
 
     const content = `Feedback from ${name} (${email}): ${comments}`;
-    sendToWebhook('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', content);
+    sendToWebhook(content);
 });
 
+// Handle report form submission
 reportForm.addEventListener('submit', (event) => {
     event.preventDefault(); // Prevent default form submission
 
@@ -90,9 +94,10 @@ reportForm.addEventListener('submit', (event) => {
     const description = document.getElementById('problem-description').value;
 
     const content = `Problem reported by ${name} (${email}): ${description}`;
-    sendToWebhook('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', content);
+    sendToWebhook(content);
 });
 
+// Review guild button click event
 reviewGuildButton.addEventListener('click', async () => {
     const inviteLink = inviteLinkInput.value;
 
@@ -102,17 +107,17 @@ reviewGuildButton.addEventListener('click', async () => {
     }
 
     const content = `A new guild review request with invite link: ${inviteLink}`;
-    sendToWebhook('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', content);
+    sendToWebhook(content);
 });
 
 // Hide modal when clicking the "OK" button inside the alert
 document.getElementById('ok-alert').addEventListener('click', hideModal);
 
+// Authorization button event listener
 document.getElementById('authorize-btn').addEventListener('click', () => {
-    const clientId = '1257962930863865866'; // Your actual Discord app client ID
     const redirectUri = 'https://skunkservice.github.io/skunkapp/';
     const permissions = '8'; // Adjust as needed
-    const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
+    const url = `https://discord.com/oauth2/authorize?client_id=1257962930863865866&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
 
     // Open the authorization URL in a popout window
     window.open(url, 'popout', 'width=800,height=600');
