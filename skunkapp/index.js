@@ -13,11 +13,13 @@ function showModal(title, description) {
 
     // Display the modal
     blackBackground.hidden = false;
+    blackBackground.style.display = "flex";
 }
 
 // Function to hide modal
 function hideModal() {
     document.getElementById('black-background').hidden = true;
+    blackBackground.style.display = "none";
 }
 
 // Function to validate the invite link
