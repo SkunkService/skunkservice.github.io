@@ -79,7 +79,7 @@ feedbackForm.addEventListener('submit', (event) => {
     const comments = document.getElementById('feedback-comments').value;
 
     const content = `Feedback from ${name} (${email}): ${comments}`;
-    sendToWebhook('https://discord.com/api/webhooks/YOUR_FEEDBACK_WEBHOOK_URL', content);
+    sendToWebhook('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', content);
 });
 
 reportForm.addEventListener('submit', (event) => {
@@ -90,7 +90,7 @@ reportForm.addEventListener('submit', (event) => {
     const description = document.getElementById('problem-description').value;
 
     const content = `Problem reported by ${name} (${email}): ${description}`;
-    sendToWebhook('https://discord.com/api/webhooks/YOUR_REPORT_WEBHOOK_URL', content);
+    sendToWebhook('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', content);
 });
 
 reviewGuildButton.addEventListener('click', async () => {
@@ -102,7 +102,7 @@ reviewGuildButton.addEventListener('click', async () => {
     }
 
     const content = `A new guild review request with invite link: ${inviteLink}`;
-    sendToWebhook('https://discord.com/api/webhooks/YOUR_REVIEW_WEBHOOK_URL', content);
+    sendToWebhook('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', content);
 });
 
 // Hide modal when clicking the "OK" button inside the alert
