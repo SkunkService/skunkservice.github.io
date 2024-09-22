@@ -10,7 +10,19 @@
     <div class="container">
         <h1>Add SkunkApp to Your Discord Server</h1>
         <p>Click the button below to invite SkunkApp to your server and grant it the required permissions.</p>
-        <a href="https://discord.com/oauth2/authorize?client_id=1257962930863865866&permissions=8&response_type=code&redirect_uri=https%3A%2F%2Fskunkservice.github.io%2FSkunk-Application&integration_type=0&scope=role_connections.write+messages.read+applications.commands+dm_channels.read+dm_channels.messages.write+gateway.connect+bot+guilds+guilds.members.read+guilds.join+applications.builds.read+applications.entitlements+email" class="button">Add SkunkApp</a>
+        <button id="add-skunkapp-btn" class="button">Add SkunkApp</button>
     </div>
+
+    <script>
+        document.getElementById('add-skunkapp-btn').addEventListener('click', () => {
+            const clientId = '1257962930863865866'; // Your Discord app client ID
+            const redirectUri = 'https://skunkservice.github.io/skunkapp/';
+            const permissions = '8'; // Adjust as needed
+            const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
+
+            // Open the authorization URL in a popout window
+            window.open(url, 'popout', 'width=800,height=600');
+        });
+    </script>
 </body>
 </html>
