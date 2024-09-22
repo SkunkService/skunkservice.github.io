@@ -32,7 +32,7 @@ reviewGuildButton.addEventListener('click', async () => {
 
   try {
     // Replace with your actual Discord webhook URL
-    const response = await fetch('YOUR_WEBHOOK_URL', {
+    const response = await fetch('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
