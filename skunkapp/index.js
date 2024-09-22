@@ -4,6 +4,9 @@ const setupBody = document.getElementById('setup-body');
 const feedbackBody = document.getElementById('feedback-body');
 const reportProblemBody = document.getElementById('report-problem-body');
 
+const feedbackForm = document.getElementById('feedback-form');
+const reportForm = document.getElementById('report-problem-form');
+
 // Function to show modal with dynamic title and description
 function showModal(title, description) {
     const modalTitle = document.getElementById('title-alert');
@@ -41,10 +44,54 @@ function toggleSection(showSection) {
     else if (showSection === 'report') reportProblemBody.hidden = false;
 }
 
+// Function to send feedback or report to the webhook
+async function sendToWebhook(url, content) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ content })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error sending webhook: ' + response.statusText);
+        }
+
+        showModal('Success!', 'Your message has been sent successfully.');
+    } catch (error) {
+        showModal('Error', 'Error sending message. Please try again later.');
+        console.error('Error sending webhook:', error);
+    }
+}
+
 // Button event listeners
 document.getElementById('setup-btn').addEventListener('click', () => toggleSection('setup'));
 document.getElementById('feedback-btn').addEventListener('click', () => toggleSection('feedback'));
 document.getElementById('report-problem-btn').addEventListener('click', () => toggleSection('report'));
+
+feedbackForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const name = document.getElementById('feedback-name').value;
+    const email = document.getElementById('feedback-email').value;
+    const comments = document.getElementById('feedback-comments').value;
+
+    const content = `Feedback from ${name} (${email}): ${comments}`;
+    sendToWebhook('https://discord.com/api/webhooks/YOUR_FEEDBACK_WEBHOOK_URL', content);
+});
+
+reportForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const name = document.getElementById('problem-name').value;
+    const email = document.getElementById('problem-email').value;
+    const description = document.getElementById('problem-description').value;
+
+    const content = `Problem reported by ${name} (${email}): ${description}`;
+    sendToWebhook('https://discord.com/api/webhooks/YOUR_REPORT_WEBHOOK_URL', content);
+});
 
 reviewGuildButton.addEventListener('click', async () => {
     const inviteLink = inviteLinkInput.value;
@@ -54,33 +101,15 @@ reviewGuildButton.addEventListener('click', async () => {
         return;
     }
 
-    try {
-        const response = await fetch('https://discord.com/api/webhooks/1287297444870357025/VyGYvm6YGiSqMURAceUkbEGpDroIM5legbQjqwAXI7zd10GPKHIern0BlWv-8bxE9cZa', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                content: `A new guild review request with invite link: ${inviteLink}`
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Error sending webhook: ' + response.statusText);
-        }
-
-        showModal('Success!', 'Server review request sent successfully.');
-    } catch (error) {
-        showModal('Error', 'Error sending review request. Please try again later.');
-        console.error('Error sending webhook:', error);
-    }
+    const content = `A new guild review request with invite link: ${inviteLink}`;
+    sendToWebhook('https://discord.com/api/webhooks/YOUR_REVIEW_WEBHOOK_URL', content);
 });
 
 // Hide modal when clicking the "OK" button inside the alert
 document.getElementById('ok-alert').addEventListener('click', hideModal);
 
 document.getElementById('authorize-btn').addEventListener('click', () => {
-    const clientId = '1257962930863865866'; // Your Discord app client ID
+    const clientId = '1257962930863865866'; // Your actual Discord app client ID
     const redirectUri = 'https://skunkservice.github.io/skunkapp/';
     const permissions = '8'; // Adjust as needed
     const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
