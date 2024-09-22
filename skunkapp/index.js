@@ -74,9 +74,7 @@ document.getElementById('feedback-btn').addEventListener('click', () => toggleSe
 document.getElementById('report-problem-btn').addEventListener('click', () => toggleSection('report'));
 
 // Handle feedback form submission
-feedbackForm.addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent default form submission
-
+feedbackForm.addEventListener('submit', () => {
     const name = document.getElementById('feedback-name').value;
     const email = document.getElementById('feedback-email').value;
     const comments = document.getElementById('feedback-comments').value;
@@ -86,9 +84,7 @@ feedbackForm.addEventListener('submit', (event) => {
 });
 
 // Handle report form submission
-reportForm.addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent default form submission
-
+reportForm.addEventListener('submit', () => {
     const name = document.getElementById('problem-name').value;
     const email = document.getElementById('problem-email').value;
     const description = document.getElementById('problem-description').value;
@@ -98,7 +94,7 @@ reportForm.addEventListener('submit', (event) => {
 });
 
 // Review guild button click event
-reviewGuildButton.addEventListener('click', async () => {
+reviewGuildButton.addEventListener('click', () => {
     const inviteLink = inviteLinkInput.value;
 
     if (!validateInviteLink(inviteLink)) {
@@ -117,7 +113,8 @@ document.getElementById('ok-alert').addEventListener('click', hideModal);
 document.getElementById('authorize-btn').addEventListener('click', () => {
     const redirectUri = 'https://skunkservice.github.io/skunkapp/';
     const permissions = '8'; // Adjust as needed
-    const url = `https://discord.com/oauth2/authorize?client_id=1257962930863865866&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
+    const clientId = '1257962930863865866'; // Your actual Discord app client ID
+    const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=bot+applications.commands+email`;
 
     // Open the authorization URL in a popout window
     window.open(url, 'popout', 'width=800,height=600');
