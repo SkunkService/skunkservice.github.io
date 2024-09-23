@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minigames Studio</title>
+    <link rel="stylesheet" href="../style.css"> <!-- Adjust the path if needed -->
+</head>
+<body>
+    <div class="container">
+        <h1>Minigames Studio</h1>
+        <p>The Minigames Studio is a Development Studio dedicated to creating engaging and interactive minigames. Our platform provides tools and resources for developers to easily design, develop, and launch their games.</p>
+        <p>Here are some key features of the Minigames Studio:</p>
+        <ul>
+            <li><strong>Game Templates:</strong> Start your projects quickly with our pre-built game templates.</li>
+            <li><strong>Customizable Assets:</strong> Access a library of graphics, sounds, and scripts to personalize your games.</li>
+            <li><strong>Live Testing:</strong> Test your games in real-time to ensure they work as intended before launching.</li>
+            <li><strong>Community Support:</strong> Join our community to share your projects and get feedback from other developers.</li>
+            <li><strong>The Achievements:</strong> Track player accomplishments and enhance gameplay experience.</li>
+        </ul>
+        <p>Whether you are a beginner or an experienced developer, the Minigames Studio has everything you need to bring your game ideas to life. Start creating your minigame today!</p>
+
+        <!-- Game Generation Section -->
+        <h2>Generate Your Game</h2>
+        <input type="text" id="gameName" placeholder="Game Name" required>
+        <input type="text" id="gameDescription" placeholder="Game Description"> <!-- optional -->
+        <button id="generateButton">Generate Game</button>
+        <p class="js" id="output"></p>
+    </div>
+
+    <script>
+        document.getElementById('generateButton').addEventListener('click', function() {
+            const gameName = document.getElementById('gameName').value;
+            const gameDescription = document.getElementById('gameDescription').value;
+            
+            // Example of generating a game using JavaScript
+            const output = `Game Name: ${gameName}\nGame Description: ${gameDescription}`;
+            document.getElementById('output').textContent = output;
+        });
+    </script>
+</body>
+</html>
