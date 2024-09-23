@@ -20,6 +20,10 @@
         <h3>Generated JavaScript Code:</h3>
         <pre id="output" class="code-output"></pre>
         <button id="copyButton">Copy to Clipboard</button>
+
+        <!-- Div where the game will be created -->
+        <h3>Your Game will appear below:</h3>
+        <div id="game" style="border: 1px solid #ccc; width: 400px; height: 300px;"></div>
     </div>
 
     <script>
@@ -32,17 +36,24 @@
                 console.log("Game Name: ${gameName}");
                 console.log("Game Description: ${gameDescription}");
                 
-                // Setup canvas
+                // Setup canvas inside the game div
+                const gameDiv = document.getElementById('game');
                 const canvas = document.createElement('canvas');
+                canvas.width = 400;
+                canvas.height = 300;
                 const context = canvas.getContext('2d');
-                document.body.appendChild(canvas);
+                gameDiv.innerHTML = ''; // Clear previous game content
+                gameDiv.appendChild(canvas);
                 
                 // Add game logic here
                 context.fillStyle = 'blue';
-                context.fillRect(10, 10, 150, 100);
+                context.fillRect(50, 50, 150, 100);
             `;
 
             document.getElementById('output').textContent = generatedCode.trim();
+
+            // Run the generated code in real-time
+            eval(generatedCode);
         });
 
         document.getElementById('copyButton').addEventListener('click', function() {
