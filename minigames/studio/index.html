@@ -15,15 +15,15 @@
         <h2>Generate JavaScript Game Code</h2>
         <input type="text" id="gameName" placeholder="Game Name" required>
         <input type="text" id="gameDescription" placeholder="Game Description"> <!-- optional -->
-        <button id="generateButton">Generate Code</button>
+        <button id="generateButton">Generate Game</button>
 
         <h3>Generated JavaScript Code:</h3>
         <pre id="output" class="code-output"></pre>
         <button id="copyButton">Copy to Clipboard</button>
 
-        <!-- Div where the game will be created -->
+        <!-- Div where the game information and canvas will be displayed -->
         <h3>Your Game will appear below:</h3>
-        <div id="game" style="border: 1px solid #ccc; width: 400px; height: 300px;"></div>
+        <div id="game" style="border: 1px solid #ccc; width: 400px; height: auto; padding: 10px;"></div>
     </div>
 
     <script>
@@ -31,28 +31,39 @@
             const gameName = document.getElementById('gameName').value;
             const gameDescription = document.getElementById('gameDescription').value;
 
-            // Example of generating JavaScript code for a game
+            // Example of generating JavaScript code for game information
             const generatedCode = `
                 console.log("Game Name: ${gameName}");
                 console.log("Game Description: ${gameDescription}");
-                
-                // Setup canvas inside the game div
+
+                // Get the div with id 'game' where the information will be added
                 const gameDiv = document.getElementById('game');
+                gameDiv.innerHTML = ''; // Clear previous content
+                
+                // Create and display the game name and description
+                const gameInfo = document.createElement('div');
+                gameInfo.innerHTML = \`
+                    <h2>\${gameName}</h2>
+                    <p>\${gameDescription}</p>
+                \`;
+                gameDiv.appendChild(gameInfo);
+                
+                // Create and append a canvas for the game
                 const canvas = document.createElement('canvas');
                 canvas.width = 400;
                 canvas.height = 300;
                 const context = canvas.getContext('2d');
-                gameDiv.innerHTML = ''; // Clear previous game content
                 gameDiv.appendChild(canvas);
                 
-                // Add game logic here
+                // Add game logic here (e.g., drawing on the canvas)
                 context.fillStyle = 'blue';
                 context.fillRect(50, 50, 150, 100);
             `;
 
+            // Display the generated JavaScript code in the <pre> element
             document.getElementById('output').textContent = generatedCode.trim();
 
-            // Run the generated code in real-time
+            // Execute the generated JavaScript code in real-time
             eval(generatedCode);
         });
 
