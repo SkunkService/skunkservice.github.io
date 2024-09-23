@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minigames Preview</title>
+    <link rel="stylesheet" href="../style.css"> <!-- Adjust the path if needed -->
+</head>
+<body>
+    <div class="container">
+        <h1>Minigames Studio Preview</h1>
+        <p>Enter your JavaScript code below to preview your game, game information, and logs:</p>
+
+        <!-- Textarea for inputting JavaScript code -->
+        <h2>JavaScript Code:</h2>
+        <textarea id="codeInput" rows="10" cols="80" placeholder="Write your JavaScript code here..."></textarea>
+        <br>
+        <button id="previewButton">Preview Game</button>
+
+        <h3>Game Preview:</h3>
+        <!-- Div where game information and canvas will be rendered -->
+        <div id="previewArea" style="border: 1px solid #ccc; width: 400px; height: auto; padding: 10px;"></div>
+
+        <h3>Console Log:</h3>
+        <!-- Div where the console logs will be displayed -->
+        <pre id="logOutput" style="border: 1px solid #333; background-color: #f5f5f5; padding: 10px; height: 150px; overflow-y: scroll;"></pre>
+    </div>
+
+    <script>
+        // Override console.log to display output in logOutput div
+        (function() {
+            const logOutput = document.getElementById('logOutput');
+            const originalLog = console.log; // Store the original console.log function
+
+            console.log = function(...args) {
+                // Append logs to logOutput div
+                args.forEach(arg => {
+                    logOutput.textContent += arg + "\n"; // Display each argument in a new line
+                });
+
+                // Call the original console.log function
+                originalLog.apply(console, args);
+            };
+        })();
+
+        // Event listener for the 'Preview Game' button
+        document.getElementById('previewButton').addEventListener('click', function() {
+            // Clear previous logs and preview content
+            document.getElementById('logOutput').textContent = '';
+            document.getElementById('previewArea').innerHTML = '';
+
+            // Get the code from the textarea
+            const code = document.getElementById('codeInput').value;
+
+            // Wrap the user's code in a function to execute it safely
+            const runCode = new Function(`
+                // Set up preview div for game information and canvas
+                const gameDiv = document.getElementById('previewArea');
+                
+                // Execute user code here
+                ${code}
+            `);
+
+            // Try to run the user's code and catch any errors
+            try {
+                runCode();
+            } catch (error) {
+                alert('Error in the provided code: ' + error.message);
+                console.log('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
