@@ -36,8 +36,8 @@
     const attackRange = 60;
 
     let health = 100;
-    let power = 100;
     const maxHealth = 100;
+    const power = 100;
     const maxPower = 100;
     const powerAttackCost = 20;
 
@@ -47,11 +47,6 @@
     let isGameOver = false;
     let currentRound = 1;
 
-    let regenerationActive = false;
-    let speedActive = false;
-    let speedIncrease = 0;
-    let regenerationTimer = null;
-    let speedTimer = null;
     let droppedPotions = [];
 
     const playerImage = new Image();
@@ -107,33 +102,6 @@
         }
     }
 
-    function consumeRegenerationPotion() {
-        regenerationActive = true;
-        health += 5;
-        if (health > maxHealth) health = maxHealth;
-
-        clearTimeout(regenerationTimer);
-        regenerationTimer = setTimeout(() => {
-            regenerationActive = false;
-        }, 10000);
-    }
-
-    function consumeSpeedPotion() {
-        speedActive = true;
-        speedIncrease = 2;
-
-        clearTimeout(speedTimer);
-        speedTimer = setTimeout(() => {
-            speedActive = false;
-            speedIncrease = 0;
-        }, 30000);
-    }
-
-    function consumePowerPotion() {
-        power += 5;
-        if (power > maxPower) power = maxPower;
-    }
-
     function createDroppedPotion() {
         const potionType = Math.random();
         let potion = {
@@ -156,35 +124,14 @@
     function checkPotionCollision() {
         for (let i = droppedPotions.length - 1; i >= 0; i--) {
             const potion = droppedPotions[i];
-            if (
-                x < potion.x + 20 &&
-                x + size > potion.x &&
-                y < potion.y + 20 &&
-                y + size > potion.y
-            ) {
-                switch (potion.type) {
-                    case 'regeneration':
-                        consumeRegenerationPotion();
-                        break;
-                    case 'power':
-                        consumePowerPotion();
-                        break;
-                    case 'speed':
-                        consumeSpeedPotion();
-                        break;
-                }
+            if (x < potion.x + 20 && x + size > potion.x && y < potion.y + 20 && y + size > potion.y) {
                 droppedPotions.splice(i, 1);
             }
         }
     }
 
     function checkPlayerCollision() {
-        if (
-            x < npcX + npcSize &&
-            x + size > npcX &&
-            y < npcY + npcSize &&
-            y + size > npcY
-        ) {
+        if (x < npcX + npcSize && x + size > npcX && y < npcY + npcSize && y + size > npcY) {
             health -= 1;
             if (health < 0) health = 0;
         }
@@ -200,10 +147,10 @@
     function gameLoop() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (keys['ArrowUp'] && y > 0) y -= 3 + speedIncrease;
-        if (keys['ArrowDown'] && y < canvas.height - size) y += 3 + speedIncrease;
-        if (keys['ArrowLeft'] && x > 0) x -= 3 + speedIncrease;
-        if (keys['ArrowRight'] && x < canvas.width - size) x += 3 + speedIncrease;
+        if (keys['ArrowUp'] && y > 0) y -= 3;
+        if (keys['ArrowDown'] && y < canvas.height - size) y += 3;
+        if (keys['ArrowLeft'] && x > 0) x -= 3;
+        if (keys['ArrowRight'] && x < canvas.width - size) x += 3;
 
         if (npcHealth > 0) {
             if (npcX < x) npcX += npcSpeed;
@@ -211,10 +158,7 @@
             if (npcY < y) npcY += npcSpeed;
             if (npcY > y) npcY -= npcSpeed;
 
-            if (
-                Math.abs(npcX - x) < attackRange && 
-                Math.abs(npcY - y) < attackRange
-            ) {
+            if (Math.abs(npcX - x) < attackRange && Math.abs(npcY - y) < attackRange) {
                 health -= 1;
                 if (health < 0) health = 0;
             }
@@ -235,14 +179,10 @@
 
         context.fillStyle = 'red';
         context.fillRect(10, 10, (health / maxHealth) * 200, 20);
-        context.fillStyle = 'blue';
-        context.fillRect(10, 40, (power / maxPower) * 200, 20);
-
         context.fillStyle = 'black';
         context.font = '20px Arial';
         context.fillText(`Round: ${currentRound}`, canvas.width - 100, 30);
         context.fillText(`Health: ${health}`, 10, 70);
-        context.fillText(`Power: ${power}`, 10, 100);
 
         if (health <= 0) {
             isGameOver = true;
@@ -257,6 +197,9 @@
 
     gameLoop();
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
