@@ -15,44 +15,26 @@
         <button id="runBtn">Run Game</button>
         
         <h2>Game Preview</h2>
-        <div id="game" style="border: 1px solid #000; width: 400px; height: 300px;"></div> <!-- Placeholder for the game canvas -->
+        <div id="game" style="border: 1px solid #000; width: 400px; height: 300px;">
+            <canvas id="gameCanvas" width="400" height="300"></canvas>
+        </div> <!-- Placeholder for the existing game canvas -->
     </div>
 
     <script>
+        const canvas = document.getElementById('gameCanvas'); // Reference to the existing canvas
+        const context = canvas.getContext('2d'); // Get the 2D context
+
         document.getElementById('runBtn').addEventListener('click', function() {
             const gameCode = document.getElementById('codeInput').value;
 
             // Clear previous game if any
-            const gameDiv = document.getElementById('game');
-            gameDiv.innerHTML = ''; // Clear the game div
+            context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
-            // Create a new canvas element
-            const canvas = document.createElement('canvas');
-            canvas.width = 400;
-            canvas.height = 300;
-            const context = canvas.getContext('2d');
-
-            // Append the canvas to the game div
-            gameDiv.appendChild(canvas);
-
-            // Log the code to the console for debugging
-            console.log("Game Code to Run:", gameCode);
-
+            // Execute user code
             try {
-                // Create a new script element to run the game code
-                const script = document.createElement('script');
-
-                // Wrap the game code in a function to avoid redeclaration issues
-                script.textContent = `
-                    (function() {
-                        ${gameCode}
-                    })();
-                `;
-
-                // Append the script to the game div
-                gameDiv.appendChild(script);
+                eval(gameCode); // Use eval to run the user code
             } catch (error) {
-                console.error("Error executing game code:", error);
+                console.error('Error executing game code:', error);
             }
         });
     </script>
