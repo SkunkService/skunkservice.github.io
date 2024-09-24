@@ -14,6 +14,10 @@
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="regularAttackButton">Regular Attack</button>
+        <button id="powerAttackButton">Power Attack</button>
+    </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const context = canvas.getContext('2d');
@@ -24,14 +28,13 @@
         const npcSize = 50; // NPC size
         const keys = {}; // Track key presses
         const npcSpeed = 2; // NPC movement speed
-        const attackRange = 60; // Range at which NPC attacks
+        const powerAttackCost = 20; // Cost of power attack
 
         // Player Health and Power
         let health = 100; // Player's health
         let power = 100; // Player's power
         const maxHealth = 100; // Maximum health
         const maxPower = 100; // Maximum power
-        const powerAttackCost = 20; // Cost of power attack
 
         // NPC Health
         let npcHealth = 50; // NPC's health
@@ -39,7 +42,6 @@
 
         // Game state
         let isGameOver = false; // Flag to check if the game is over
-        let currentRound = 1; // Current round number
 
         // Load images
         const playerImage = new Image();
@@ -94,9 +96,12 @@
                 return; // Exit the game loop
             }
 
-            // Check if NPC is defeated to move to the next round
+            // Check if NPC is defeated
             if (npcHealth <= 0) {
-                startNewRound(); // Start a new round
+                context.fillStyle = 'green';
+                context.font = '30px Arial';
+                context.fillText('NPC Defeated!', canvas.width / 2 - 70, canvas.height / 2);
+                return; // Exit the game loop
             }
 
             // Move NPC towards the player
@@ -117,8 +122,37 @@
             // Draw NPC
             context.drawImage(npcImage, npcX, npcY, npcSize, npcSize);
 
+            // Show health bars
+            drawHealthBars();
+
             requestAnimationFrame(gameLoop); // Request next frame
         }
+
+        // Function to draw health bars
+        function drawHealthBars() {
+            // Draw player health bar
+            context.fillStyle = 'green';
+            context.fillRect(10, 10, (health / maxHealth) * 200, 20);
+            context.strokeRect(10, 10, 200, 20);
+            context.fillStyle = 'black';
+            context.fillText('Health: ' + health, 220, 25);
+
+            // Draw NPC health bar
+            context.fillStyle = 'red';
+            context.fillRect(canvas.width - 210, 10, (npcHealth / maxNpcHealth) * 200, 20);
+            context.strokeRect(canvas.width - 210, 10, 200, 20);
+            context.fillStyle = 'black';
+            context.fillText('NPC Health: ' + npcHealth, canvas.width - 200, 25);
+        }
+
+        // Attack button handlers
+        document.getElementById('regularAttackButton').addEventListener('click', () => {
+            regularAttack(); // Perform regular attack
+        });
+
+        document.getElementById('powerAttackButton').addEventListener('click', () => {
+            powerAttack(); // Perform power attack
+        });
 
         // Start the game loop
         gameLoop();
