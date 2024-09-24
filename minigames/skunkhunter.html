@@ -37,8 +37,8 @@
         const maxPower = 100; // Maximum power
 
         // NPC Health
-        let npcHealth = 250; // NPC's health
-        const maxNpcHealth = 50; // Maximum NPC health
+        let npcHealth = 150; // NPC's health
+        const maxNpcHealth = 150; // Maximum NPC health
 
         // Game state
         let isGameOver = false; // Flag to check if the game is over
@@ -68,6 +68,7 @@
                 console.log("Regular Attack!");
                 npcHealth -= 5; // Decrease NPC health on regular attack
                 if (npcHealth < 0) npcHealth = 0; // Ensure health doesn't go below 0
+                console.log(`NPC Health: ${npcHealth}`);
             }
         }
 
@@ -78,6 +79,7 @@
                 console.log("Power Attack!");
                 npcHealth -= 10; // Decrease NPC health on power attack
                 if (npcHealth < 0) npcHealth = 0; // Ensure health doesn't go below 0
+                console.log(`NPC Health: ${npcHealth}`);
             } else {
                 console.log("Not enough power for a power attack!");
             }
