@@ -11,31 +11,28 @@
         <h1>Game Preview</h1>
         
         <h2>Enter Your Game Code</h2>
-        <textarea id="codeInput" rows="10" placeholder="Write your JavaScript game code here..."></textarea>
-        <button id="runGameBtn">Run Game</button>
+        <textarea id="codeInput" rows="10" placeholder="Paste your game code here..."></textarea>
+        <button id="runBtn">Run Game</button>
         
-        <div id="game"></div> <!-- Placeholder for the game canvas -->
+        <h2>Game Preview</h2>
+        <div id="game" style="border: 1px solid #000; width: 400px; height: 300px;"></div> <!-- Placeholder for the game canvas -->
     </div>
 
     <script>
-        // Function to run the game code from the textarea
-        function runGame() {
-            // Clear previous game elements
-            document.getElementById('game').innerHTML = '';
-
-            // Get the game code from the textarea
+        document.getElementById('runBtn').addEventListener('click', function() {
             const gameCode = document.getElementById('codeInput').value;
+
+            // Clear previous game if any
+            const gameDiv = document.getElementById('game');
+            gameDiv.innerHTML = '';
 
             // Create a new script element to run the game code
             const script = document.createElement('script');
             script.textContent = gameCode;
 
             // Append the script to the game div
-            document.getElementById('game').appendChild(script);
-        }
-
-        // Event listener for the button
-        document.getElementById('runGameBtn').addEventListener('click', runGame);
+            gameDiv.appendChild(script);
+        });
     </script>
 </body>
 </html>
