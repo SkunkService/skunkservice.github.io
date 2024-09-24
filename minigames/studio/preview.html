@@ -9,6 +9,11 @@
 <body>
     <div class="container">
         <h1>Game Preview</h1>
+        
+        <h2>Generated Game Code</h2>
+        <textarea id="codeOutput" rows="10" readonly></textarea>
+        <button id="runGameBtn">Run Game</button>
+        
         <div id="game"></div> <!-- Placeholder for the game canvas -->
     </div>
 
@@ -16,10 +21,27 @@
         // Retrieve the game code from local storage
         const gameCode = localStorage.getItem('gameCode');
 
-        // Create a new script element to run the game code
-        const script = document.createElement('script');
-        script.textContent = gameCode;
-        document.getElementById('game').appendChild(script);
+        // Display the game code in the textarea
+        document.getElementById('codeOutput').value = gameCode;
+
+        // Function to run the game code
+        function runGame() {
+            // Clear previous game elements
+            document.getElementById('game').innerHTML = '';
+
+            // Create a new script element to run the game code
+            const script = document.createElement('script');
+            script.textContent = gameCode;
+
+            // Append the script to the game div
+            document.getElementById('game').appendChild(script);
+        }
+
+        // Event listener for the button
+        document.getElementById('runGameBtn').addEventListener('click', runGame);
+
+        // Optional: Automatically run the game when the page loads
+        // runGame();
     </script>
 </body>
 </html>
