@@ -247,6 +247,255 @@
         if (keys['ArrowRight'] && x < canvas.width - size) x += 3 + speedIncrease; // Move right
 
         // NPC movement logic
+        if (npcHealth > 0) {<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #000;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const context = canvas.getContext('2d');
+
+    // Player's initial position
+    let x = 175;
+    let y = 125;
+    const size = 50; // Player size
+    const npcSize = 50; // NPC size
+    const keys = {}; // Track key presses
+    const npcSpeed = 2; // NPC movement speed
+    const attackRange = 60; // Range at which NPC attacks
+
+    // Player Health and Power
+    let health = 100; // Player's health
+    let power = 100; // Player's power
+    const maxHealth = 100; // Maximum health
+    const maxPower = 100; // Maximum power
+    const powerAttackCost = 20; // Cost of power attack
+
+    // NPC Health
+    let npcHealth = 50; // NPC's health
+    const maxNpcHealth = 50; // Maximum NPC health
+
+    // Game state
+    let isGameOver = false; // Flag to check if the game is over
+    let currentRound = 1; // Current round number
+
+    // Potion effects
+    let regenerationActive = false; // Flag for regeneration effect
+    let speedActive = false; // Flag for speed effect
+    let speedIncrease = 0; // Speed increase value
+    let regenerationTimer = null; // Timer for regeneration
+    let speedTimer = null; // Timer for speed
+    let droppedPotions = []; // Array to hold dropped potions
+
+    // Load images
+    const playerImage = new Image();
+    playerImage.src = 'https://cdn.discordapp.com/avatars/1208633283907158030/ed85bc245ae585b2a1586cf0c8661345.webp'; // Player image path
+
+    const npcImage = new Image();
+    npcImage.src = 'https://www.shutterstock.com/image-vector/chat-bot-icon-virtual-smart-600nw-2478937555.jpg'; // NPC character image
+
+    // Load potion images
+    const potionImages = {
+        regeneration: new Image(),
+        power: new Image(),
+        speed: new Image(),
+    };
+
+    potionImages.regeneration.src = 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/e/e5/Splash_Potion_of_Regeneration_JE2_BE2.png/revision/latest/scale-to-width/360?cb=20191027041322'; // Regeneration potion image
+    potionImages.power.src = 'https://static.wikia.nocookie.net/evolution-evade/images/0/06/Power_Potion.png/revision/latest?cb=20201231074314'; // Power potion image
+    potionImages.speed.src = 'https://static.wikia.nocookie.net/catalog-gear-place-official/images/2/22/Ultimate_Super_Speed_Potion.png/revision/latest/scale-to-width-down/420?cb=20210722211242'; // Speed potion image
+
+    // NPC position
+    let npcX = Math.random() * (canvas.width - npcSize);
+    let npcY = Math.random() * (canvas.height - npcSize);
+
+    // Handle player movement
+    document.addEventListener('keydown', (event) => {
+        keys[event.key] = true;
+    });
+    document.addEventListener('keyup', (event) => {
+        keys[event.key] = false;
+    });
+
+    // Handle mouse click for regular attack
+    document.addEventListener('mousedown', (event) => {
+        if (event.button === 0) { // Left mouse button
+            regularAttack();
+        }
+    });
+
+    // Handle power attack
+    document.addEventListener('keydown', (event) => {
+        if (event.code === 'Space') {
+            powerAttack();
+        }
+    });
+
+    // Regular attack function
+    function regularAttack() {
+        if (npcHealth > 0) {
+            console.log("Regular Attack!");
+            npcHealth -= 5; // Decrease NPC health on regular attack
+            if (npcHealth < 0) npcHealth = 0; // Ensure health doesn't go below 0
+        }
+    }
+
+    // Power attack function
+    function powerAttack() {
+        if (power >= powerAttackCost && npcHealth > 0) {
+            power -= powerAttackCost; // Decrease power for the attack
+            console.log("Power Attack!");
+            npcHealth -= 10; // Decrease NPC health on power attack
+            if (npcHealth < 0) npcHealth = 0; // Ensure health doesn't go below 0
+        } else {
+            console.log("Not enough power for a power attack!");
+        }
+    }
+
+    // Consume potion of regeneration
+    function consumeRegenerationPotion() {
+        regenerationActive = true;
+        health += 5; // Heal the player
+        if (health > maxHealth) health = maxHealth; // Ensure health doesn't exceed maximum
+
+        console.log("Potion of Regeneration consumed! (+5 health for 10 seconds)");
+
+        // Set a timer for the effect duration
+        clearTimeout(regenerationTimer);
+        regenerationTimer = setTimeout(() => {
+            regenerationActive = false;
+            console.log("Regeneration effect ended.");
+        }, 10000); // Duration: 10 seconds
+    }
+
+    // Consume potion of speed
+    function consumeSpeedPotion() {
+        speedActive = true;
+        speedIncrease = 2; // Increase speed
+        console.log("Potion of Speed consumed! (+15 speed for 30 seconds)");
+
+        // Set a timer for the effect duration
+        clearTimeout(speedTimer);
+        speedTimer = setTimeout(() => {
+            speedActive = false;
+            speedIncrease = 0; // Reset speed
+            console.log("Speed effect ended.");
+        }, 30000); // Duration: 30 seconds
+    }
+
+    // Consume potion of power
+    function consumePowerPotion() {
+        power += 5; // Increase power
+        if (power > maxPower) power = maxPower; // Ensure power doesn't exceed maximum
+        console.log("Potion of Power consumed! (+5 power)");
+    }
+
+    // Create a dropped potion when the NPC is defeated
+    function createDroppedPotion() {
+        const potionType = Math.random();
+        let potion = {
+            type: '',
+            x: Math.random() * (canvas.width - 20),
+            y: Math.random() * (canvas.height - 20)
+        };
+
+        if (potionType < 0.45) {
+            potion.type = 'regeneration';
+        } else if (potionType < 0.55) {
+            potion.type = 'power';
+        } else {
+            potion.type = 'speed';
+        }
+
+        droppedPotions.push(potion);
+        console.log(`Dropped a potion of ${potion.type}!`);
+    }
+
+    // Check for collision with potions
+    function checkPotionCollision() {
+        for (let i = droppedPotions.length - 1; i >= 0; i--) {
+            const potion = droppedPotions[i];
+            // Check if the player touches the potion
+            if (
+                x < potion.x + 20 && // Assuming potion width is 20
+                x + size > potion.x &&
+                y < potion.y + 20 && // Assuming potion height is 20
+                y + size > potion.y
+            ) {
+                // Consume the potion based on its type
+                switch (potion.type) {
+                    case 'regeneration':
+                        consumeRegenerationPotion();
+                        break;
+                    case 'power':
+                        consumePowerPotion();
+                        break;
+                    case 'speed':
+                        consumeSpeedPotion();
+                        break;
+                }
+                droppedPotions.splice(i, 1); // Remove the potion from the array
+                console.log(`Consumed a potion of ${potion.type}!`);
+            }
+        }
+    }
+
+    // Check for collision with NPC
+    function checkPlayerCollision() {
+        if (
+            x < npcX + npcSize && // Right side of player
+            x + size > npcX && // Left side of NPC
+            y < npcY + npcSize && // Bottom side of player
+            y + size > npcY // Top side of NPC
+        ) {
+            // Player is touching the NPC, reduce health
+            health -= 1; // Damage player on contact
+            if (health < 0) health = 0; // Ensure health doesn't go below 0
+            console.log("Player hit by NPC! Current health:", health);
+        }
+    }
+
+    // Start a new round
+    function startNewRound() {
+        currentRound++;
+        npcHealth = maxNpcHealth; // Reset NPC health
+        npcX = Math.random() * (canvas.width - npcSize);
+        npcY = Math.random() * (canvas.height - npcSize);
+        console.log(`Round ${currentRound} started!`);
+    }
+
+    // Game loop
+    function gameLoop() {
+        context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+        // Player movement logic
+        if (keys['ArrowUp'] && y > 0) y -= 3 + speedIncrease; // Move up
+        if (keys['ArrowDown'] && y < canvas.height - size) y += 3 + speedIncrease; // Move down
+        if (keys['ArrowLeft'] && x > 0) x -= 3 + speedIncrease; // Move left
+        if (keys['ArrowRight'] && x < canvas.width - size) x += 3 + speedIncrease; // Move right
+
+        // NPC movement logic
         if (npcHealth > 0) {
             // Simple AI to move towards the player
             if (npcX < x) npcX += npcSpeed;
