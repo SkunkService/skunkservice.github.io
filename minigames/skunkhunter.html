@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Game</title>
+    <style>
+        canvas {
+            background: #f0f0f0;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const context = canvas.getContext('2d');
+
+        let x = 175; // Player's initial X position
+        let y = 125; // Player's initial Y position
+        const size = 50; // Player's size
+        const npcSize = 50; // NPC size
+        const keys = {}; // Track key presses
+        const npcSpeed = 2; // NPC movement speed
+        const attackRange = 60; // Range at which NPC attacks
+
+        // Player Health and Power
+        let health = 100; // Player's health
+        let power = 100; // Player's power
+        const maxHealth = 100; // Maximum health
+        const maxPower = 100; // Maximum power
+        const powerAttackCost = 20; // Cost of power attack
+
+        // NPC Health
+        let npcHealth = 50; // NPC's health
+        const maxNpcHealth = 50; // Maximum NPC health
+
+        // Game state
+        let isGameOver = false; // Flag to check if the game is over
+        let currentRound = 1; // Current round number
+
+        // Load images
+        const playerImage = new Image();
+        playerImage.src = 'https://cdn.discordapp.com/avatars/1208633283907158030/ed85bc245ae585b2a1586cf0c8661345.webp'; // Player image path
+
+        const npcImage = new Image();
+        npcImage.src = 'https://www.shutterstock.com/image-vector/chat-bot-icon-virtual-smart-600nw-2478937555.jpg'; // NPC character image
+
+        // NPC position
+        let npcX = Math.random() * (canvas.width - npcSize);
+        let npcY = Math.random() * (canvas.height - npcSize);
+
+        // Handle player movement
+        document.addEventListener('keydown', (event) => {
+            keys[event.key] = true;
+        });
+        document.addEventListener('keyup', (event) => {
+            keys[event.key] = false;
+        });
+
+        // Regular attack function
+        function regularAttack() {
+            if (npcHealth > 0) {
+                console.log("Regular Attack!");
+                npcHealth -= 5; // Decrease NPC health on regular attack
+                if (npcHealth < 0) npcHealth = 0; // Ensure health doesn't go below 0
+            }
+        }
+
+        // Power attack function
+        function powerAttack() {
+            if (power >= powerAttackCost && npcHealth > 0) {
+                power -= powerAttackCost; // Decrease power for the attack
+                console.log("Power Attack!");
+                npcHealth -= 10; // Decrease NPC health on power attack
+                if (npcHealth < 0) npcHealth = 0; // Ensure health doesn't go below 0
+            } else {
+                console.log("Not enough power for a power attack!");
+            }
+        }
+
+        // Game loop function
+        function gameLoop() {
+            context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+            // Check if the game is over
+            if (health <= 0) {
+                isGameOver = true; // Set game over flag
+                context.fillStyle = 'black';
+                context.font = '30px Arial';
+                context.fillText('Game Over', canvas.width / 2 - 70, canvas.height / 2);
+                return; // Exit the game loop
+            }
+
+            // Check if NPC is defeated to move to the next round
+            if (npcHealth <= 0) {
+                startNewRound(); // Start a new round
+            }
+
+            // Move NPC towards the player
+            if (npcX < x) npcX += npcSpeed;
+            if (npcX > x) npcX -= npcSpeed;
+            if (npcY < y) npcY += npcSpeed;
+            if (npcY > y) npcY -= npcSpeed;
+
+            // Move player based on key presses
+            if (keys['w']) y -= 5; // Move up
+            if (keys['a']) x -= 5; // Move left
+            if (keys['s']) y += 5; // Move down
+            if (keys['d']) x += 5; // Move right
+
+            // Draw Player
+            context.drawImage(playerImage, x, y, size, size);
+            
+            // Draw NPC
+            context.drawImage(npcImage, npcX, npcY, npcSize, npcSize);
+
+            requestAnimationFrame(gameLoop); // Request next frame
+        }
+
+        // Start the game loop
+        gameLoop();
+    </script>
+</body>
+</html>
