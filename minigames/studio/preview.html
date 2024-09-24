@@ -32,7 +32,11 @@
 
             // Execute user code
             try {
-                eval(gameCode); // Use eval to run the user code
+                eval(`
+                    const canvas = document.getElementById('gameCanvas');
+                    const context = canvas.getContext('2d');
+                    ${gameCode}
+                `); // Use eval to run the user code
             } catch (error) {
                 console.error('Error executing game code:', error);
             }
