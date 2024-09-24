@@ -15,7 +15,7 @@
         <button id="runBtn">Run Game</button>
         
         <h2>Game Preview</h2>
-        <div id="game" style="border: 1px solid #000; width: 400px; height: 300px;"></div> <!-- Placeholder for the game canvas -->
+        <div id="game" style="border: 1px solid #000; width: 400px; height: 300px;"></div>
     </div>
 
     <script>
@@ -24,11 +24,26 @@
 
             // Clear previous game if any
             const gameDiv = document.getElementById('game');
-            gameDiv.innerHTML = '';
+            gameDiv.innerHTML = ''; // Clear the game div
+
+            // Create a new canvas element
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 300;
+            const context = canvas.getContext('2d');
+
+            // Append the canvas to the game div
+            gameDiv.appendChild(canvas);
 
             // Create a new script element to run the game code
             const script = document.createElement('script');
-            script.textContent = gameCode;
+
+            // Wrap the game code in a function to avoid redeclaration issues
+            script.textContent = `
+                (function() {
+                    ${gameCode}
+                })();
+            `;
 
             // Append the script to the game div
             gameDiv.appendChild(script);
