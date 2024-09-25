@@ -235,9 +235,16 @@ function startNewRound() {
     console.log(`Starting round ${currentRound}!`);
 }
 
+const backgroundImage = new Image();
+backgroundImage.src = 'https://img.freepik.com/vector-gratis/escena-bosque-pista-senderismo-muchos-arboles_1308-54526.jpg'; // Replace with your image URL
+
 // Game loop function
 function gameLoop() {
-    context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Check if the game is over
     if (health <= 0) {
