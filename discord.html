@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Join Server</title>
     <script>
-      window.open("https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=https%3A%2F%2Fyour-redirect-uri.com%2Fcallback&scope=guilds.join%20dm_channels.messages.write%20dm_channels.read", "popout", "width=500,height=500");
+      function openCenteredPopout() {
+        const width = 500;
+        const height = 500;
+        const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+
+        window.open(
+          "https://discord.com/oauth2/authorize?client_id=1257962930863865866&response_type=code&redirect_uri=https%3A%2F%2Fskunkservice.github.io%2Fauthorized&scope=guilds.join+dm_channels.messages.write+dm_channels.read",
+          "popout",
+          `width=${width},height=${height},left=${left},top=${top}`
+        );
+      }
+
+      window.onload = openCenteredPopout;
     </script>
   </head>
   <body>
-    <h1>Pop-Out Opened</h1>
+    <h1>Pop-Out Opened!</h1>
+    <p>The pop-out was opened and authorized to join the server.</p>
   </body>
 </html>
