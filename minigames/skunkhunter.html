@@ -26,7 +26,7 @@
 </head>
 <body>
     <h1>SkunkPlatform's Hunt of the Bots - Minigames</h1>
-    <p>Keys: Space = Super Attack (The SkunkPlatform when it attacks with power)<br>Left Mouse Button: Attack<br>W,A,S,D: Use to Move for SkunkPlatform</p>
+    <p>Keys: Space = Super Attack (The SkunkPlatform when it attacks with power)<br>Left Mouse Button = Attack<br>W,A,S,D = Use to Move for SkunkPlatform<br>R = Reload the Game</p>
 
 <canvas id="gameCanvas" width="800" height="600"></canvas>
 
@@ -350,6 +350,35 @@ function drawPowerBar(x, y, currentPower, maxPower, fillColor, bgColor) {
 // Start the game loop
 gameLoop();
 
+function restartGame() {
+    health = 100;
+    power = 100;
+    npcHealth = maxNpcHealth;
+    currentRound = 1;
+    droppedPotions = [];
+    isGameOver = false;
+
+    // Reset positions
+    x = 175;
+    y = 125;
+    npcX = Math.random() * (canvas.width - npcSize);
+    npcY = Math.random() * (canvas.height - npcSize);
+
+    gameLoop(); // Restart the game loop
+}
+
+// In the game loop, check if the game is over and prompt to restart
+if (isGameOver) {
+    context.fillStyle = 'black';
+    context.font = '30px Arial';
+    context.fillText('Game Over! Press R to Restart', canvas.width / 2 - 150, canvas.height / 2);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'r') {
+            restartGame();
+        }
+    });
+}
+    
 createAchievement("Go 5 Rounds", "Survive and defeat enemies for 5 rounds! Keep pushing your limits!");
 createAchievement("Go 10 Rounds", "You've shown great skill! Complete 10 rounds to prove your mastery!");
 createAchievement("Go 15 Rounds", "A true champion! Conquer 15 rounds to claim your ultimate victory!");
@@ -357,6 +386,7 @@ createAchievement("Go 25 Rounds", "You've become a formidable player! Complete 2
 createAchievement("SkunkPlatform want a 50 Rounds", "The SkunkPlatform was won the 50 Rounds!");
 createAchievement("I'm Powerful!","A significant milestone! The SkunkPlatform has reached 75 rounds with impressive skill!");
 createAchievement("SkunkPlatform got 100 Rounds", "The SkunkPlatform won the Master and Extreme Rounds.");
+createAchievement("I'm SkunkPlatform Powerful!", "The SkunkPlatform got a Powerful");
 </script>
     <script src="api/achievement-api.js"></script>
 
