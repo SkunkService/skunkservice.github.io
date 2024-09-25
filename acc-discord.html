@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord OAuth2 Example</title>
+</head>
+<body>
+    <h1>Discord OAuth2 Example</h1>
+    <button id="login-button">Login with Discord</button>
+    <p id="message"></p>
+
+    <script>
+        const clientId = '1257962930863865866'; // Your client ID as per your previous example
+        const redirectUri = 'https://skunkservice.github.io/skunkapp/'; // Your GitHub Pages URL
+        const scope = 'guilds.join dm_channels.messages.write dm_channels.read';
+
+        const oauth2Url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+
+        document.getElementById('login-button').onclick = () => {
+            window.location.href = oauth2Url;
+        };
+
+        // Check if the URL contains the access token
+        const hash = window.location.hash;
+        if (hash) {
+            const token = new URLSearchParams(hash.substring(1)).get('access_token');
+            if (token) {
+                document.getElementById('message').textContent = 'Logged in successfully!';
+                console.log('Access Token:', token);
+                
+                // Example: Fetching user data using the access token
+                fetch('https://discord.com/api/v10/users/@me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('User Data:', data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
