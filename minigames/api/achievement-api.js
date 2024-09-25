@@ -32,7 +32,3 @@ function createAchievement(name, description) {
 function onClickAchievementList() {
     window.open('https://skunkservice.github.io/minigames/achievements', '_blank');
 }
-
-// Example Usage
-createAchievement('Joined a Minigames!', 'You're Welcome!');
-rewardAchievement(1);
