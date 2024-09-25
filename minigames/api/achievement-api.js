@@ -7,9 +7,13 @@ const achievements = JSON.parse(localStorage.getItem('achievements')) || [];
 function rewardAchievement(achievementId, reason = null) {
     const achievement = achievements.find(ach => ach.id === achievementId);
     if (achievement) {
-        achievement.rewarded = true; // Mark as rewarded
-        localStorage.setItem('achievements', JSON.stringify(achievements));
-        console.log(`Achievement rewarded: ${achievement.name}`);
+        if (!achievement.rewarded) { // Prevent re-rewarding the same achievement
+            achievement.rewarded = true; // Mark as rewarded
+            localStorage.setItem('achievements', JSON.stringify(achievements));
+            console.log(`Achievement rewarded: ${achievement.name}`);
+        } else {
+            console.log(`Achievement already rewarded: ${achievement.name}`);
+        }
     } else {
         console.log('Achievement ID does not exist.');
     }
