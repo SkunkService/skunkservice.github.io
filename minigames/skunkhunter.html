@@ -241,10 +241,9 @@ backgroundImage.src = 'https://img.freepik.com/vector-gratis/escena-bosque-pista
 // Game loop function
 function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height);
-
+    
     context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Check if the game is over
     if (health <= 0) {
