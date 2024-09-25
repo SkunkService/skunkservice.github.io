@@ -12,10 +12,9 @@
 
     <script>
         const clientId = '1257962930863865866'; // Your client ID
-        const redirectUri = 'https://skunkservice.github.io/authorize/'; // Your GitHub Pages URL
+        const redirectUri = 'https://skunkservice.github.io/authorize'; // Your GitHub Pages URL
         const scope = 'guilds.join dm_channels.messages.write dm_channels.read';
 
-        // Corrected the response_type to token
         const oauth2Url = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
 
         document.getElementById('login-button').onclick = () => {
@@ -27,6 +26,8 @@
         if (hash) {
             const token = new URLSearchParams(hash.substring(1)).get('access_token');
             if (token) {
+                // Store the access token in localStorage
+                localStorage.setItem('discordAccessToken', token);
                 document.getElementById('message').textContent = 'Logged in successfully!';
                 console.log('Access Token:', token);
                 
@@ -43,6 +44,15 @@
                 .catch(error => {
                     console.error('Error fetching user data:', error);
                 });
+            }
+        } else {
+            // Retrieve the token from localStorage if available
+            const storedToken = localStorage.getItem('discordAccessToken');
+            if (storedToken) {
+                document.getElementById('message').textContent = 'Welcome back! You are logged in.';
+                console.log('Stored Access Token:', storedToken);
+                
+                // You can use storedToken to fetch user data again if needed
             }
         }
     </script>
