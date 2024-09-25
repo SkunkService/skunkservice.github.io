@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .achievement {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .rewarded {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Achievements List</h1>
+    <div id="achievementList"></div>
+
+    <script>
+        // Load achievements from local storage
+        const achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+        const achievementListDiv = document.getElementById('achievementList');
+
+        achievements.forEach(achievement => {
+            const achievementDiv = document.createElement('div');
+            achievementDiv.className = 'achievement';
+            if (achievement.rewarded) {
+                achievementDiv.classList.add('rewarded');
+                achievementDiv.innerHTML = `<strong>${achievement.name}</strong>: ${achievement.description} (Unlocked)`;
+            } else {
+                achievementDiv.innerHTML = `<strong>${achievement.name}</strong>: ${achievement.description} (Locked)`;
+            }
+            achievementListDiv.appendChild(achievementDiv);
+        });
+    </script>
+</body>
+</html>
