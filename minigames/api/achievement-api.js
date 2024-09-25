@@ -73,15 +73,29 @@ function showNotification(achievementName) {
 
 // Function to create an achievement
 function createAchievement(name, description) {
+    // Check if the achievement name already exists
+    const existingAchievement = achievements.find(ach => ach.name === name);
+    if (existingAchievement) {
+        console.log(`Achievement with the name "${name}" already exists.`);
+        return; // Exit the function if the name is already taken
+    }
+
+    const currentId = localStorage.getItem('nextAchievementId') || 1; // Get the next ID or start at 1
     const newAchievement = {
-        id: achievements.length + 1, // Incremental ID
+        id: currentId, // Use the retrieved ID
         name,
         description,
         rewarded: false
     };
+    
     achievements.push(newAchievement);
     localStorage.setItem('achievements', JSON.stringify(achievements));
+    
+    // Increment and save the next ID for future achievements
+    localStorage.setItem('nextAchievementId', parseInt(currentId) + 1);
+    
     console.log(`Achievement created: ${name}`);
+    console.log(`Achievement ID: ${newAchievement.id}`);
 }
 
 // Function to open achievement list
