@@ -20,6 +20,7 @@
     </style>
 </head>
 <body>
+    <p>Keys: Space = Super Attack (The SkunkPlatform when it attacks with power)<br>Left Mouse Button: Attack<br>W,A,S,D: Use to Move for SkunkPlatform</p>
 
 <canvas id="gameCanvas" width="800" height="600"></canvas>
 
@@ -233,6 +234,23 @@ function startNewRound() {
     npcX = Math.random() * (canvas.width - npcSize); // Randomize NPC position
     npcY = Math.random() * (canvas.height - npcSize);
     console.log(`Starting round ${currentRound}!`);
+
+    // Check for achievements based on current round
+    if (currentRound === 5) {
+        awardAchievement(1); // Replace with the actual ID for "Go 5 Rounds"
+    } else if (currentRound === 10) {
+        awardAchievement(2); // Replace with the actual ID for "Go 10 Rounds"
+    } else if (currentRound === 15) {
+        awardAchievement(3); // Replace with the actual ID for "Go 15 Rounds"
+    } else if (currentRound === 25) {
+        awardAchievement(4); // Replace with the actual ID for "Go 25 Rounds"
+    } else if (currentRound === 50) {
+        awardAchievement(5); // Replace with the actual ID for "SkunkPlatform won 50 Rounds"
+    } else if (currentRound === 75) {
+        awardAchievement(6); // Replace with the actual ID for "SkunkPlatform got 75 Rounds"
+    } else if (currentRound === 100) {
+        awardAchievement(7); // Replace with the actual ID for "SkunkPlatform got 100 Rounds"
+    }
 }
 
 const backgroundImage = new Image();
@@ -325,10 +343,18 @@ function drawPowerBar(x, y, currentPower, maxPower, fillColor, bgColor) {
 
 // Start the game loop
 gameLoop();
+
+createAchievement("Go 5 Rounds", "Survive and defeat enemies for 5 rounds! Keep pushing your limits!"));
+createAchievement("Go 10 Rounds", "You've shown great skill! Complete 10 rounds to prove your mastery!");
+createAchievement("Go 15 Rounds", "A true champion! Conquer 15 rounds to claim your ultimate victory!"));
+createAchievement("Go 25 Rounds", "You've become a formidable player! Complete 25 rounds to show your resilience!");
+createAchievement("SkunkPlatform want a 50 Rounds", "The SkunkPlatform was won the 50 Rounds!");
+createAchievement("A significant milestone! The SkunkPlatform has reached 75 rounds with impressive skill!");
+createAchievement("SkunkPlatform got 100 Rounds", "The SkunkPlatform won the Master and Extreme Rounds.");
 </script>
+    <script src="api/achievement-api.js"></script>
 
 </body>
 </html>
-
 </body>
 </html>
