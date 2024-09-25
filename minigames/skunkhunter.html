@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Game</title>
+    <title>SkunkPlatform's Hunt of the Bots</title>
     <style>
         body {
             display: flex;
@@ -13,13 +13,19 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
+
         canvas {
             border: 2px solid #000;
             background-color: #fff;
         }
+
+        h1, p {
+            user-select: none; /* Disable text selection */
+        }
     </style>
 </head>
 <body>
+    <h1>SkunkPlatform's Hunt of the Bots - Minigames</h1>
     <p>Keys: Space = Super Attack (The SkunkPlatform when it attacks with power)<br>Left Mouse Button: Attack<br>W,A,S,D: Use to Move for SkunkPlatform</p>
 
 <canvas id="gameCanvas" width="800" height="600"></canvas>
