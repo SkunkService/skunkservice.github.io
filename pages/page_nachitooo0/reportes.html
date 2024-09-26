@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportar Usuario</title>
+</head>
+<body>
+    <h1>Reportar a un Usuario</h1>
+    <form id="reportForm">
+        <label for="username">Nombre de usuario:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="reason">Razón del reporte:</label>
+        <textarea id="reason" name="reason" required></textarea><br><br>
+        
+        <button type="submit">Enviar Reporte</button>
+    </form>
+
+    <p id="statusMessage"></p>
+
+    <script>
+        document.getElementById("reportForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita que el formulario recargue la página
+
+            const username = document.getElementById("username").value;
+            const reason = document.getElementById("reason").value;
+            const webhookUrl = "https://discord.com/api/webhooks/1288682120352628737/h1opxe72PeqNOX3FM83ojAjSC61mHDS5_2fVArBAnUjWe7qhkkXxVRC0L4C66O3rF5vA"; // Reemplaza con tu URL de webhook de Discord
+
+            const payload = {
+                content: `🚨 **Usuario Reportado** 🚨\n**Nombre de usuario:** ${username}\n**Razón:** ${reason}`
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("statusMessage").innerText = "¡Reporte enviado con éxito!";
+            })
+            .catch((error) => {
+                document.getElementById("statusMessage").innerText = "Error al enviar el reporte.";
+                console.error("Error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
