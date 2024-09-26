@@ -22,9 +22,9 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px; /* Ajusta el tamaño máximo del formulario */
-            width: 100%; /* Asegura que el formulario ocupe todo el espacio disponible */
-            box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* Título */
@@ -42,14 +42,14 @@
         }
 
         /* Estilos para los campos de texto */
-        input[type="text"] {
-            width: 100%; /* Asegura que el campo ocupe el ancho completo del contenedor */
-            padding: 10px; /* Añade espacio interior al campo */
-            margin-bottom: 20px; /* Espacio entre el campo y el siguiente elemento */
-            border: 2px solid #ddd; /* Añade un borde ligero */
-            border-radius: 5px; /* Bordes redondeados */
-            font-size: 16px; /* Tamaño del texto dentro del campo */
-            box-sizing: border-box; /* Asegura que el padding esté dentro del ancho total */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
 
         /* Estilos para el botón */
@@ -76,18 +76,6 @@
             font-size: 14px;
             color: #333;
         }
-
-        textarea {
-            width: 100%; /* Asegura que el campo de texto ocupe todo el ancho del contenedor */
-            height: 100px; /* Ajusta la altura inicial */
-            padding: 10px; /* Añade espacio interior */
-            margin-bottom: 20px; /* Añade espacio debajo del campo */
-            border: 2px solid #ddd; /* Añade un borde */
-            border-radius: 5px; /* Bordes redondeados */
-            font-size: 16px; /* Tamaño del texto */
-            resize: vertical; /* Permite redimensionar solo en la dirección vertical */
-            box-sizing: border-box; /* Asegura que el padding esté dentro del ancho total */
-        }
     </style>
 </head>
 <body>
@@ -104,13 +92,32 @@
     </form>
 
     <script>
+        // Lista de palabras prohibidas
+        const badWords = ["maldita", "idiota", "tonto"]; // Agrega aquí más palabras
+        const webhookUrl = "https://discord.com/api/webhooks/1288682120352628737/h1opxe72PeqNOX3FM83ojAjSC61mHDS5_2fVArBAnUjWe7qhkkXxVRC0L4C66O3rF5vA";
+
         document.getElementById("reportForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Evita que el formulario recargue la página
+            event.preventDefault();
 
-            const username = document.getElementById("username").value;
-            const reason = document.getElementById("reason").value;
-            const webhookUrl = "https://discord.com/api/webhooks/1288682120352628737/h1opxe72PeqNOX3FM83ojAjSC61mHDS5_2fVArBAnUjWe7qhkkXxVRC0L4C66O3rF5vA"; // Reemplaza con tu URL de webhook de Discord
+            const username = document.getElementById("username").value.trim();
+            const reason = document.getElementById("reason").value.trim();
 
+            // Validación anti-link
+            const linkRegex = /(https?:\/\/[^\s]+)/g;
+            if (linkRegex.test(reason)) {
+                document.getElementById("statusMessage").innerText = "Error: No se permiten enlaces en la razón.";
+                return;
+            }
+
+            // Validación anti-badwords
+            for (const word of badWords) {
+                if (reason.toLowerCase().includes(word)) {
+                    document.getElementById("statusMessage").innerText = "Error: La razón contiene palabras prohibidas.";
+                    return;
+                }
+            }
+
+            // Envío del reporte
             const payload = {
                 content: `🚨 **Usuario Reportado** 🚨\n**Nombre de usuario:** ${username}\n**Razón:** ${reason}`
             };
