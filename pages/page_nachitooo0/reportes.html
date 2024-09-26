@@ -42,7 +42,7 @@
         }
 
         /* Estilos para los campos de texto */
-        input[type="text"], textarea {
+        input[type="text"] {
             width: 100%; /* Asegura que el campo ocupe el ancho completo del contenedor */
             padding: 10px; /* Añade espacio interior al campo */
             margin-bottom: 20px; /* Espacio entre el campo y el siguiente elemento */
@@ -75,6 +75,18 @@
             text-align: center;
             font-size: 14px;
             color: #333;
+        }
+
+        textarea {
+            width: 100%; /* Asegura que el campo de texto ocupe todo el ancho del contenedor */
+            height: 100px; /* Ajusta la altura inicial */
+            padding: 10px; /* Añade espacio interior */
+            margin-bottom: 20px; /* Añade espacio debajo del campo */
+            border: 2px solid #ddd; /* Añade un borde */
+            border-radius: 5px; /* Bordes redondeados */
+            font-size: 16px; /* Tamaño del texto */
+            resize: vertical; /* Permite redimensionar solo en la dirección vertical */
+            box-sizing: border-box; /* Asegura que el padding esté dentro del ancho total */
         }
     </style>
 </head>
