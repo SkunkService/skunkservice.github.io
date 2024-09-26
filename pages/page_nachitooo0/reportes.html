@@ -4,20 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportar Usuario</title>
+    <style>
+        /* Fondo de la página */
+        body {
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Contenedor del formulario */
+        #reportForm {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        /* Título */
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Etiquetas de los campos */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Estilos para los campos de texto */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Estilos para el botón */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Efecto hover sobre el botón */
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Mensaje de estado */
+        #statusMessage {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h1>Reportar a un Usuario</h1>
     <form id="reportForm">
+        <h1>Reportar a un Usuario</h1>
         <label for="username">Nombre de usuario:</label>
-        <input type="text" id="username" name="username" required><br><br>
+        <input type="text" id="username" name="username" required>
         
         <label for="reason">Razón del reporte:</label>
-        <textarea id="reason" name="reason" required></textarea><br><br>
+        <textarea id="reason" name="reason" required></textarea>
         
         <button type="submit">Enviar Reporte</button>
+        <p id="statusMessage"></p>
     </form>
-
-    <p id="statusMessage"></p>
 
     <script>
         document.getElementById("reportForm").addEventListener("submit", function(event) {
