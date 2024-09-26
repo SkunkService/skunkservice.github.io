@@ -25,6 +25,8 @@
             max-width: 400px;
             width: 100%;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column; /* Cambia la dirección de los elementos a columna */
         }
 
         /* Título */
@@ -50,6 +52,12 @@
             border-radius: 5px;
             font-size: 16px;
             box-sizing: border-box;
+        }
+
+        /* Ajustes para textarea */
+        textarea {
+            min-height: 100px; /* Altura mínima */
+            resize: vertical; /* Permite redimensionar solo en la dirección vertical */
         }
 
         /* Estilos para el botón */
