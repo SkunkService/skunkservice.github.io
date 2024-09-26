@@ -8,20 +8,37 @@
 </head>
 <body>
     <div class="container">
-        <h1>Minigames Hub</h1>
-        <button onclick="onClickAchievementList()">View Achievements</button>
-        <a href="studio">Minigames Studio</a>
-        <h2>Minigames Studio</h2>
-        <p>The Minigames Studio is a Development Studio dedicated to creating engaging and interactive minigames. Our platform provides tools and resources for developers to easily design, develop, and launch their games.</p>
-        <p>Here are some key features of the Minigames Studio:</p>
-        <ul>
-            <li><strong>Game Templates:</strong> Start your projects quickly with our pre-built game templates.</li>
-            <li><strong>Customizable Assets:</strong> Access a library of graphics, sounds, and scripts to personalize your games.</li>
-            <li><strong>Live Testing:</strong> Test your games in real-time to ensure they work as intended before launching.</li>
-            <li><strong>Community Support:</strong> Join our community to share your projects and get feedback from other developers.</li>
-            <li><strong>The Achievements:</strong> Track player progress and reward them with achievements for completing specific tasks or reaching milestones in your games.</li>
-        </ul>
-        <p>Whether you are a beginner or an experienced developer, the Minigames Studio has everything you need to bring your game ideas to life. Start creating your minigame today!</p>
+        <header>
+            <h1>Minigames Hub</h1>
+            <button onclick="onClickAchievementList()" aria-label="View Achievements">View Achievements</button>
+            <a href="studio" aria-label="Minigames Studio">Minigames Studio</a>
+        </header>
+
+        <section>
+            <h2>About Minigames Studio</h2>
+            <p>The Minigames Studio is a Development Studio dedicated to creating engaging and interactive minigames. Our platform provides tools and resources for developers to easily design, develop, and launch their games.</p>
+            <p>Here are some key features of the Minigames Studio:</p>
+            <ul>
+                <li><strong>Game Templates:</strong> Start your projects quickly with our pre-built game templates.</li>
+                <li><strong>Customizable Assets:</strong> Access a library of graphics, sounds, and scripts to personalize your games.</li>
+                <li><strong>Live Testing:</strong> Test your games in real-time to ensure they work as intended before launching.</li>
+                <li><strong>Community Support:</strong> Join our community to share your projects and get feedback from other developers.</li>
+                <li><strong>The Achievements:</strong> Track player progress and reward them with achievements for completing specific tasks or reaching milestones in your games.</li>
+            </ul>
+            <p>Whether you are a beginner or an experienced developer, the Minigames Studio has everything you need to bring your game ideas to life. Start creating your minigame today!</p>
+        </section>
+
+        <br><br>
+        <section>
+            <h2>Games</h2>
+            <div class="list">
+                <div>
+                    <p>SkunkPlatform's Hunt of the Bots</p>
+                    <button onclick='window.open("skunkhunter", "popout", "width=500,height=500");' aria-label="Launch SkunkPlatform's Hunt of the Bots in a pop-out window">Launch with Pop-Out</button>
+                    <button onclick='window.location.href="skunkhunter"' aria-label="Launch SkunkPlatform's Hunt of the Bots in the website">Launch with Website</button>
+                </div>
+            </div>
+        </section>
     </div>
 </body>
 </html>
