@@ -137,8 +137,15 @@
                 },
                 body: JSON.stringify(payload),
             })
-            .then(response => response.json())
+            .then(response => {
+                // Verifica el estado de la respuesta
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.text(); // Cambia a text() para verificar la respuesta
+            })
             .then(data => {
+                console.log("Response data:", data); // Muestra la respuesta cruda
                 document.getElementById("statusMessage").innerText = "¡Reporte enviado con éxito!";
                 // Notificación
                 if ('Notification' in window) {
