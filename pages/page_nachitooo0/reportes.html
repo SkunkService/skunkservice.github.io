@@ -145,6 +145,17 @@
                 document.getElementById("statusMessage").innerText = "Error al enviar el reporte.";
                 console.error("Error:", error);
             });
+            if ('Notification' in window) {
+    Notification.requestPermission().then(function (permission) {
+        if (permission === 'granted') {
+            var notification = new Notification('Reportando a Usuario Se ha Enviado en Servidor de Discord'.', {
+                body: 'El Reportes Està Revsisando. Enviando Reporte en Servidor de Discord al \'Server de nachitoo🤯\'
+            });
+        }
+    });
+} else {
+    // Handle browsers that don't support notifications
+}
         });
     </script>
 </body>
