@@ -107,3 +107,12 @@ class CookieDataLong extends CookieData {
         return data ? data[key] : null;
     }
 }}
+
+
+/*
+This allows you to use the following script tag for integration:
+Old Example:
+<script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io/api/cookie-data.js"></script>
+Latest Example:
+<script src="https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io/api/cookie-data.js"></script>
+*/
