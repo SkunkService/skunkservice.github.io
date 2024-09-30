@@ -38,6 +38,60 @@ if (isNode()) {
         }
     }
 
+    async function requirement(path) {
+        if (path.endsWith('.json')) {
+            try {
+                const response = await fetch(path);  // Use await to handle the promise
+                if (!response.ok) {
+                    throw new Error(`Failed to load JSON from ${path}`);
+                }
+                const data = await response.json();  // Await the resolution of the JSON data
+                return data;
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        } else if (path.endsWith('.js')) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = path;
+                script.type = 'module';
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error(`Failed to load script at ${path}`));
+                document.head.appendChild(script);
+            });
+        } else {
+            throw new Error(`Unsupported file type for path: ${path}`);
+        }
+    }
+
+    async function req(path) {
+        if (path.endsWith('.json')) {
+            try {
+                const response = await fetch(path);  // Use await to handle the promise
+                if (!response.ok) {
+                    throw new Error(`Failed to load JSON from ${path}`);
+                }
+                const data = await response.json();  // Await the resolution of the JSON data
+                return data;
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        } else if (path.endsWith('.js')) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = path;
+                script.type = 'module';
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error(`Failed to load script at ${path}`));
+                document.head.appendChild(script);
+            });
+        } else {
+            throw new Error(`Unsupported file type for path: ${path}`);
+        }
+    }
+
     isCreated = true;
 }
 
