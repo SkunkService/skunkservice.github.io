@@ -1,3 +1,104 @@
+class gsap {
+    constructor() {
+        // Check if GSAP is already loaded
+        if (typeof window.TweenMax === 'undefined' && typeof window.TweenLite === 'undefined') {
+            this.loadGsapScript();
+        } else {
+            console.log('GSAP is already loaded.');
+        }
+    }
+
+    loadGsapScript() {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js'; // You can change the version as needed
+        script.onload = () => {
+            console.log('GSAP script loaded successfully.');
+        };
+        script.onerror = () => {
+            console.error('Failed to load GSAP script.');
+        };
+        document.head.appendChild(script);
+    }
+
+    tween(element, time, tweenData) {
+        if (typeof window.gsap !== 'undefined') {
+            gsap.to(element, time, tweenData);
+        } else {
+            console.error('GSAP is not loaded. Cannot perform tween.');
+        }
+    }
+
+    moveElement(element, time, x, y) {
+        if (typeof window.gsap !== 'undefined') {
+            gsap.to(element, {
+                duration: time,
+                x: x,
+                y: y
+            });
+        } else {
+            console.error('GSAP is not loaded. Cannot move element.');
+        }
+    }
+}
+
+class AnimationImage {
+    constructor(id, keyFrames) {
+        this.ID = id; // Unique ID for the animation element
+        this.id = id; // Unique ID for the animation element
+        this.KEY_FRAMES = keyFrames; // Array of key frames with time and src
+        this.currentFrame = 0; // Index of the current frame
+        this.isPlaying = false; // Track if the animation is playing
+        this.intervalId = null; // Store the interval ID for animation playback
+    }
+
+    // Method to start the animation
+    Play() {
+        if (!this.isPlaying) {
+            this.isPlaying = true;
+            this.currentFrame = 0; // Reset to the first frame
+            this.animate(); // Start the animation loop
+        }
+    }
+
+    // Method to stop the animation
+    Stop() {
+        this.isPlaying = false;
+        clearInterval(this.intervalId);
+        this.currentFrame = 0; // Reset to the first frame
+        this.updateImage(); // Update image to the first frame
+    }
+
+    // Method to pause the animation
+    Pause() {
+        this.isPlaying = false;
+        clearInterval(this.intervalId);
+    }
+
+    // Method to animate the frames
+    animate() {
+        const frameDuration = 1000; // Duration for each frame in milliseconds
+        this.intervalId = setInterval(() => {
+            if (this.currentFrame < this.KEY_FRAMES.length) {
+                this.updateImage();
+                this.currentFrame++;
+            } else {
+                this.Stop(); // Stop when all frames have been displayed
+            }
+        }, frameDuration);
+    }
+
+    // Method to update the displayed image
+    updateImage() {
+        const frame = this.KEY_FRAMES[this.currentFrame];
+        if (frame) {
+            const imageElement = document.getElementById(this.id);
+            if (imageElement) {
+                imageElement.src = frame.src; // Update the image source
+            }
+        }
+    }
+}
+
 async function createElement(elementType, parent, id = null, classAttr = null, className = null, name = null) {
   // Create an element of the specified type
   const element = document.createElement(elementType);
@@ -370,15 +471,28 @@ async function utilities() {
   
   console.log(`14. discordWebhook(url, data)`);
   console.log(`    - Sends data to a Discord webhook.`);
-  
-  console.log(`15. sendDiscordWebhook(url, data)`);
-  console.log(`    - Handles sending data to a Discord webhook without a server.`);
 
-  console.log("\nFor more details on each function, refer to the code comments and documentation.");
-  console.log("SkunkService API v1.1");
+  // Classes Overview
+  console.log(`15. Classes Overview:\n`);
+  
+  console.log(`   a. class gsap`);
+  console.log(`      - Constructor: Checks if GSAP is loaded, if not, loads the GSAP script.`);
+  console.log(`      - Method: tween(element, time, tweenData) - Tween an element.`);
+  console.log(`      - Method: moveElement(element, time, x, y) - Move an element using GSAP.`);
+  
+  console.log(`   b. class AnimationImage`);
+  console.log(`      - Constructor: Initializes the animation with ID and key frames.`);
+  console.log(`      - Method: Play() - Starts the animation.`);
+  console.log(`      - Method: Stop() - Stops the animation and resets.`);
+  console.log(`      - Method: Pause() - Pauses the animation.`);
+  console.log(`      - Method: animate() - Handles frame updates for the animation.`);
+  console.log(`      - Method: updateImage() - Updates the image source to the current frame.`);
+  
+  console.log(`\nEnd of Available Utilities and Functions.`);
+  console.log("SkunkService API v1.2");
 }
 
-console.log(`Made for SkunkService's API\n-\nWelcome to SkunkService's API for Website Controller`);
+console.log(`Made for SkunkService's API\n\nWelcome to SkunkService's API for Website Controller`);
 
 /*
 This allows you to use the following script tag for integration:
