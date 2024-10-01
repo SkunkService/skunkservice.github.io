@@ -1,4 +1,4 @@
-class gsap {
+class GSAP {
     constructor() {
         // Check if GSAP is already loaded
         if (typeof window.TweenMax === 'undefined' && typeof window.TweenLite === 'undefined') {
