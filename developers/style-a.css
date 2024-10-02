@@ -19,6 +19,9 @@ main {
     position: fixed;
     bottom: 20px;
     right: 20px;
+}
+
+#notification {
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 15px;
@@ -29,6 +32,7 @@ main {
 
 .notify-message {
     margin-right: 10px;
+    flex-grow: 1; /* Allow the message to take available space */
 }
 
 button {
