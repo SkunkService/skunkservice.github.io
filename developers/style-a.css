@@ -28,6 +28,7 @@ main {
     border-radius: 5px;
     display: none;
     align-items: center;
+    opacity: 0;
 }
 
 .notify-message {
