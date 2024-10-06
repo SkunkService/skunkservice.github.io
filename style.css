@@ -1,4 +1,4 @@
-/* style.css */
+/* General Body Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -7,21 +7,42 @@ body {
     color: #fff; /* White text color for readability */
 }
 
+/* Background Image and Blur Effect */
 body#image-viewport {
     background-repeat: no-repeat; /* This should be set separately */
     background-image: url("https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f"); /* Use url() to specify the image */
-    background-size: cover; /* Optional: ensures the background image covers the whole area */
+    background-size: cover; /* Ensure the background image covers the whole area */
     position: relative; /* Required for pseudo-element positioning */
-    filter: blur(15px);
 }
 
+/* Pseudo-element for Blur Effect */
+body#image-viewport::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: inherit; /* Use the same background image */
+    background-repeat: no-repeat; /* Ensure background does not repeat */
+    background-size: cover; /* Ensure it covers the whole area */
+    filter: blur(15px); /* Apply blur effect */
+    z-index: -1; /* Send the pseudo-element behind the content */
+}
+
+/* Heading Styles */
 h1 {
     color: #fff; /* White text color for the heading */
+    position: relative; /* Ensure heading stays above the blurred background */
+    z-index: 1; /* Bring the heading above the blurred background */
+    font-size: 2.5em; /* Adjust font size as needed */
+    margin: 20px 0; /* Margin around the heading */
 }
 
+/* Button Styles */
 button {
     background-color: transparent; /* Remove default background color */
-    border: 2px solid #4CAF5000; /* Green border */
+    border: 2px solid #4CAF50; /* Green border */
     color: #4CAF50; /* Green text color */
     padding: 10px 20px;
     text-align: center;
@@ -31,94 +52,91 @@ button {
     font-size: 16px;
     margin: 10px;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Darker shadow */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Darker shadow */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-    background-color: #444bb; /* Darker background for button */
+    position: relative; /* Ensure button stays above the blurred background */
+    z-index: 1; /* Bring the button above the blurred background */
 }
 
 button:hover {
-    background-color: #555; /* Dark grey background on hover */
+    background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
     color: #fff; /* White text color on hover */
 }
 
-button img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    object-fit: contain; /* Ensure the image scales correctly */
-}
-
+/* Live Streams Button Styles */
 .live-streams-button {
     color: #E91E63; /* Pink text color */
-    background-color: #333bb; /* Dark background for the LIVE Streams button */
+    background-color: rgba(51, 59, 66, 0.8); /* Dark background for the LIVE Streams button */
 }
 
 .live-streams-button:hover {
     background-color: #C2185B; /* Darker pink background on hover */
-    color: #fff; /* White text color on hover */
 }
 
+/* Beta Button Styles */
 .beta-button {
-    background-color: #cc0022bb; /* Teal color for Beta button */
+    background-color: rgba(204, 0, 34, 0.8); /* Darker red color for Beta button */
+    color: white; /* White text color */
 }
 
 .beta-button:hover {
-    background-color: #cc0011; /* Darker teal on hover */
+    background-color: #cc0011; /* Darker red on hover */
 }
 
-/* Container for account-related elements */
+/* Container for Account-Related Elements */
 .acc-container {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  width: 200px;
-  padding: 10px;
-  background-color: #f9f9f9c0;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 200px;
+    padding: 10px;
+    background-color: rgba(249, 249, 249, 0.9); /* Light background with some transparency */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    z-index: 1; /* Ensure this is above the blurred background */
 }
 
-/* Styling for the account icon */
+/* Styling for the Account Icon */
 .account-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* Circular icon */
-  object-fit: cover; /* Ensures the image fits well within the circle */
-  display: block;
-  margin: 0 auto; /* Centers the icon horizontally */
-  background-color: #333;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Circular icon */
+    object-fit: cover; /* Ensures the image fits well within the circle */
+    display: block;
+    margin: 0 auto; /* Centers the icon horizontally */
 }
 
-/* Styling for text elements */
+/* Styling for Text Elements */
 #username, #nickname, #has-verified {
-  margin: 5px 0; /* Space between text elements */
-  color: #333; /* Text color */
-  font-size: 14px; /* Font size */
+    margin: 5px 0; /* Space between text elements */
+    color: #333; /* Text color */
+    font-size: 14px; /* Font size */
 }
 
-/* Additional styling for the verification status */
+/* Additional Styling for Verification Status */
 #has-verified {
-  font-weight: bold; /* Makes the verification status stand out */
-  color: #007bff; /* Color of the verification status text */
+    font-weight: bold; /* Makes the verification status stand out */
+    color: #007bff; /* Color of the verification status text */
 }
 
-/* Styling for the toggle button */
+/* Styling for the Toggle Button */
 #toggle-account {
-  margin-top: 10px; /* Adds space between the toggle button and other elements */
-  padding: 10px; /* Adds padding to the button */
-  background-color: #007bffaa; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Removes default border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Changes cursor to pointer on hover */
+    margin-top: 10px; /* Adds space between the toggle button and other elements */
+    padding: 10px; /* Adds padding to the button */
+    background-color: #007bffaa; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Removes default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Changes cursor to pointer on hover */
 }
 
 #toggle-account:hover {
-  background-color: #0056b3; /* Darker background on hover */
+    background-color: #0056b3; /* Darker background on hover */
 }
 
+/* Styling for Black Background Overlay */
 #black-background {
     position: fixed;
     top: 0;
@@ -126,12 +144,13 @@ button img {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: none;
+    display: none; /* Hidden by default */
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 9999; /* Ensure this is on top */
 }
 
+/* Styling for Alert Modal */
 #alert-modal {
     background-color: white;
     padding: 20px;
