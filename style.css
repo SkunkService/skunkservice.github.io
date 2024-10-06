@@ -2,9 +2,11 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    margin: 20px;
+    margin: 0; /* Remove default margin */
+    padding: 20px; /* Add some padding */
     background-color: #222; /* Dark background for the whole page */
     color: #fff; /* White text color for readability */
+    position: relative; /* Set relative positioning for stacking context */
 }
 
 /* Background Image and Blur Effect */
@@ -12,13 +14,12 @@ body#image-viewport {
     background-repeat: no-repeat; /* This should be set separately */
     background-image: url("https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f"); /* Use url() to specify the image */
     background-size: cover; /* Ensure the background image covers the whole area */
-    position: relative; /* Required for pseudo-element positioning */
 }
 
 /* Pseudo-element for Blur Effect */
 body#image-viewport::before {
     content: "";
-    position: absolute;
+    position: absolute; /* Position it absolutely to cover the body */
     top: 0;
     left: 0;
     right: 0;
