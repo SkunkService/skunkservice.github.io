@@ -31,7 +31,7 @@ h1 {
 
 button {
     background-color: transparent; /* Remove default background color */
-    border: 2px solid #4CAF50; /* Green border */
+    border: 2px solid #4CAF50aa; /* Green border */
     color: #4CAF50; /* Green text color */
     padding: 10px 20px;
     text-align: center;
@@ -43,11 +43,11 @@ button {
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Darker shadow */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-    background-color: #444; /* Darker background for button */
+    background-color: #444aa; /* Darker background for button */
 }
 
 button:hover {
-    background-color: #555a; /* Dark grey background on hover */
+    background-color: #555; /* Dark grey background on hover */
     color: #fff; /* White text color on hover */
     border-color: #333; /* Darker border on hover */
 }
@@ -62,22 +62,22 @@ button img {
 .live-streams-button {
     border-color: #E91E63aa; /* Pink border */
     color: #E91E63; /* Pink text color */
-    background-color: #333; /* Dark background for the LIVE Streams button */
+    background-color: #333aa; /* Dark background for the LIVE Streams button */
 }
 
 .live-streams-button:hover {
-    background-color: #C2185Baa; /* Darker pink background on hover */
+    background-color: #C2185B; /* Darker pink background on hover */
     color: #fff; /* White text color on hover */
     border-color: #C2185B; /* Darker pink border on hover */
 }
 
 .beta-button {
     background-color: #cc0022aa; /* Teal color for Beta button */
-    border: 2px solid #117a8b; /* Darker teal border */
+    border: 2px solid #117a8baa; /* Darker teal border */
 }
 
 .beta-button:hover {
-    background-color: #cc0011aa; /* Darker teal on hover */
+    background-color: #cc0011; /* Darker teal on hover */
     border-color: #0f6c77; /* Even darker teal border */
 }
 
@@ -88,7 +88,7 @@ button img {
   bottom: 0;
   width: 200px;
   padding: 10px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9aa;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -122,7 +122,7 @@ button img {
 #toggle-account {
   margin-top: 10px; /* Adds space between the toggle button and other elements */
   padding: 10px; /* Adds padding to the button */
-  background-color: #007bff; /* Button background color */
+  background-color: #007bffaa; /* Button background color */
   color: white; /* Button text color */
   border: none; /* Removes default border */
   border-radius: 5px; /* Rounded corners */
