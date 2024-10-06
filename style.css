@@ -47,7 +47,7 @@ button {
 }
 
 button:hover {
-    background-color: #555; /* Dark grey background on hover */
+    background-color: #555a; /* Dark grey background on hover */
     color: #fff; /* White text color on hover */
     border-color: #333; /* Darker border on hover */
 }
@@ -60,24 +60,24 @@ button img {
 }
 
 .live-streams-button {
-    border-color: #E91E63; /* Pink border */
+    border-color: #E91E63aa; /* Pink border */
     color: #E91E63; /* Pink text color */
     background-color: #333; /* Dark background for the LIVE Streams button */
 }
 
 .live-streams-button:hover {
-    background-color: #C2185B; /* Darker pink background on hover */
+    background-color: #C2185Baa; /* Darker pink background on hover */
     color: #fff; /* White text color on hover */
     border-color: #C2185B; /* Darker pink border on hover */
 }
 
 .beta-button {
-    background-color: #17a2b8; /* Teal color for Beta button */
+    background-color: #cc0022aa; /* Teal color for Beta button */
     border: 2px solid #117a8b; /* Darker teal border */
 }
 
 .beta-button:hover {
-    background-color: #138496; /* Darker teal on hover */
+    background-color: #cc0011aa; /* Darker teal on hover */
     border-color: #0f6c77; /* Even darker teal border */
 }
 
