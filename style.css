@@ -12,7 +12,7 @@ body#image-viewport {
     background-image: url("https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f"); /* Use url() to specify the image */
     background-size: cover; /* Optional: ensures the background image covers the whole area */
     position: relative; /* Required for pseudo-element positioning */
-    filter: 
+    filter: blur(15px);
 }
 
 h1 {
