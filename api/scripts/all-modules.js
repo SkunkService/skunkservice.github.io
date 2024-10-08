@@ -1,5 +1,5 @@
 // Importing all modules
-const fePromise = fetch("https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io/api/scripts/fetch-element.js")
+const fePromise = fetch("https://cdn.jsdelivr.net/gh/SkunkService/skunkservice.github.io/api/scripts/element-fetch.js")
   .then(response => {
     if (!response.ok) {
       throw new Error("Network response was not ok " + response.statusText);
