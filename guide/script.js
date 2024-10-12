@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li>Provide a safe and welcoming environment for all users.</li>
                 <li>Ensure transparency in our operations and decision-making processes.</li>
                 <li>Actively listen to user feedback and make improvements based on community input.</li>
+                <li>Prevent console malware and uphold the integrity of our services.</li>
+                <li>Establish clear guidelines for our promises and rules.</li>
+                <li>Our console software is protected by SkunkService's commitments and SkunkPlatform. (SkunkPlatform: The developer for JavaScript)</li>
+                <li>SkunkService developers allow access to the API for JavaScript through JSDelivery on GitHub.</li>
+                <li>Ensure the safety and security of the console.</li>
             </ul>
         `
     };
@@ -47,4 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         pageDiv.innerHTML = '<h2>Welcome to SkunkService</h2><p>Select a section from the navigation above.</p>';
     }
+
+    const translation = localStorage.getItem("translation");
 });
