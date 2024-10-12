@@ -31,17 +31,42 @@ document.addEventListener('DOMContentLoaded', function() {
         `,
         promises: `
             <h2>Promises of Guidelines</h2>
-            <p>At SkunkService, we promise to:</p>
-            <ul>
-                <li>Provide a safe and welcoming environment for all users.</li>
-                <li>Ensure transparency in our operations and decision-making processes.</li>
-                <li>Actively listen to user feedback and make improvements based on community input.</li>
-                <li>Prevent console malware and uphold the integrity of our services.</li>
-                <li>Establish clear guidelines for our promises and rules.</li>
-                <li>Our console software is protected by SkunkService's commitments and SkunkPlatform. (SkunkPlatform: The developer for JavaScript)</li>
-                <li>SkunkService developers allow access to the API for JavaScript through JSDelivery on GitHub.</li>
-                <li>Ensure the safety and security of the console.</li>
-            </ul>
+<p>At SkunkService, we are committed to creating a positive and safe community for all users. We promise to uphold the following principles:</p>
+<ul>
+    <li>
+        <strong>Provide a safe and welcoming environment for all users:</strong>
+        <p>We strive to ensure that every user feels included and respected. We have zero tolerance for harassment, discrimination, or any form of abuse. Our moderation team is trained to handle reports seriously and with care, ensuring a supportive atmosphere.</p>
+    </li>
+    <li>
+        <strong>Ensure transparency in our operations and decision-making processes:</strong>
+        <p>We believe in being open with our community. Our policies, moderation actions, and updates will be communicated clearly and regularly. Users will have access to information about how decisions are made and the reasoning behind significant changes to our services.</p>
+    </li>
+    <li>
+        <strong>Actively listen to user feedback and make improvements based on community input:</strong>
+        <p>Your voice matters! We encourage users to share their experiences and suggestions. Regular surveys and feedback sessions will be conducted to gather input, and we will actively work to implement feasible suggestions that enhance the user experience.</p>
+    </li>
+    <li>
+        <strong>Prevent console malware and uphold the integrity of our services:</strong>
+        <p>We take the security of our platform seriously. Regular security audits and updates will be performed to prevent malicious activities. We will also provide users with guidance on safe practices and how to recognize potential threats to their accounts.</p>
+    </li>
+    <li>
+        <strong>Establish clear guidelines for our promises and rules:</strong>
+        <p>Our guidelines will be clearly outlined and easily accessible. We will define what behaviors are expected from users and what actions may result in warnings or bans. Transparency in our rules ensures everyone knows the standards we uphold.</p>
+    </li>
+    <li>
+        <strong>Our console software is protected by SkunkService's commitments and SkunkPlatform:</strong>
+        <p>SkunkService and SkunkPlatform are dedicated to delivering quality software that prioritizes user safety and security. All development practices will adhere to industry standards, ensuring a robust and reliable experience for all users.</p>
+    </li>
+    <li>
+        <strong>SkunkService developers allow access to the API for JavaScript through JSDelivery on GitHub:</strong>
+        <p>To foster innovation and creativity, we provide developers with access to our API. We encourage the community to build and share applications that enhance the user experience. Documentation and support will be available for developers seeking to integrate with our platform.</p>
+    </li>
+    <li>
+        <strong>Ensure the safety and security of the console:</strong>
+        <p>We are committed to maintaining a secure environment for our users. Regular security measures will be implemented, including encryption, two-factor authentication, and user education on safe practices to protect personal information.</p>
+    </li>
+</ul>
+<p>By adhering to these promises, we aim to create a thriving community where users can enjoy and contribute positively to SkunkService. Thank you for being part of our journey!</p>
         `
     };
 
