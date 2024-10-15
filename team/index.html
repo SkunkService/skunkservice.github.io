@@ -21,10 +21,19 @@
             margin: 20px 0;
             text-align: center;
         }
-        nav a {
+        nav button {
             margin: 0 15px;
             text-decoration: none;
             color: #333;
+            cursor: pointer;
+            background-color: #e7e7e7;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav button:hover {
+            background-color: #d7d7d7;
         }
         main {
             background: white;
@@ -36,6 +45,17 @@
             margin-top: 20px;
             color: #777;
         }
+        .source-theme {
+            background-color: #f0f8ff; /* Light blue background */
+            color: white; /* White text for contrast */
+            border: 1px solid #2980b9; /* Border color */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .source-theme h3 {
+            color: white; /* White header color */
+        }
     </style>
 </head>
 <body>
@@ -45,12 +65,21 @@
 </header>
 
 <main>
-    <a>Team Information</a> <a>Team Guidelines</a> <a>Team Discord Server</a> <a>Source Mode</a>
+    <nav>
+        <button id="teamInfoBtn">Team Information</button>
+        <button id="teamGuidelinesBtn">Team Guidelines</button>
+        <button id="teamDiscordBtn">Team Discord Server</button>
+        <button id="sourceModeBtn">Source Mode</button>
+    </nav>
     <div id="page">
-      <p>This Page Search of ?go is Loading...</p>
-      <p>This may take a few second.</p>
-      <p>Use ?go to go an Page, for example: ?go=info</p>
-      <p>The Page go will Send to JavaScript</p>
+        <p>This Page Search of ?go is Loading...</p>
+        <p>This may take a few seconds.</p>
+        <p>Use ?go to go to a Page, for example: ?go=info</p>
+        <p>The Page go will Send to JavaScript</p>
+    </div>
+    <div class="source-theme">
+        <h3>Source Code Theme</h3>
+        <p>This section contains the source code information.</p>
     </div>
 </main>
 
