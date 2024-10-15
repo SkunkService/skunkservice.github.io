@@ -53,8 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <span style="color: lightgreen;">color</span>: <span style="color: lightblue;">white</span>; 
     <span style="color: lightgreen;">padding</span>: <span style="color: lightblue;">15px</span>; 
     <span style="color: lightgreen;">border-radius</span>: <span style="color: lightblue;">8px</span>; 
-<span style="color: white;">}</span></pre>
-                    </div>
+<span style="color: white;">}</span></pre></div>
                 </div>
             `;
         } else {
