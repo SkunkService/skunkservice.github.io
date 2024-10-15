@@ -1,4 +1,3 @@
-// index.js
 document.addEventListener('DOMContentLoaded', function () {
     const pageDiv = document.getElementById('page');
 
@@ -80,6 +79,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to get the URL parameters and load the corresponding content
+    function loadFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const goParam = urlParams.get('go');
+        if (goParam) {
+            loadPageContent(goParam);
+        }
+    }
+
     // Handle button clicks
     document.getElementById('teamInfoBtn').addEventListener('click', function () {
         loadPageContent('info');
@@ -93,4 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('sourceModeBtn').addEventListener('click', function () {
         loadPageContent('source');
     });
+
+    // Load content based on URL parameter
+    loadFromURL();
 });
