@@ -48,14 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h2>Source Mode</h2>
                 <div class="source-theme">
                     <p>You can copy this style example:</p>
-                    <div class="code">
-                        <pre><span style="color: white;">.source-theme {</span>
+                    <div class="code"><pre><span style="color: white;">.source-theme {</span>
     <span style="color: lightgreen;">background-color</span>: <span style="color: lightblue;">#1c1c1c</span>; 
     <span style="color: lightgreen;">color</span>: <span style="color: lightblue;">white</span>; 
     <span style="color: lightgreen;">padding</span>: <span style="color: lightblue;">15px</span>; 
     <span style="color: lightgreen;">border-radius</span>: <span style="color: lightblue;">8px</span>; 
-<span style="color: white;">}</span>
-                        </pre>
+<span style="color: white;">}</span></pre>
                     </div>
                 </div>
             `;
