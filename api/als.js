@@ -1,21 +1,36 @@
-// Create a new item in Local Storage
-function newItemStorage() {
+// Delete an item from Local Storage with required fields
+function deleteItemStorage() {
+    let name = prompt("Enter the name of the item to delete:");
+    if (name) {
+        if (localStorage.getItem(name)) {
+            localStorage.removeItem(name);
+            alert("Item deleted from Local Storage");
+        } else {
+            alert("Item not found in Local Storage");
+        }
+    } else {
+        alert("Name is required to delete an item.");
+    }
+}
+
+// Add a new item to Local Storage with prompts
+function addItemStorage() {
     let name = prompt("Enter the name for the item:");
     let value = prompt("Enter the value for the item:");
     if (name && value) {
         localStorage.setItem(name, value);
         alert("Item added to Local Storage");
+    } else {
+        alert("Name and value are required to add an item.");
     }
 }
 
-// Delete an item from Local Storage
-function deleteItemStorage() {
-    let name = prompt("Enter the name of the item to delete:");
-    if (name && localStorage.getItem(name)) {
-        localStorage.removeItem(name);
-        alert("Item deleted from Local Storage");
+// Create a new item in Local Storage
+function setItemStorage() {
+    if (allowCookieData()) {
+        addItemStorage();
     } else {
-        alert("Item not found in Local Storage");
+        alert("Cookies need to be enabled to use this function.");
     }
 }
 
@@ -29,10 +44,5 @@ function deletePermanentDatas() {
 
 // Allow cookie data
 function allowCookieData() {
-    if (confirm("Do you allow the use of cookies on this website?")) {
-        document.cookie = "allowCookies=true; path=/";
-        alert("Cookies are now enabled");
-    } else {
-        alert("Cookies are not enabled");
-    }
+    return confirm("Do you allow the use of cookies on this website?");
 }
