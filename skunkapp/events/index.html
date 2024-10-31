@@ -11,6 +11,9 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         header {
             background-color: #333;
@@ -36,6 +39,7 @@
         }
         main {
             padding: 20px;
+            flex: 1;
         }
         h1, h2, h3 {
             color: #333;
@@ -45,9 +49,7 @@
             padding: 15px;
             background-color: #333;
             color: #fff;
-            position: relative; /* Changed to relative for footer positioning */
-            width: 100%;
-            bottom: 0;
+            margin-top: auto;
         }
     </style>
 </head>
@@ -63,13 +65,19 @@
 
     <main>
         <h2>Welcome to SkunkApp Events</h2>
-        <h3>This is a platform for fun events related to Gaming, Programming, etc.</h3><br>
+        <h3>A platform for fun events related to gaming, programming, and more.</h3><br>
 
-        <h2><a href="#how-to-create">How to Create an Event?</a></h2>
+        <h2><a href="#how-to-create">How to Create an Event</a></h2>
         <p>Click the link above for guidance on creating an event. If you have any questions, feel free to ask.</p>
         
-        <h2><a href="#how-to-update">How to Update a Thumbnail?</a></h2>
+        <h2><a href="#how-to-update">How to Update a Thumbnail</a></h2>
         <p>Click the link above for guidance on updating an event's thumbnail. If you have any questions, feel free to ask.</p>
+
+        <h2><a href="#why-deleted">Why Was the Event Deleted?</a></h2>
+        <p>Click the link above to learn why an event might be deleted. If you have any questions, feel free to ask.</p>
+
+        <h2><a href="#search-events">How to Search for Events</a></h2>
+        <p>Click the link above to learn how to search for events. If you have any questions, feel free to ask.</p>
 
         <h1>Sections</h1>
         
@@ -79,15 +87,38 @@
             <p>2. Fill out the fields: Name, Description, Start Time, and End Time.</p>
             <p>3. Review the <a href="guidelines.html">SkunkApp's Events Guidelines</a>.</p>
             <p>4. Send the message to create the event.</p>
-            <p>5. If you added a thumbnail, it will be under review according to the SkunkApp's Events Guidelines.</p>
+            <p>5. If you added a thumbnail, it will be reviewed according to SkunkApp's Events Guidelines.</p>
+
+            <p>Your event will be created! Enjoy participating in SkunkApp events.</p>
         </section>
 
         <section id="how-to-update">
             <h1>How to Update a Thumbnail</h1>
             <p>1. Use the Slash Command: Type <code>/update-thumbnail</code> in Discord.</p>
             <p>2. Provide the event name and the new thumbnail attachment.</p>
-            <p>3. Wait for approval based on the <a href="guidelines.html">SkunkApp's Events Guidelines</a>.</p>
+            <p>3. Wait for approval based on <a href="guidelines.html">SkunkApp's Events Guidelines</a>.</p>
             <p>4. If approved, the thumbnail will be updated for the event.</p>
+
+            <p>Your event thumbnail has been updated! Enjoy the new look for your event.</p>
+        </section>
+
+        <section id="why-deleted">
+            <h1>Why Was the Event Deleted?</h1>
+            <p>Event deletion is part of moderation to ensure adherence to SkunkApp's Events Guidelines.</p>
+            <p><strong>Why an Event is Moderated:</strong> If an event is moderated, it means that a thumbnail or content might have been rejected for violating SkunkApp's Events Guidelines.</p>
+            <p><strong>If I End an Event:</strong> Ending an event will delete it, and this action cannot be undone. End events only when you are certain you no longer need them.</p>
+
+            <p>Your event’s thumbnail will be updated once approved. Enjoy the events!</p>
+        </section>
+
+        <section id="search-events">
+            <h1>How to Search for Events</h1>
+            <p>1. Use the Slash Command: Type <code>/events</code> in Discord.</p>
+            <p>2. Select the "Search" option.</p>
+            <p>3. Enter your search terms or criteria.</p>
+            <p>4. Send the message to execute the search command.</p>
+
+            <p>You can now easily find events! Enjoy exploring SkunkApp’s events.</p>
         </section>
     </main>
 
