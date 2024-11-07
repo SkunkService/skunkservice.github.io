@@ -15,10 +15,24 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>These terms are subject to change, and your continued use of the service constitutes your acceptance of any updates.</p>
         `,
         privacy: `
-            <h2>Privacy Policy</h2>
-            <p>Your privacy is important to us. We collect personal information to provide you with a better service.</p>
-            <p>We do not share your information with third parties without your consent, except as required by law.</p>
-            <p>You have the right to access, correct, or delete your personal information at any time.</p>
+            <h2>Welcome to the SkunkService's Privacy Policy</h2>
+            <p>The Privacy Policy governs the safety, community guidelines, and terms of service for SkunkService.</p>
+            
+            <h3>Community Guidelines</h3>
+            <p>SkunkService is committed to maintaining a safe and secure environment for all users. Please review our community guidelines below:</p>
+            <ul>
+                <li><strong>Not Available for Accounts:</strong> This account is not available in SkunkService.</li>
+                <li><strong>Sexual Content:</strong> The rule of privacy policy prohibits sexual content, which is considered illegal and forbidden. Any use of such content will result in a ban.</li>
+                <li><strong>Nudity:</strong> Nudity is strictly not allowed under the privacy policy and will lead to a ban if violated.</li>
+                <li><strong>Community Guidelines:</strong> Our <a href="?go=guidelines">SkunkService's Community Guidelines</a> provide protection for both the SkunkService community and SkunkPlatform developers.</li>
+                <li><strong>Gore Content:</strong> Any content containing gore, such as blood, hearts, or crudeness, will result in a ban.</li>
+                <li><strong>JU (Jumper Utilities):</strong> Jumper Utilities will be protected as DevTools to prevent malware, console abuse, and unsafe software usage.</li>
+            </ul>
+            
+            <h3>Privacy and Security</h3>
+            <p>At SkunkService, we take your privacy seriously. Our platform is designed with security features to protect your personal information. We also take steps to avoid malware and unsafe software in our system.</p>
+
+            <p>By adhering to these guidelines, you help us create a safer and more enjoyable environment for everyone in the SkunkService community.</p>
         `,
         guide: `
             <h2>Guidelines</h2>
