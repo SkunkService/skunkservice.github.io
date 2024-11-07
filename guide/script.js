@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li><strong>Not Available for Accounts:</strong> This account is not available in SkunkService.</li>
                 <li><strong>Sexual Content:</strong> The rule of privacy policy prohibits sexual content, which is considered illegal and forbidden. Any use of such content will result in a ban.</li>
                 <li><strong>Nudity:</strong> Nudity is strictly not allowed under the privacy policy and will lead to a ban if violated.</li>
-                <li><strong>Community Guidelines:</strong> Our <a href="?go=guidelines">SkunkService's Community Guidelines</a> provide protection for both the SkunkService community and SkunkPlatform developers.</li>
+                <li><strong>Community Guidelines:</strong> Our <a href="?go=guide">SkunkService's Community Guidelines</a> provide protection for both the SkunkService community and SkunkPlatform developers.</li>
                 <li><strong>Gore Content:</strong> Any content containing gore, such as blood, hearts, or crudeness, will result in a ban.</li>
                 <li><strong>JU (Jumper Utilities):</strong> Jumper Utilities will be protected as DevTools to prevent malware, console abuse, and unsafe software usage.</li>
             </ul>
