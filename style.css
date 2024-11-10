@@ -5,24 +5,7 @@ body {
     margin: 20px;
     background-color: #333; /* Dark background for the whole page */
     color: #fff; /* White text color for readability */
-    background-repeat: no-repeat; /* This should be set separately */
-    background-image: url("https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f"); /* Use url() to specify the image */
-    background-size: cover; /* Optional: ensures the background image covers the whole area */
     position: relative; /* Required for pseudo-element positioning */
-}
-
-/* Use a pseudo-element for the opacity effect */
-body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f");
-    opacity: 0.5; /* Set the desired opacity here */
-    z-index: -1; /* Send the pseudo-element behind the content */
-    background-size: cover; /* Ensure the background image covers the whole area */
 }
 
 h1 {
@@ -164,3 +147,17 @@ button img {
 #description-alert {
     margin: 15px 0 0;
 }
+
+#body-image {
+  width: 100%;
+  height: 100%;
+  background-image: url('https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f');
+  background-size: cover; /* Ensures the image covers the entire div */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents image repetition */
+  position: absolute; /* Required for z-index to take effect */
+  top: 0;
+  left: 0;
+  z-index: -5; /* Positions it behind other elements */
+}
+
