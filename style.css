@@ -159,11 +159,11 @@ html, body {
   width: 100%;
   height: 100%;
   background-image: url('https://ninjasites.com/images/blog/webpage-creation.png?v=1684153977260389102f');
-  background-size: cover; /* Ensures the image covers the entire div */
-  background-position: center; /* Centers the image */
-  background-repeat: no-repeat; /* Prevents image repetition */
-  position: absolute; /* Required for z-index to take effect */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed; /* Stays fixed even on scroll */
   top: 0;
   left: 0;
-  z-index: -5; /* Positions it behind other elements */
+  z-index: -1;
 }
