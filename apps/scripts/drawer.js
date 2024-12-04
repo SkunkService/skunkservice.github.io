@@ -5,6 +5,7 @@ const colorPicker = document.getElementById('colorPicker');
 const brushSizeInput = document.getElementById('brushSize');
 const fileInput = document.getElementById('fileInput');
 const brushOpacityInput = document.getElementById('brushOpacity');
+const settingsToggleBtn = document.getElementById('settingsToggle');
 
 let currentTool = 'draw';
 let isDrawing = false;
@@ -13,6 +14,7 @@ let brushSize = 30; // Default brush size
 let brushOpacity = 1; // Default opacity (fully opaque)
 let history = [];
 let historyIndex = -1;
+let isSettingsVisible = false;
 
 // Set the current tool
 function setTool(tool) {
@@ -205,3 +207,13 @@ brushOpacityInput.addEventListener('input', (e) => {
 
 // Display the library on page load
 document.addEventListener('DOMContentLoaded', displayLibrary);
+
+// Toggle settings visibility
+function toggleSettings() {
+    const settingsPanel = document.getElementById('settingsPanel');
+    isSettingsVisible = !isSettingsVisible;
+    settingsPanel.style.display = isSettingsVisible ? 'block' : 'none';
+}
+
+// Event listener for the settings toggle button
+settingsToggleBtn.addEventListener('click', toggleSettings);
