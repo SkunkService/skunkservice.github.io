@@ -208,12 +208,24 @@ brushOpacityInput.addEventListener('input', (e) => {
 // Display the library on page load
 document.addEventListener('DOMContentLoaded', displayLibrary);
 
-// Toggle settings visibility
+let isSettingsVisible = false;
+
+// Function to toggle the settings visibility
 function toggleSettings() {
-    const settingsPanel = document.getElementById('settingsPanel');
+    const settingsBox = document.getElementById('settingsBox');
     isSettingsVisible = !isSettingsVisible;
-    settingsPanel.style.display = isSettingsVisible ? 'block' : 'none';
+    settingsBox.style.display = isSettingsVisible ? 'block' : 'none';
 }
 
-// Event listener for the settings toggle button
-settingsToggleBtn.addEventListener('click', toggleSettings);
+// Apply settings (you can add any other logic here as required)
+function applySettings() {
+    const autoRecovery = document.getElementById('autoRecovery').checked;
+    const recoveryMinutes = document.getElementById('recoveryMinutes').value;
+    const theme = document.getElementById('themeSelect').value;
+
+    // Store settings or apply them here
+    console.log(`Auto Recovery: ${autoRecovery}, Recovery Minutes: ${recoveryMinutes}, Theme: ${theme}`);
+
+    // Close settings panel
+    toggleSettings();
+}
