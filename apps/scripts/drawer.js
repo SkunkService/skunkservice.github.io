@@ -208,8 +208,6 @@ brushOpacityInput.addEventListener('input', (e) => {
 // Display the library on page load
 document.addEventListener('DOMContentLoaded', displayLibrary);
 
-let isSettingsVisible = false;
-
 // Function to toggle the settings visibility
 function toggleSettings() {
     const settingsBox = document.getElementById('settingsBox');
