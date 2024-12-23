@@ -19,7 +19,7 @@
         }
     }
 
-    setInterval(detectConsole, 2000); // Check every second
+    setInterval(detectConsole, 1000); // Check every second
 })();
 
 /*
