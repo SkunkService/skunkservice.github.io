@@ -34,15 +34,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <p>By adhering to these guidelines, you help us create a safer and more enjoyable environment for everyone in the SkunkService community.</p>
         `,
-        guide: `
-            <h2>Guidelines</h2>
-            <p>We expect all users to adhere to our community guidelines:</p>
-            <ul>
-                <li>Be respectful to others in the community.</li>
-                <li>No spamming or advertising without permission.</li>
-                <li>Report any inappropriate content to the moderators.</li>
-            </ul>
-        `,
+        guide: `<h2>Community Guidelines</h2>
+<p>To ensure a positive environment, we ask all members to follow these simple rules:</p>
+<ul>
+    <li><strong>Respectfulness:</strong> Treat everyone with kindness and respect, regardless of differing opinions.</li>
+    <li><strong>No spamming or unsolicited advertising:</strong> Please refrain from spamming messages or promoting products/services without prior permission.</li>
+    <li><strong>Report inappropriate behavior:</strong> If you encounter any offensive or harmful content, please report it to the moderators promptly.</li>
+    <li><strong>Stay on-topic:</strong> Keep discussions relevant to the community's purpose.</li>
+    <li><strong>Privacy:</strong> Respect others' privacy and never share personal information without consent.</li>
+</ul>
+<p>By following these guidelines, we can maintain a welcoming and enjoyable space for everyone!</p>`,
         promises: `
             <h2>Promises of Guidelines</h2>
 <p>At SkunkService, we are committed to creating a positive and safe community for all users. We promise to uphold the following principles:</p>
