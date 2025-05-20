@@ -9,14 +9,38 @@ const settingsToggleBtn = document.getElementById('settingsToggle');
 
 let currentTool = 'draw';
 let isDrawing = false;
-let brushColor = '#000000'; // Default brush color
-let brushSize = 30; // Default brush size
-let brushOpacity = 1; // Default opacity (fully opaque)
+let brushColor = '#000000';
+let brushSize = 30;
+let brushOpacity = 1;
 let history = [];
 let historyIndex = -1;
 let isSettingsVisible = false;
 
-// Set the current tool
+let db;
+
+window.onload = () => {
+    const request = indexedDB.open('CanvasDrawingApp', 1);
+
+    request.onerror = () => {
+        console.error('IndexedDB failed to open');
+    };
+
+    request.onsuccess = () => {
+        db = request.result;
+        displayLibrary();
+    };
+
+    request.onupgradeneeded = (e) => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains('imageLibrary')) {
+            db.createObjectStore('imageLibrary', { keyPath: 'id', autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains('savedDrawing')) {
+            db.createObjectStore('savedDrawing', { keyPath: 'name' });
+        }
+    };
+};
+
 function setTool(tool) {
     currentTool = tool;
     if (tool === 'fill') {
@@ -26,12 +50,10 @@ function setTool(tool) {
     }
 }
 
-// Event listeners for drawing
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mouseup', stopDrawing);
 canvas.addEventListener('mousemove', draw);
 
-// Start drawing
 function startDrawing(e) {
     if (currentTool === 'draw' || currentTool === 'eraser') {
         isDrawing = true;
@@ -39,7 +61,6 @@ function startDrawing(e) {
     }
 }
 
-// Stop drawing
 function stopDrawing() {
     if (isDrawing) {
         isDrawing = false;
@@ -48,7 +69,6 @@ function stopDrawing() {
     }
 }
 
-// Drawing logic
 function draw(e) {
     if (!isDrawing) return;
     const rect = canvas.getBoundingClientRect();
@@ -62,7 +82,6 @@ function draw(e) {
     ctx.closePath();
 }
 
-// Convert hex color to RGB
 function hexToRgb(hex) {
     let r = 0, g = 0, b = 0;
     if (hex.length === 4) {
@@ -77,7 +96,6 @@ function hexToRgb(hex) {
     return `${r}, ${g}, ${b}`;
 }
 
-// Save drawing state for undo/redo
 function saveState() {
     if (historyIndex < history.length - 1) {
         history = history.slice(0, historyIndex + 1);
@@ -87,7 +105,6 @@ function saveState() {
     historyIndex++;
 }
 
-// Undo last action
 function undo() {
     if (historyIndex > 0) {
         historyIndex--;
@@ -95,7 +112,6 @@ function undo() {
     }
 }
 
-// Redo last undone action
 function redo() {
     if (historyIndex < history.length - 1) {
         historyIndex++;
@@ -103,76 +119,91 @@ function redo() {
     }
 }
 
-// Load a saved state onto the canvas
 function loadState(state) {
     const img = new Image();
     img.onload = () => ctx.drawImage(img, 0, 0);
     img.src = state;
 }
 
-// Save drawing to local storage
 function saveDrawing() {
     const dataURL = canvas.toDataURL('image/png');
-    localStorage.setItem('savedDrawing', dataURL);
-    alert('Drawing saved!');
+    const transaction = db.transaction(['savedDrawing'], 'readwrite');
+    const store = transaction.objectStore('savedDrawing');
+    store.put({ name: 'mainDrawing', data: dataURL });
+    transaction.oncomplete = () => alert('Drawing saved!');
+    transaction.onerror = () => alert('Failed to save drawing.');
 }
 
-// Load drawing from local storage
 function loadDrawing() {
-    const dataURL = localStorage.getItem('savedDrawing');
-    if (dataURL) {
-        loadState(dataURL);
-    } else {
-        alert('No saved drawing found.');
-    }
+    const transaction = db.transaction(['savedDrawing'], 'readonly');
+    const store = transaction.objectStore('savedDrawing');
+    const request = store.get('mainDrawing');
+
+    request.onsuccess = () => {
+        if (request.result) {
+            loadState(request.result.data);
+        } else {
+            alert('No saved drawing found.');
+        }
+    };
+
+    request.onerror = () => alert('Failed to load drawing.');
 }
 
-// Add the current canvas to the library
 function addCurrentCanvasToLibrary() {
     const dataURL = canvas.toDataURL('image/png');
-    let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-    library.push(dataURL);
-    localStorage.setItem('imageLibrary', JSON.stringify(library));
-    displayLibrary();
+    const transaction = db.transaction(['imageLibrary'], 'readwrite');
+    const store = transaction.objectStore('imageLibrary');
+    store.add({ data: dataURL });
+    transaction.oncomplete = displayLibrary;
 }
 
-// Display the image library
 function displayLibrary() {
     imageLibrary.innerHTML = '';
-    let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-    library.forEach((imgDataURL, index) => {
-        const div = document.createElement('div');
-        div.className = 'library-item';
-        div.onclick = () => loadImageToCanvas(imgDataURL);
-        div.innerHTML = `
-            <img src="${imgDataURL}" />
-            <button class="edit" onclick="editImage(${index}); event.stopPropagation();">Edit</button>
-            <button onclick="deleteImage(${index}); event.stopPropagation();">Delete</button>
-        `;
-        imageLibrary.appendChild(div);
-    });
+    const transaction = db.transaction(['imageLibrary'], 'readonly');
+    const store = transaction.objectStore('imageLibrary');
+    const request = store.openCursor();
+
+    request.onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+            const div = document.createElement('div');
+            div.className = 'library-item';
+            div.onclick = () => loadImageToCanvas(cursor.value.data);
+            div.innerHTML = `
+                <img src="${cursor.value.data}" />
+                <button class="edit" onclick="editImage(${cursor.key}); event.stopPropagation();">Edit</button>
+                <button onclick="deleteImage(${cursor.key}); event.stopPropagation();">Delete</button>
+            `;
+            imageLibrary.appendChild(div);
+            cursor.continue();
+        }
+    };
 }
 
-// Load an image onto the canvas
 function loadImageToCanvas(imgDataURL) {
     loadState(imgDataURL);
 }
 
-// Delete an image from the library
-function deleteImage(index) {
-    let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-    library.splice(index, 1);
-    localStorage.setItem('imageLibrary', JSON.stringify(library));
-    displayLibrary();
+function deleteImage(id) {
+    const transaction = db.transaction(['imageLibrary'], 'readwrite');
+    const store = transaction.objectStore('imageLibrary');
+    store.delete(id);
+    transaction.oncomplete = displayLibrary;
 }
 
-// Edit an image from the library
-function editImage(index) {
-    let library = JSON.parse(localStorage.getItem('imageLibrary')) || [];
-    loadImageToCanvas(library[index]);
+function editImage(id) {
+    const transaction = db.transaction(['imageLibrary'], 'readonly');
+    const store = transaction.objectStore('imageLibrary');
+    const request = store.get(id);
+
+    request.onsuccess = () => {
+        if (request.result) {
+            loadImageToCanvas(request.result.data);
+        }
+    };
 }
 
-// Handle file uploads
 fileInput.addEventListener('change', () => {
     const file = fileInput.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -192,7 +223,6 @@ fileInput.addEventListener('change', () => {
     }
 });
 
-// Event listeners for color, size, and opacity controls
 colorPicker.addEventListener('input', (e) => {
     brushColor = e.target.value;
 });
@@ -205,25 +235,21 @@ brushOpacityInput.addEventListener('input', (e) => {
     brushOpacity = e.target.value / 100;
 });
 
-// Display the library on page load
-document.addEventListener('DOMContentLoaded', displayLibrary);
+document.addEventListener('DOMContentLoaded', () => {
+    if (db) displayLibrary();
+});
 
-// Function to toggle the settings visibility
 function toggleSettings() {
     const settingsBox = document.getElementById('settingsBox');
     isSettingsVisible = !isSettingsVisible;
     settingsBox.style.display = isSettingsVisible ? 'block' : 'none';
 }
 
-// Apply settings (you can add any other logic here as required)
 function applySettings() {
     const autoRecovery = document.getElementById('autoRecovery').checked;
     const recoveryMinutes = document.getElementById('recoveryMinutes').value;
     const theme = document.getElementById('themeSelect').value;
 
-    // Store settings or apply them here
     console.log(`Auto Recovery: ${autoRecovery}, Recovery Minutes: ${recoveryMinutes}, Theme: ${theme}`);
-
-    // Close settings panel
     toggleSettings();
 }
